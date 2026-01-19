@@ -20,8 +20,7 @@ Rails.application.configure do
 
 
   # Busca y asegúrate de que estas líneas estén así:
-config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || ENV['RAILS_SERVE_STATIC_FILES'].to_bool
-config.assets.compile = false
+config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || ENV['RAILS_SERVE_STATIC_RAILS_CONFIG'] == 'true'
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
