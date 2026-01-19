@@ -1520,3 +1520,29 @@ Processing by ClicksController#total as */*
 Completed 200 OK in 21ms (Views: 0.4ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
 
 
+Started GET "/" for 127.0.0.1 at 2026-01-19 03:55:25 -0600
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ProjectRor'*/[0m
+Processing by WelcomeController#index as HTML
+  [1m[36mClick Load (0.9ms)[0m  [1m[34mSELECT "clicks".* FROM "clicks" ORDER BY "clicks"."id" DESC LIMIT 1 /*action='index',application='ProjectRor',controller='welcome'*/[0m
+  ↳ app/controllers/welcome_controller.rb:3:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering welcome/index.html.erb within layouts/application
+  Rendered welcome/index.html.erb within layouts/application (Duration: 68.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 182.7ms | GC: 0.0ms)
+Completed 200 OK in 806ms (Views: 241.9ms | ActiveRecord: 16.9ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/clicks/total" for 127.0.0.1 at 2026-01-19 03:55:27 -0600
+Processing by ClicksController#total as */*
+  [1m[36mClick Load (0.4ms)[0m  [1m[34mSELECT "clicks".* FROM "clicks" ORDER BY "clicks"."id" DESC LIMIT 1 /*action='total',application='ProjectRor',controller='clicks'*/[0m
+  ↳ app/controllers/clicks_controller.rb:29:in `total'
+Completed 200 OK in 45ms (Views: 0.4ms | ActiveRecord: 0.4ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/clicks/total" for 127.0.0.1 at 2026-01-19 03:55:37 -0600
+Processing by ClicksController#total as */*
+  [1m[36mClick Load (0.4ms)[0m  [1m[34mSELECT "clicks".* FROM "clicks" ORDER BY "clicks"."id" DESC LIMIT 1 /*action='total',application='ProjectRor',controller='clicks'*/[0m
+  ↳ app/controllers/clicks_controller.rb:29:in `total'
+Completed 200 OK in 51ms (Views: 0.6ms | ActiveRecord: 0.4ms (1 query, 0 cached) | GC: 0.0ms)
+
+
