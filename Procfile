@@ -1,2 +1,2 @@
-web: sh -c "PORT=\${PORT:-3000} && bundle exec rails server -p \$PORT -b 0.0.0.0"
+web: bundle exec puma -C config/puma.rb
 release: bundle exec rails db:migrate
