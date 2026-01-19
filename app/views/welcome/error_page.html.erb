@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Error <%= @error_code %> - Sistema</title>
+  <meta http-equiv="refresh" content="8; url=/">
+  
+  <!-- Fuente Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Reset y configuración base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #0a1929;
+      color: #e6edf3;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    /* Contenedor principal */
+    .error-container {
+      width: 100%;
+      max-width: 600px;
+      background-color: #132f4c;
+      border-radius: 12px;
+      padding: 40px 32px;
+      border: 1px solid #1e4976;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+    
+    /* Encabezado del error */
+    .error-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #1e4976;
+    }
+    
+    .error-code {
+      font-size: 72px;
+      font-weight: 700;
+      color: #ff7b72;
+      margin-bottom: 8px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -1px;
+    }
+    
+    .error-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    /* Contenido del error */
+    .error-content {
+      margin-bottom: 32px;
+    }
+    
+    .error-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+    
+    .error-description {
+      font-size: 16px;
+      color: #c9d1d9;
+      margin-bottom: 24px;
+      padding: 0 20px;
+      line-height: 1.7;
+    }
+    
+    /* Contador */
+    .countdown-container {
+      background-color: #0c2d6b;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 24px 0;
+      border: 1px solid #1f6feb;
+    }
+    
+    .countdown-label {
+      font-size: 14px;
+      color: #79c0ff;
+      margin-bottom: 8px;
+    }
+    
+    .countdown-value {
+      font-size: 32px;
+      font-weight: 600;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    .redirect-info {
+      font-size: 14px;
+      color: #8b949e;
+      margin-top: 8px;
+    }
+    
+    /* Botones */
+    .button-container {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin: 28px 0;
+    }
+    
+    .button {
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 160px;
+    }
+    
+    .button:hover {
+      transform: translateY(-1px);
+    }
+    
+    .button-primary {
+      background-color: #1f6feb;
+      color: #ffffff;
+      border: 1px solid #388bfd;
+    }
+    
+    .button-primary:hover {
+      background-color: #2b81fb;
+      border-color: #58a6ff;
+      box-shadow: 0 4px 12px rgba(31, 111, 235, 0.2);
+    }
+    
+    .button-secondary {
+      background-color: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+    }
+    
+    .button-secondary:hover {
+      background-color: #30363d;
+      border-color: #8b949e;
+    }
+    
+    /* Detalles técnicos */
+    .technical-details {
+      margin-top: 32px;
+      padding: 20px;
+      background-color: #0a1929;
+      border-radius: 8px;
+      border: 1px solid #1e4976;
+      text-align: left;
+    }
+    
+    .technical-details h3 {
+      font-size: 14px;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    
+    .details-list {
+      list-style: none;
+      font-size: 13px;
+      color: #c9d1d9;
+    }
+    
+    .details-list li {
+      padding: 6px 0;
+      border-bottom: 1px solid #1e4976;
+    }
+    
+    .details-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      display: inline-block;
+      width: 120px;
+      color: #8b949e;
+    }
+    
+    /* Footer */
+    .error-footer {
+      margin-top: 32px;
+      font-size: 13px;
+      color: #6e7681;
+      text-align: center;
+    }
+    
+    /* Responsive */
+    @media (max-width: 640px) {
+      .error-container {
+        padding: 32px 24px;
+      }
+      
+      .error-code {
+        font-size: 60px;
+      }
+      
+      .error-title {
+        font-size: 18px;
+      }
+      
+      .button-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .button {
+        width: 100%;
+        max-width: 280px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .error-code {
+        font-size: 52px;
+      }
+      
+      .error-description {
+        padding: 0 10px;
+        font-size: 15px;
+      }
+      
+      .countdown-value {
+        font-size: 28px;
+      }
+    }
+    
+    /* Animación sutil para el contador */
+    @keyframes countdown-pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    
+    .countdown-active {
+      animation: countdown-pulse 1s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <!-- Encabezado -->
+    <div class="error-header">
+      <div class="error-code"><%= @error_code %></div>
+      <div class="error-title"><%= @error_message %></div>
+    </div>
+    
+    <!-- Icono según el error -->
+    <div class="error-content">
+      <div class="error-icon">
+        <% case @error_code %>
+        <% when "404" %>
+          🔍
+        <% when "418" %>
+          🫖
+        <% when "500" %>
+          ⚙️
+        <% when "429" %>
+          ⏳
+        <% else %>
+          ⚠️
+        <% end %>
+      </div>
+      
+      <div class="error-description">
+        <% case @error_code %>
+        <% when "404" %>
+          El recurso solicitado no se encuentra disponible. Verifique la URL e intente nuevamente.
+        <% when "418" %>
+          El servidor se niega a preparar café porque es una tetera. (Código HTTP 418 - I'm a teapot)
+        <% when "500" %>
+          Se ha producido un error interno en el servidor. El equipo técnico ha sido notificado.
+        <% when "429" %>
+          Se han realizado demasiadas solicitudes en un período corto. Por favor, espere un momento.
+        <% else %>
+          Se ha producido un error inesperado en la aplicación.
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Contador de redirección -->
+    <div class="countdown-container">
+      <div class="countdown-label">Redirección automática en</div>
+      <div class="countdown-value" id="countdown-number">8</div>
+      <div class="redirect-info">Será dirigido a la página principal</div>
+    </div>
+    
+    <!-- Botones de acción -->
+    <div class="button-container">
+      <a href="/" class="button button-primary">
+        Ir al Inicio
+      </a>
+      
+      <button id="cancelRedirect" class="button button-secondary">
+        <span>✕</span>
+        Cancelar Redirección
+      </button>
+    </div>
+    
+    <!-- Detalles técnicos -->
+    <div class="technical-details">
+      <h3>Información Técnica</h3>
+      <ul class="details-list">
+        <li>
+          <span class="detail-label">Código:</span>
+          HTTP <%= @error_code %>
+        </li>
+        <li>
+          <span class="detail-label">Fecha:</span>
+          <%= Time.current.strftime("%d/%m/%Y") %>
+        </li>
+        <li>
+          <span class="detail-label">Hora:</span>
+          <%= Time.current.strftime("%H:%M:%S") %>
+        </li>
+        <li>
+          <span class="detail-label">URL:</span>
+          <span style="word-break: break-all;"><%= request.original_url %></span>
+        </li>
+        <% if request.user_agent %>
+        <li>
+          <span class="detail-label">Cliente:</span>
+          <%= request.user_agent.split(' ').first %>
+        </li>
+        <% end %>
+      </ul>
+    </div>
+    
+    <!-- Footer -->
+    <div class="error-footer">
+      Sistema de Contador de Interacciones • Rails 8.1.2
+    </div>
+  </div>
+
+  <script>
+    // Elementos del DOM
+    const countdownElement = document.getElementById('countdown-number');
+    const cancelButton = document.getElementById('cancelRedirect');
+    
+    // Configuración
+    let seconds = 8;
+    let redirectActive = true;
+    let countdownInterval;
+    
+    // Función para iniciar el contador
+    function startCountdown() {
+      countdownInterval = setInterval(() => {
+        if (!redirectActive) return;
+        
+        seconds--;
+        countdownElement.textContent = seconds;
+        
+        // Añadir efecto visual cuando quedan 3 segundos o menos
+        if (seconds <= 3) {
+          countdownElement.classList.add('countdown-active');
+        }
+        
+        // Redirigir cuando llegue a 0
+        if (seconds <= 0) {
+          clearInterval(countdownInterval);
+          window.location.href = '/';
+        }
+      }, 1000);
+    }
+    
+    // Función para cancelar la redirección
+    function cancelRedirect() {
+      redirectActive = false;
+      clearInterval(countdownInterval);
+      
+      // Actualizar UI
+      countdownElement.textContent = '—';
+      countdownElement.classList.remove('countdown-active');
+      
+      // Cambiar texto del botón
+      cancelButton.innerHTML = '<span>✓</span> Redirección Cancelada';
+      cancelButton.classList.remove('button-secondary');
+      cancelButton.classList.add('button-primary');
+      cancelButton.disabled = true;
+      
+      // Actualizar mensaje
+      const container = document.querySelector('.countdown-container');
+      container.querySelector('.redirect-info').textContent = 'Redirección manualmente cancelada';
+      container.style.backgroundColor = '#033a16';
+      container.style.borderColor = '#238636';
+    }
+    
+    // Función para redirigir manualmente
+    function redirectNow() {
+      window.location.href = '/';
+    }
+    
+    // Inicialización
+    function initializeErrorPage() {
+      // Iniciar contador
+      startCountdown();
+      
+      // Event listeners
+      cancelButton.addEventListener('click', cancelRedirect);
+      
+      // Permitir redirección con tecla Enter
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && redirectActive) {
+          redirectNow();
+        }
+        if (event.key === 'Escape') {
+          cancelRedirect();
+        }
+      });
+      
+      // Registrar en consola para debugging
+      console.log(`Error ${<%= @error_code %>}: ${<%= @error_message.inspect %>}`);
+    }
+    
+    // Iniciar cuando el DOM esté listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeErrorPage);
+    } else {
+      initializeErrorPage();
+    }
+  </script>
+</body>
+</html>
