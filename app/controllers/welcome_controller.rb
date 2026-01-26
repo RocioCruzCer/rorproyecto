@@ -1,33 +1,36 @@
+# app/controllers/welcome_controller.rb
 class WelcomeController < ApplicationController
   def index
-    @click = Click.last || Click.create(count: 0)
-    @total_clicks = @click.count
+    # Código existente
   end
-  
+
+  def dashboard
+    # Código existente
+  end
+
   def error_page
-    @error_code = params[:code] || "500"
-    
-    @error_messages = {
-      "400" => "Solicitud Incorrecta",
-      "401" => "No Autorizado", 
-      "403" => "Prohibido",
-      "404" => "Página No Encontrada",
-      "405" => "Método No Permitido",
-      "408" => "Tiempo de Espera Agotado",
-      "418" => "¡Soy una Tetera!",
-      "429" => "Demasiadas Solicitudes",
-      "500" => "Error Interno del Servidor",
-      "502" => "Puerta de Enlace Incorrecta",
-      "503" => "Servicio No Disponible"
-    }
-    
-    @error_message = @error_messages[@error_code] || "Error Desconocido"
+    # Código existente
   end
-  
-  # ¡ESTA ES LA ACCIÓN QUE FALTABA!
+
+  def personal_data
+    # Acción para mostrar el formulario de datos personales
+  end
+
+  def save_personal_data
+    # Acción para procesar el formulario
+    flash[:success] = "Registro guardado exitosamente (simulación)"
+    redirect_to personal_data_path, notice: "Registro guardado exitosamente (simulación)"
+  end
+
+  def system_info
+    # Acción para mostrar información del sistema
+  end
+
   def random_error
-    error_codes = ["400", "401", "403", "404", "408", "418", "429", "500", "502", "503"]
-    random_code = error_codes.sample
-    redirect_to error_page_path(code: random_code)
+    # Código existente
+  end
+
+  def advanced_dashboard
+    # Nueva acción para el dashboard avanzado
   end
 end

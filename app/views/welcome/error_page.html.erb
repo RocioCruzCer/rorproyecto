@@ -1,451 +1,794 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Error <%= @error_code %> - Sistema</title>
-  <meta http-equiv="refresh" content="8; url=/">
+<div class="error-container">
+  <div class="error-wrapper">
+    <div class="error-illustration">
+      <div class="error-shape">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="error-rays">
+        <div class="ray ray-1"></div>
+        <div class="ray ray-2"></div>
+        <div class="ray ray-3"></div>
+        <div class="ray ray-4"></div>
+      </div>
+    </div>
+    
+    <div class="error-content">
+      <h1 class="error-code">Error <span class="code-number">500</span></h1>
+      <h2 class="error-title">¡Ups! Algo salió mal</h2>
+      <p class="error-description">
+        Has accedido a la pantalla de error intencional. Esta página simula 
+        un error de servidor para fines de demostración y pruebas.
+      </p>
+      
+      <!-- Contador de regreso -->
+      <div class="countdown-container">
+        <div class="countdown-card">
+          <i class="fas fa-clock"></i>
+          <div class="countdown-content">
+            <h3>Redirección automática</h3>
+            <p>Serás redirigido a la página principal en:</p>
+            <div class="countdown-timer">
+              <span id="countdown-display">10</span>
+              <span class="seconds-text">segundos</span>
+            </div>
+            <div class="countdown-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" id="countdown-progress"></div>
+              </div>
+            </div>
+          </div>
+          <button onclick="cancelCountdown()" class="cancel-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="error-details-card">
+        <h3><i class="fas fa-info-circle"></i> Detalles del Error</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Código de Error:</span>
+            <span class="detail-value">ERR-SIM-001</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Tipo:</span>
+            <span class="detail-value">Error de Simulación</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Severidad:</span>
+            <span class="detail-value">
+              <span class="severity-tag">Baja</span>
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Timestamp:</span>
+            <span class="detail-value" id="errorTimestamp">
+              <%= Time.current.strftime("%d/%m/%Y %H:%M:%S") %>
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Sesión ID:</span>
+            <span class="detail-value" id="errorSessionId">
+              <%= SecureRandom.hex(8).upcase %>
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Componente:</span>
+            <span class="detail-value">Sistema de Interacciones</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="error-actions">
+        <button onclick="navigateWithBreadcrumbs('/', 'Inicio', 'fa-home')" class="action-btn primary-btn">
+          <i class="fas fa-home"></i>
+          <span>Volver al Inicio</span>
+        </button>
+        <button onclick="restartCountdown()" class="action-btn secondary-btn">
+          <i class="fas fa-redo"></i>
+          <span>Reiniciar Contador</span>
+        </button>
+        <button onclick="navigateWithBreadcrumbs('/dashboard', 'Interacción con DB', 'fa-database')" 
+                class="action-btn tertiary-btn">
+          <i class="fas fa-database"></i>
+          <span>Ir al Dashboard</span>
+        </button>
+      </div>
+      
+      <div class="error-tips">
+        <h4><i class="fas fa-lightbulb"></i> ¿Qué puedes hacer?</h4>
+        <ul>
+          <li>Verificar que estés conectado a internet</li>
+          <li>Recargar la página actual</li>
+          <li>Contactar al administrador si el error persiste</li>
+          <li>Regresar a una página funcional del sistema</li>
+        </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Estilos ajustados para el layout con sidebar */
+  .error-container {
+    min-height: calc(100vh - 150px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
   
-  <!-- Fuente Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  .error-wrapper {
+    background-color: #FFFFFF;
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(11, 93, 59, 0.1);
+    border: 1px solid #E4DDC9;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin: 20px auto;
+  }
   
-  <style>
-    /* Reset y configuración base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+  .error-illustration {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 30px;
+  }
+  
+  .error-shape {
+    width: 140px;
+    height: 140px;
+    background: linear-gradient(135deg, #E0B100 0%, #F0C900 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 2;
+    box-shadow: 0 10px 30px rgba(224, 177, 0, 0.3);
+  }
+  
+  .error-shape i {
+    font-size: 60px;
+    color: #2F2F2A;
+  }
+  
+  .error-rays {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    top: 0;
+    left: 0;
+  }
+  
+  .ray {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(224, 177, 0, 0.2) 0%, transparent 100%);
+    border-radius: 4px;
+  }
+  
+  .ray-1 {
+    width: 180px;
+    height: 4px;
+    top: 88px;
+    left: 0;
+    transform: rotate(0deg);
+    animation: pulseRay 2s infinite;
+  }
+  
+  .ray-2 {
+    width: 180px;
+    height: 4px;
+    top: 88px;
+    left: 0;
+    transform: rotate(90deg);
+    animation: pulseRay 2s infinite 0.5s;
+  }
+  
+  .ray-3 {
+    width: 180px;
+    height: 4px;
+    top: 88px;
+    left: 0;
+    transform: rotate(45deg);
+    animation: pulseRay 2s infinite 1s;
+  }
+  
+  .ray-4 {
+    width: 180px;
+    height: 4px;
+    top: 88px;
+    left: 0;
+    transform: rotate(135deg);
+    animation: pulseRay 2s infinite 1.5s;
+  }
+  
+  @keyframes pulseRay {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+  
+  .error-content {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .error-code {
+    color: #2F2F2A;
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+  
+  .error-code .code-number {
+    color: #E0B100;
+  }
+  
+  .error-title {
+    color: #0B5D3B;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .error-description {
+    color: #6F8F7A;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Estilos del contador */
+  .countdown-container {
+    margin-bottom: 30px;
+  }
+  
+  .countdown-card {
+    background: linear-gradient(135deg, #0B5D3B 0%, #1A7D55 100%);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(11, 93, 59, 0.3);
+    animation: pulseCountdown 2s infinite;
+  }
+  
+  @keyframes pulseCountdown {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+  
+  .countdown-card i {
+    font-size: 32px;
+    color: #FAF5E9;
+  }
+  
+  .countdown-content {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .countdown-content h3 {
+    color: #FAF5E9;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .countdown-content p {
+    color: rgba(250, 245, 233, 0.9);
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .countdown-timer {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  #countdown-display {
+    font-size: 40px;
+    font-weight: 800;
+    color: #FAF5E9;
+    font-family: 'Courier New', monospace;
+    min-width: 50px;
+    text-align: center;
+  }
+  
+  .seconds-text {
+    color: rgba(250, 245, 233, 0.9);
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .countdown-progress {
+    width: 100%;
+  }
+  
+  .progress-bar {
+    height: 6px;
+    background-color: rgba(250, 245, 233, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FAF5E9 0%, #E0B100 100%);
+    width: 100%;
+    border-radius: 4px;
+    transition: width 1s linear;
+  }
+  
+  .cancel-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(250, 245, 233, 0.2);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #FAF5E9;
+    transition: all 0.3s ease;
+  }
+  
+  .cancel-btn:hover {
+    background: rgba(250, 245, 233, 0.4);
+    transform: rotate(90deg);
+  }
+  
+  .error-details-card {
+    background-color: #FAF5E9;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid #E4DDC9;
+    text-align: left;
+  }
+  
+  .error-details-card h3 {
+    color: #2F2F2A;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .error-details-card h3 i {
+    color: #6F8F7A;
+  }
+  
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+  }
+  
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(111, 143, 122, 0.2);
+  }
+  
+  .detail-item:last-child {
+    border-bottom: none;
+  }
+  
+  .detail-label {
+    color: #6F8F7A;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  
+  .detail-value {
+    color: #2F2F2A;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .severity-tag {
+    background-color: #E4DDC9;
+    color: #2F2F2A;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .error-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .action-btn {
+    padding: 14px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+    justify-content: center;
+  }
+  
+  .action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .primary-btn {
+    background: linear-gradient(135deg, #0B5D3B 0%, #1A7D55 100%);
+    color: #FAF5E9;
+  }
+  
+  .primary-btn:hover {
+    box-shadow: 0 10px 25px rgba(11, 93, 59, 0.3);
+  }
+  
+  .secondary-btn {
+    background-color: #6F8F7A;
+    color: #FAF5E9;
+  }
+  
+  .secondary-btn:hover {
+    box-shadow: 0 10px 25px rgba(111, 143, 122, 0.3);
+  }
+  
+  .tertiary-btn {
+    background-color: #E4DDC9;
+    color: #2F2F2A;
+  }
+  
+  .tertiary-btn:hover {
+    box-shadow: 0 10px 25px rgba(47, 47, 42, 0.1);
+  }
+  
+  .error-tips {
+    background-color: #E4DDC9;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .error-tips h4 {
+    color: #2F2F2A;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .error-tips h4 i {
+    color: #E0B100;
+  }
+  
+  .error-tips ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .error-tips li {
+    color: #6F8F7A;
+    padding: 6px 0;
+    padding-left: 25px;
+    position: relative;
+    font-size: 14px;
+  }
+  
+  .error-tips li:before {
+    content: '•';
+    color: #0B5D3B;
+    font-size: 18px;
+    position: absolute;
+    left: 0;
+    top: 3px;
+  }
+  
+  @media (max-width: 768px) {
+    .error-wrapper {
+      padding: 25px 20px;
     }
     
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      display: flex;
+    .error-actions {
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background-color: #0a1929;
-      color: #e6edf3;
-      line-height: 1.6;
-      padding: 20px;
+      align-items: stretch;
+      gap: 12px;
     }
     
-    /* Contenedor principal */
-    .error-container {
+    .action-btn {
+      min-width: auto;
       width: 100%;
-      max-width: 600px;
-      background-color: #132f4c;
-      border-radius: 12px;
-      padding: 40px 32px;
-      border: 1px solid #1e4976;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-      text-align: center;
-    }
-    
-    /* Encabezado del error */
-    .error-header {
-      margin-bottom: 32px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid #1e4976;
+      padding: 12px 20px;
+      font-size: 14px;
     }
     
     .error-code {
-      font-size: 72px;
-      font-weight: 700;
-      color: #ff7b72;
-      margin-bottom: 8px;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -1px;
+      font-size: 36px;
     }
     
     .error-title {
-      font-size: 20px;
-      font-weight: 500;
-      color: #8b949e;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    /* Contenido del error */
-    .error-content {
-      margin-bottom: 32px;
-    }
-    
-    .error-icon {
-      font-size: 48px;
-      margin-bottom: 20px;
-      opacity: 0.9;
+      font-size: 24px;
     }
     
     .error-description {
-      font-size: 16px;
-      color: #c9d1d9;
-      margin-bottom: 24px;
-      padding: 0 20px;
-      line-height: 1.7;
-    }
-    
-    /* Contador */
-    .countdown-container {
-      background-color: #0c2d6b;
-      border-radius: 8px;
-      padding: 20px;
-      margin: 24px 0;
-      border: 1px solid #1f6feb;
-    }
-    
-    .countdown-label {
-      font-size: 14px;
-      color: #79c0ff;
-      margin-bottom: 8px;
-    }
-    
-    .countdown-value {
-      font-size: 32px;
-      font-weight: 600;
-      color: #ffffff;
-      font-variant-numeric: tabular-nums;
-    }
-    
-    .redirect-info {
-      font-size: 14px;
-      color: #8b949e;
-      margin-top: 8px;
-    }
-    
-    /* Botones */
-    .button-container {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      margin: 28px 0;
-    }
-    
-    .button {
-      padding: 14px 28px;
       font-size: 15px;
-      font-weight: 500;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-width: 160px;
+      margin-bottom: 25px;
     }
     
-    .button:hover {
-      transform: translateY(-1px);
+    .countdown-card {
+      flex-direction: column;
+      text-align: center;
+      gap: 12px;
+      padding: 15px;
     }
     
-    .button-primary {
-      background-color: #1f6feb;
-      color: #ffffff;
-      border: 1px solid #388bfd;
-    }
-    
-    .button-primary:hover {
-      background-color: #2b81fb;
-      border-color: #58a6ff;
-      box-shadow: 0 4px 12px rgba(31, 111, 235, 0.2);
-    }
-    
-    .button-secondary {
-      background-color: #21262d;
-      color: #c9d1d9;
-      border: 1px solid #30363d;
-    }
-    
-    .button-secondary:hover {
-      background-color: #30363d;
-      border-color: #8b949e;
-    }
-    
-    /* Detalles técnicos */
-    .technical-details {
-      margin-top: 32px;
-      padding: 20px;
-      background-color: #0a1929;
-      border-radius: 8px;
-      border: 1px solid #1e4976;
-      text-align: left;
-    }
-    
-    .technical-details h3 {
-      font-size: 14px;
-      color: #8b949e;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
-      font-weight: 500;
-    }
-    
-    .details-list {
-      list-style: none;
-      font-size: 13px;
-      color: #c9d1d9;
-    }
-    
-    .details-list li {
-      padding: 6px 0;
-      border-bottom: 1px solid #1e4976;
-    }
-    
-    .details-list li:last-child {
-      border-bottom: none;
-    }
-    
-    .detail-label {
-      display: inline-block;
-      width: 120px;
-      color: #8b949e;
-    }
-    
-    /* Footer */
-    .error-footer {
-      margin-top: 32px;
-      font-size: 13px;
-      color: #6e7681;
+    .countdown-content {
       text-align: center;
     }
     
-    /* Responsive */
-    @media (max-width: 640px) {
-      .error-container {
-        padding: 32px 24px;
-      }
-      
-      .error-code {
-        font-size: 60px;
-      }
-      
-      .error-title {
-        font-size: 18px;
-      }
-      
-      .button-container {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .button {
-        width: 100%;
-        max-width: 280px;
-      }
+    #countdown-display {
+      font-size: 32px;
     }
     
-    @media (max-width: 480px) {
-      .error-code {
-        font-size: 52px;
-      }
-      
-      .error-description {
-        padding: 0 10px;
-        font-size: 15px;
-      }
-      
-      .countdown-value {
-        font-size: 28px;
-      }
+    .error-details-card {
+      padding: 20px;
     }
     
-    /* Animación sutil para el contador */
-    @keyframes countdown-pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.7; }
-      100% { opacity: 1; }
+    .details-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
     }
     
-    .countdown-active {
-      animation: countdown-pulse 1s infinite;
+    .detail-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      padding: 10px 0;
     }
-  </style>
-</head>
-<body>
-  <div class="error-container">
-    <!-- Encabezado -->
-    <div class="error-header">
-      <div class="error-code"><%= @error_code %></div>
-      <div class="error-title"><%= @error_message %></div>
-    </div>
     
-    <!-- Icono según el error -->
-    <div class="error-content">
-      <div class="error-icon">
-        <% case @error_code %>
-        <% when "404" %>
-          🔍
-        <% when "418" %>
-          🫖
-        <% when "500" %>
-          ⚙️
-        <% when "429" %>
-          ⏳
-        <% else %>
-          ⚠️
-        <% end %>
-      </div>
-      
-      <div class="error-description">
-        <% case @error_code %>
-        <% when "404" %>
-          El recurso solicitado no se encuentra disponible. Verifique la URL e intente nuevamente.
-        <% when "418" %>
-          El servidor se niega a preparar café porque es una tetera. (Código HTTP 418 - I'm a teapot)
-        <% when "500" %>
-          Se ha producido un error interno en el servidor. El equipo técnico ha sido notificado.
-        <% when "429" %>
-          Se han realizado demasiadas solicitudes en un período corto. Por favor, espere un momento.
-        <% else %>
-          Se ha producido un error inesperado en la aplicación.
-        <% end %>
-      </div>
-    </div>
+    .detail-label, .detail-value {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .error-container {
+      padding: 15px;
+    }
     
-    <!-- Contador de redirección -->
-    <div class="countdown-container">
-      <div class="countdown-label">Redirección automática en</div>
-      <div class="countdown-value" id="countdown-number">8</div>
-      <div class="redirect-info">Será dirigido a la página principal</div>
-    </div>
+    .error-wrapper {
+      padding: 20px 15px;
+      margin: 10px auto;
+    }
     
-    <!-- Botones de acción -->
-    <div class="button-container">
-      <a href="/" class="button button-primary">
-        Ir al Inicio
-      </a>
-      
-      <button id="cancelRedirect" class="button button-secondary">
-        <span>✕</span>
-        Cancelar Redirección
-      </button>
-    </div>
+    .error-illustration {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 20px;
+    }
     
-    <!-- Detalles técnicos -->
-    <div class="technical-details">
-      <h3>Información Técnica</h3>
-      <ul class="details-list">
-        <li>
-          <span class="detail-label">Código:</span>
-          HTTP <%= @error_code %>
-        </li>
-        <li>
-          <span class="detail-label">Fecha:</span>
-          <%= Time.current.strftime("%d/%m/%Y") %>
-        </li>
-        <li>
-          <span class="detail-label">Hora:</span>
-          <%= Time.current.strftime("%H:%M:%S") %>
-        </li>
-        <li>
-          <span class="detail-label">URL:</span>
-          <span style="word-break: break-all;"><%= request.original_url %></span>
-        </li>
-        <% if request.user_agent %>
-        <li>
-          <span class="detail-label">Cliente:</span>
-          <%= request.user_agent.split(' ').first %>
-        </li>
-        <% end %>
-      </ul>
-    </div>
+    .error-shape {
+      width: 110px;
+      height: 110px;
+      top: 15px;
+      left: 15px;
+    }
     
-    <!-- Footer -->
-    <div class="error-footer">
-      Sistema de Contador de Interacciones • Rails 8.1.2
-    </div>
-  </div>
+    .error-shape i {
+      font-size: 45px;
+    }
+    
+    .ray-1, .ray-2, .ray-3, .ray-4 {
+      width: 140px;
+      top: 68px;
+    }
+    
+    .error-code {
+      font-size: 32px;
+    }
+    
+    .error-title {
+      font-size: 22px;
+    }
+    
+    #countdown-display {
+      font-size: 28px;
+    }
+    
+    .seconds-text {
+      font-size: 14px;
+    }
+  }
+</style>
 
-  <script>
-    // Elementos del DOM
-    const countdownElement = document.getElementById('countdown-number');
-    const cancelButton = document.getElementById('cancelRedirect');
+<script>
+  // Variables para el contador
+  let countdownValue = 10;
+  let countdownInterval;
+  let countdownActive = true;
+  const totalTime = 10; // 10 segundos totales
+
+  // Iniciar el contador
+  function startCountdown() {
+    countdownValue = totalTime;
+    const countdownDisplay = document.getElementById('countdown-display');
+    const progressFill = document.getElementById('countdown-progress');
     
-    // Configuración
-    let seconds = 8;
-    let redirectActive = true;
-    let countdownInterval;
+    // Reiniciar la barra de progreso
+    progressFill.style.width = '100%';
     
-    // Función para iniciar el contador
-    function startCountdown() {
-      countdownInterval = setInterval(() => {
-        if (!redirectActive) return;
+    // Actualizar inmediatamente
+    countdownDisplay.textContent = countdownValue;
+    
+    // Limpiar intervalo anterior si existe
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+    }
+    
+    // Iniciar nuevo intervalo
+    countdownInterval = setInterval(() => {
+      if (countdownActive && countdownValue > 0) {
+        countdownValue--;
+        countdownDisplay.textContent = countdownValue;
         
-        seconds--;
-        countdownElement.textContent = seconds;
+        // Actualizar barra de progreso
+        const progressPercentage = (countdownValue / totalTime) * 100;
+        progressFill.style.width = `${progressPercentage}%`;
         
-        // Añadir efecto visual cuando quedan 3 segundos o menos
-        if (seconds <= 3) {
-          countdownElement.classList.add('countdown-active');
+        // Efecto visual cuando llega a los últimos 3 segundos
+        if (countdownValue <= 3) {
+          countdownDisplay.style.color = '#FF6B6B';
+          countdownDisplay.style.animation = 'pulse 0.5s infinite alternate';
         }
         
         // Redirigir cuando llegue a 0
-        if (seconds <= 0) {
+        if (countdownValue === 0) {
           clearInterval(countdownInterval);
-          window.location.href = '/';
+          redirectToHome();
         }
-      }, 1000);
-    }
+      }
+    }, 1000);
+  }
+
+  // Cancelar el contador
+  function cancelCountdown() {
+    countdownActive = false;
+    clearInterval(countdownInterval);
     
-    // Función para cancelar la redirección
-    function cancelRedirect() {
-      redirectActive = false;
-      clearInterval(countdownInterval);
-      
-      // Actualizar UI
-      countdownElement.textContent = '—';
-      countdownElement.classList.remove('countdown-active');
-      
-      // Cambiar texto del botón
-      cancelButton.innerHTML = '<span>✓</span> Redirección Cancelada';
-      cancelButton.classList.remove('button-secondary');
-      cancelButton.classList.add('button-primary');
-      cancelButton.disabled = true;
-      
-      // Actualizar mensaje
-      const container = document.querySelector('.countdown-container');
-      container.querySelector('.redirect-info').textContent = 'Redirección manualmente cancelada';
-      container.style.backgroundColor = '#033a16';
-      container.style.borderColor = '#238636';
-    }
+    const countdownCard = document.querySelector('.countdown-card');
+    const countdownDisplay = document.getElementById('countdown-display');
     
-    // Función para redirigir manualmente
-    function redirectNow() {
-      window.location.href = '/';
-    }
+    // Efecto visual al cancelar
+    countdownCard.style.animation = 'none';
+    countdownCard.style.transform = 'scale(0.95)';
+    countdownDisplay.textContent = 'Cancelado';
+    countdownDisplay.style.color = '#FF6B6B';
     
-    // Inicialización
-    function initializeErrorPage() {
-      // Iniciar contador
+    // Restaurar después de 2 segundos
+    setTimeout(() => {
+      countdownActive = true;
       startCountdown();
-      
-      // Event listeners
-      cancelButton.addEventListener('click', cancelRedirect);
-      
-      // Permitir redirección con tecla Enter
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && redirectActive) {
-          redirectNow();
-        }
-        if (event.key === 'Escape') {
-          cancelRedirect();
-        }
+    }, 2000);
+  }
+
+  // Reiniciar el contador
+  function restartCountdown() {
+    clearInterval(countdownInterval);
+    startCountdown();
+    
+    // Efecto visual
+    const countdownDisplay = document.getElementById('countdown-display');
+    countdownDisplay.style.color = '#FAF5E9';
+    countdownDisplay.style.animation = 'none';
+    
+    setTimeout(() => {
+      if (countdownDisplay.style.animation === 'none') {
+        countdownDisplay.style.animation = '';
+      }
+    }, 10);
+  }
+
+  // Redirigir a la página principal
+  function redirectToHome() {
+    // Efecto de desvanecimiento antes de redirigir
+    const errorWrapper = document.querySelector('.error-wrapper');
+    errorWrapper.style.opacity = '0.8';
+    errorWrapper.style.transform = 'scale(0.98)';
+    errorWrapper.style.transition = 'all 0.5s ease';
+    
+    // Redirigir después del efecto
+    setTimeout(() => {
+      navigateWithBreadcrumbs('/', 'Inicio', 'fa-home');
+    }, 500);
+  }
+
+  // Actualizar timestamp en tiempo real
+  function updateTimestamp() {
+    const now = new Date();
+    const timestampElement = document.getElementById('errorTimestamp');
+    if (timestampElement) {
+      timestampElement.textContent = now.toLocaleDateString('es-ES') + ' ' + 
+                                    now.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
       });
-      
-      // Registrar en consola para debugging
-      console.log(`Error ${<%= @error_code %>}: ${<%= @error_message.inspect %>}`);
+    }
+  }
+
+  // Efecto de escritura para el código de error
+  const errorCode = document.querySelector('.code-number');
+  const originalText = errorCode.textContent;
+  let charIndex = 0;
+
+  function typeEffect() {
+    if (charIndex < originalText.length) {
+      errorCode.textContent = originalText.substring(0, charIndex + 1);
+      charIndex++;
+      setTimeout(typeEffect, 100);
+    }
+  }
+
+  // Inicializar todo cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', () => {
+    // Generar ID de sesión si no existe
+    const sessionIdElement = document.getElementById('errorSessionId');
+    if (sessionIdElement && !sessionIdElement.textContent.trim()) {
+      sessionIdElement.textContent = 'ERR-' + Math.random().toString(36).substr(2, 9).toUpperCase();
     }
     
-    // Iniciar cuando el DOM esté listo
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initializeErrorPage);
-    } else {
-      initializeErrorPage();
+    updateTimestamp();
+    setInterval(updateTimestamp, 1000);
+    setTimeout(typeEffect, 1000);
+    startCountdown();
+    
+    // Actualizar breadcrumb específico para esta página
+    // Esta función está definida en el layout principal
+    if (typeof updateBreadcrumb === 'function') {
+      updateBreadcrumb('Simulación de Error', 'fa-exclamation-triangle');
     }
-  </script>
-</body>
-</html>
+    
+    // Agregar animación de pulso para los últimos segundos
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.2); }
+      }
+    `;
+    document.head.appendChild(style);
+  });
+</script>

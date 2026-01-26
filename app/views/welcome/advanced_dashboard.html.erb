@@ -1,0 +1,129 @@
+<!-- app/views/dashboard/advanced.html.erb -->
+<div class="simple-dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">
+      <i class="fas fa-chart-line"></i> Dashboard Avanzado
+    </h1>
+    <p class="dashboard-subtitle">
+      Esta es una nueva pantalla
+    </p>
+  </div>
+  
+  <!-- Contenido simple -->
+  <div class="dashboard-content">
+    <div class="empty-state">
+      <i class="fas fa-chart-pie fa-4x"></i>
+      <h3>Pantalla del Dashboard Avanzado</h3>
+      <p>Esta página esta en proceso<p>
+    </div>
+  </div>
+  
+  <!-- Botón para volver -->
+  <div class="dashboard-actions">
+    <%= link_to system_info_path, class: "back-button" do %>
+      <i class="fas fa-arrow-left"></i> Volver a Información del Sistema
+    <% end %>
+  </div>
+</div>
+
+<style>
+  /* Dashboard simple */
+  .simple-dashboard {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-top: 20px;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  
+  .dashboard-title {
+    color: #0B5D3B;
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .dashboard-subtitle {
+    color: #666;
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .dashboard-content {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+  
+  .empty-state i {
+    color: #0B5D3B;
+    margin-bottom: 20px;
+  }
+  
+  .empty-state h3 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  /* Botón de volver */
+  .dashboard-actions {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+    margin-top: 30px;
+  }
+  
+  .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    background: #0B5D3B;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .back-button:hover {
+    background: #08462c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .simple-dashboard {
+      padding: 20px;
+    }
+    
+    .dashboard-title {
+      font-size: 24px;
+    }
+    
+    .empty-state {
+      padding: 20px;
+    }
+    
+    .empty-state i {
+      font-size: 3em;
+    }
+  }
+</style>
