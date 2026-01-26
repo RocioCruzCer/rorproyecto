@@ -1,20 +1,15 @@
-default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-
-development:
-  <<: *default
-  database: storage/development.sqlite3
-
-test:
-  <<: *default
-  database: storage/test.sqlite3
-
-# SOLO PARA PRODUCCIÓN (RENDER) usa PostgreSQL
 production:
   adapter: postgresql
   encoding: unicode
-  url: <%= ENV['postgresql://rorproyecto_user:95BMwtcucDuZvWTdeiR7wKkxRH4jKDXL@dpg-d5rq21beetsc738fqm3g-a/rorproyecto_production'] %>
+  # Esto es más compatible
+  <% if ENV['DATABASE_URL'] %>
+    url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+    host: <%= ENV['DB_HOST'] || 'localhost' %>
+    port: <%= ENV['DB_PORT'] || 5432 %>
+    database: <%= ENV['DB_NAME'] || 'rorproyecto_production' %>
+    username: <%= ENV['DB_USERNAME'] || 'rorproyecto_user' %>
+    password: <%= ENV['DB_PASSWORD'] || '95BMwtcucDuZvWTdeiR7wKkxRH4jKDXL' %>
+  <% end %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
