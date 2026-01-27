@@ -12,8 +12,4 @@ test:
   database: storage/test.sqlite3
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  url: <%= ENV['postgresql://rorproyecto_user:95BMwtcucDuZvWTdeiR7wKkxRH4jKDXL@dpg-d5rq21beetsc738fqm3g-a/rorproyecto_production'] %>
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  url: <%= ENV['DATABASE_URL'] %>
