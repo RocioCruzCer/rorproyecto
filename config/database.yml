@@ -1,7 +1,6 @@
-@"
 default: &default
   adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 5 } %>
   timeout: 5000
 
 development:
@@ -14,7 +13,3 @@ test:
 
 production:
   url: <%= ENV['DATABASE_URL'] %>
-  cable:
-    url: <%= ENV['DATABASE_URL'] %>
-    adapter: postgresql
-"@ | Out-File config/database.yml
