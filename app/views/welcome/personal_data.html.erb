@@ -39,10 +39,12 @@
         </label>
         <%= text_field_tag :document_id, nil, class: "form-input", required: true, 
                           placeholder: "Ej: GARM800101HDFRNN09",
-                          pattern: "^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[0-9A-Z]{2}$",
-                          title: "Formato CURP: 4 letras, 6 números, letra H/M, 5 letras, 2 caracteres",
-                          onblur: "validateCURP(this)" %>
+                          pattern: "^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[A-Z0-9][0-9A]$",
+                          title: "Formato CURP: 4 letras, 6 números, H/M, 5 letras, 1 alfanumérico, 1 número o letra",
+                          onblur: "validateCURP(this)",
+                          oninput: "this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')" %>
         <div class="field-error" id="document_id_error"></div>
+        <small class="field-help">Formato: 4 letras + 6 números + H/M + 5 letras + 2 caracteres</small>
       </div>
       
       <div class="form-group">
@@ -313,6 +315,14 @@
     display: block;
   }
   
+  .field-help {
+    color: #6F8F7A;
+    font-size: 11px;
+    margin-top: 4px;
+    display: block;
+    font-style: italic;
+  }
+  
   .char-count {
     color: #666;
     font-size: 12px;
@@ -552,14 +562,21 @@
     return true;
   }
   
-  // Función para validar CURP
+  // Función para validar CURP (formato oficial mexicano)
   function validateCURP(input) {
     const value = input.value.trim().toUpperCase();
-    const regex = /^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[0-9A-Z]{2}$/;
     const errorElement = document.getElementById('document_id_error');
+    
+    // Expresión regular para CURP oficial
+    const regex = /^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[A-Z0-9][0-9A]$/;
     
     if (!value) {
       showError(input, errorElement, 'La CURP es obligatoria');
+      return false;
+    }
+    
+    if (value.length !== 18) {
+      showError(input, errorElement, 'La CURP debe tener exactamente 18 caracteres');
       return false;
     }
     
@@ -568,23 +585,65 @@
       return false;
     }
     
-    // Validar fecha en CURP (posiciones 5-10: YYMMDD)
-    const year = value.substring(4, 6);
-    const month = value.substring(6, 8);
-    const day = value.substring(8, 10);
+    // Validar estructura específica de la CURP
+    const curpParts = {
+      birthDate: value.substring(4, 10), // Fecha de nacimiento (YYMMDD)
+      gender: value.charAt(10),      // Sexo (H/M)
+      stateCode: value.substring(11, 13), // Código de la entidad federativa
+    };
     
-    if (parseInt(month) < 1 || parseInt(month) > 12) {
+    // Validar año (00-99)
+    const year = parseInt(curpParts.birthDate.substring(0, 2));
+    if (year < 0 || year > 99) {
+      showError(input, errorElement, 'Año inválido en la CURP');
+      return false;
+    }
+    
+    // Validar mes (01-12)
+    const month = parseInt(curpParts.birthDate.substring(2, 4));
+    if (month < 1 || month > 12) {
       showError(input, errorElement, 'Mes inválido en la CURP');
       return false;
     }
     
-    if (parseInt(day) < 1 || parseInt(day) > 31) {
+    // Validar día (dependiendo del mes)
+    const day = parseInt(curpParts.birthDate.substring(4, 6));
+    const daysInMonth = getDaysInMonth(month, year);
+    
+    if (day < 1 || day > daysInMonth) {
       showError(input, errorElement, 'Día inválido en la CURP');
+      return false;
+    }
+    
+    // Validar sexo (H o M)
+    if (!['H', 'M'].includes(curpParts.gender)) {
+      showError(input, errorElement, 'Sexo inválido en la CURP (debe ser H o M)');
+      return false;
+    }
+    
+    // Validar código de estado (entidad federativa)
+    const stateCodes = [
+      'AS', 'BC', 'BS', 'CC', 'CL', 'CM', 'CS', 'CH', 'DF', 'DG',
+      'GT', 'GR', 'HG', 'JC', 'MC', 'MN', 'MS', 'NT', 'NL', 'OC',
+      'PL', 'QT', 'QR', 'SP', 'SL', 'SR', 'TC', 'TS', 'TL', 'VZ',
+      'YN', 'ZS', 'NE'
+    ];
+    
+    if (!stateCodes.includes(curpParts.stateCode)) {
+      showError(input, errorElement, 'Código de estado inválido en la CURP');
       return false;
     }
     
     showSuccess(input, errorElement);
     return true;
+  }
+  
+  // Función auxiliar para obtener días en un mes
+  function getDaysInMonth(month, year) {
+    // Ajustar año completo (1900-1999 para años 00-99)
+    const fullYear = year < 50 ? 2000 + year : 1900 + year;
+    
+    return new Date(fullYear, month, 0).getDate();
   }
   
   // Función para validar fecha de nacimiento
@@ -607,17 +666,19 @@
     // Calcular edad
     const age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() < birthDate.getDate();
     
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
+    let calculatedAge = age;
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff)) {
+      calculatedAge--;
     }
     
-    if (age < 18) {
+    if (calculatedAge < 18) {
       showError(input, errorElement, 'Debe ser mayor de 18 años');
       return false;
     }
     
-    if (age > 120) {
+    if (calculatedAge > 120) {
       showError(input, errorElement, 'Edad inválida');
       return false;
     }
@@ -653,15 +714,6 @@
     
     if (!regex.test(value)) {
       showError(input, errorElement, 'Formato de email inválido');
-      return false;
-    }
-    
-    // Validar dominio común
-    const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'empresa.com'];
-    const domain = value.split('@')[1];
-    
-    if (!domain.includes('.')) {
-      showError(input, errorElement, 'Dominio de email inválido');
       return false;
     }
     
@@ -833,6 +885,8 @@
     }
     
     // Actualizar breadcrumb para esta página
-    updateBreadcrumb('Datos Personales', 'fa-user-circle');
+    if (typeof updateBreadcrumb === 'function') {
+      updateBreadcrumb('Datos Personales', 'fa-user-circle');
+    }
   });
 </script>
