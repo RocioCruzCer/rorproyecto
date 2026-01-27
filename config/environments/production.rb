@@ -18,9 +18,8 @@ Rails.application.configure do
   # Cache assets for far-future expiry since they are all digest stamped.
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
-
-  # Busca y asegúrate de que estas líneas estén así:
-config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || ENV['RAILS_SERVE_STATIC_RAILS_CONFIG'] == 'true'
+  # IMPORTANTE: Esta línea debe estar así para Render
+  config.public_file_server.enabled = true  # Render necesita esto en true
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
@@ -32,7 +31,7 @@ config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || 
   # config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true  # Activar SSL para producción
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
@@ -50,21 +49,26 @@ config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || 
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Replace the default in-process memory cache store with a durable alternative.
-  config.cache_store = :solid_cache_store
+  # IMPORTANTE: Cambia solid_cache_store por algo básico
+  config.cache_store = :null_store  # Temporal - cambia después si necesitas cache
+  
+  # O si prefieres memory_store (solo para una instancia):
+  # config.cache_store = :memory_store, { size: 64.megabytes }
 
-  # Replace the default in-process and non-durable queuing backend for Active Job.
-
+  # IMPORTANTE: Mantén :async para Active Job
   config.active_job.queue_adapter = :async
- # config.active_job.queue_adapter = :solid_queue
- #  config.solid_queue.connects_to = { database: { writing: :queue } }
+  
+  # COMENTA o ELIMINA estas líneas de solid_queue:
+  # config.active_job.queue_adapter = :solid_queue
+  # config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  # IMPORTANTE: Cambia example.com por tu dominio real
+  config.action_mailer.default_url_options = { host: ENV.fetch('HOST', 'localhost:3000') }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
