@@ -8,6 +8,9 @@
     </div>
   <% end %>
   
+  <!-- Mensajes de error de validación -->
+  <div id="errorMessages" class="error-messages"></div>
+  
   <h2 class="form-title">
     <i class="fas fa-user-edit"></i> Formulario de Datos Personales
   </h2>
@@ -15,28 +18,41 @@
     Complete todos los campos del formulario. Los campos marcados con <span class="required">*</span> son obligatorios.
   </p>
   
-  <%= form_tag save_personal_data_path, method: :post, id: "personalDataForm" do %>
+  <%= form_tag save_personal_data_path, method: :post, id: "personalDataForm", onsubmit: "return validateForm()" do %>
     <div class="form-grid">
       <!-- Información Personal -->
       <div class="form-group">
         <label class="form-label">
           <i class="fas fa-user"></i> Nombre Completo <span class="required">*</span>
         </label>
-        <%= text_field_tag :full_name, nil, class: "form-input", required: true, placeholder: "Ingrese su nombre completo" %>
+        <%= text_field_tag :full_name, nil, class: "form-input", required: true, 
+                          placeholder: "Ingrese su nombre completo (mín. 5 caracteres)", 
+                          pattern: "^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{5,100}$",
+                          title: "Solo letras y espacios, mínimo 5 caracteres",
+                          onblur: "validateName(this)" %>
+        <div class="field-error" id="full_name_error"></div>
       </div>
       
       <div class="form-group">
         <label class="form-label">
           <i class="fas fa-id-card"></i> CURP <span class="required">*</span>
         </label>
-        <%= text_field_tag :document_id, nil, class: "form-input", required: true, placeholder: "Número de identificación" %>
+        <%= text_field_tag :document_id, nil, class: "form-input", required: true, 
+                          placeholder: "Ej: GARM800101HDFRNN09",
+                          pattern: "^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[0-9A-Z]{2}$",
+                          title: "Formato CURP: 4 letras, 6 números, letra H/M, 5 letras, 2 caracteres",
+                          onblur: "validateCURP(this)" %>
+        <div class="field-error" id="document_id_error"></div>
       </div>
       
       <div class="form-group">
         <label class="form-label">
           <i class="fas fa-birthday-cake"></i> Fecha de Nacimiento <span class="required">*</span>
         </label>
-        <%= date_field_tag :birth_date, nil, class: "form-input", required: true %>
+        <%= date_field_tag :birth_date, nil, class: "form-input", required: true,
+                          min: "1900-01-01",
+                          onchange: "validateBirthDate(this)" %>
+        <div class="field-error" id="birth_date_error"></div>
       </div>
       
       <div class="form-group">
@@ -49,7 +65,9 @@
           ["Femenino", "femenino"],
           ["Otro", "otro"],
           ["Prefiero no decir", "prefiero-no-decir"]
-        ]), class: "form-select", required: true %>
+        ]), class: "form-select", required: true,
+        onchange: "validateSelect(this)" %>
+        <div class="field-error" id="gender_error"></div>
       </div>
       
       <!-- Información de Contacto -->
@@ -57,28 +75,48 @@
         <label class="form-label">
           <i class="fas fa-envelope"></i> Correo Electrónico <span class="required">*</span>
         </label>
-        <%= email_field_tag :email, nil, class: "form-input", required: true, placeholder: "ejemplo@correo.com" %>
+        <%= email_field_tag :email, nil, class: "form-input", required: true, 
+                          placeholder: "ejemplo@correo.com",
+                          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+                          title: "Formato de email válido: usuario@dominio.com",
+                          onblur: "validateEmail(this)" %>
+        <div class="field-error" id="email_error"></div>
       </div>
       
       <div class="form-group">
         <label class="form-label">
           <i class="fas fa-phone"></i> Teléfono <span class="required">*</span>
         </label>
-        <%= telephone_field_tag :phone, nil, class: "form-input", required: true, placeholder: "Número de teléfono" %>
+        <%= telephone_field_tag :phone, nil, class: "form-input", required: true, 
+                              placeholder: "10 dígitos (ej: 5512345678)",
+                              pattern: "^[0-9]{10}$",
+                              title: "10 dígitos numéricos",
+                              onblur: "validatePhone(this)" %>
+        <div class="field-error" id="phone_error"></div>
       </div>
       
       <div class="form-group">
         <label class="form-label">
           <i class="fas fa-map-marker-alt"></i> Dirección <span class="required">*</span>
         </label>
-        <%= text_field_tag :address, nil, class: "form-input", required: true, placeholder: "Dirección completa" %>
+        <%= text_field_tag :address, nil, class: "form-input", required: true, 
+                          placeholder: "Calle, número, colonia",
+                          pattern: "^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s.,#-]{10,200}$",
+                          title: "Dirección válida, mínimo 10 caracteres",
+                          onblur: "validateAddress(this)" %>
+        <div class="field-error" id="address_error"></div>
       </div>
       
       <div class="form-group">
         <label class="form-label">
           <i class="fas fa-city"></i> Ciudad
         </label>
-        <%= text_field_tag :city, nil, class: "form-input", placeholder: "Ciudad de residencia" %>
+        <%= text_field_tag :city, nil, class: "form-input", 
+                          placeholder: "Ciudad de residencia",
+                          pattern: "^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,50}$",
+                          title: "Solo letras y espacios, mínimo 3 caracteres",
+                          onblur: "validateCity(this)" %>
+        <div class="field-error" id="city_error"></div>
       </div>
       
       <!-- Información Adicional -->
@@ -100,7 +138,12 @@
         <label class="form-label">
           <i class="fas fa-briefcase"></i> Ocupación
         </label>
-        <%= text_field_tag :occupation, nil, class: "form-input", placeholder: "Su profesión u oficio" %>
+        <%= text_field_tag :occupation, nil, class: "form-input", 
+                          placeholder: "Su profesión u oficio",
+                          pattern: "^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,100}$",
+                          title: "Solo letras y espacios, mínimo 3 caracteres",
+                          onblur: "validateOccupation(this)" %>
+        <div class="field-error" id="occupation_error"></div>
       </div>
       
       <div class="form-group">
@@ -124,15 +167,20 @@
         </label>
         <%= text_area_tag :additional_info, nil, class: "form-textarea", 
                           placeholder: "Escriba aquí cualquier información adicional que considere importante...", 
-                          rows: 4 %>
+                          rows: 4,
+                          maxlength: "500",
+                          oninput: "updateCharCount(this)" %>
+        <div class="char-count">Caracteres: <span id="charCount">0</span>/500</div>
+        <div class="field-error" id="additional_info_error"></div>
       </div>
       
       <!-- Checkbox de términos y condiciones -->
       <div class="form-group" style="grid-column: span 2;">
         <div class="checkbox-group">
-          <%= check_box_tag :terms, "1", false, required: true %>
+          <%= check_box_tag :terms, "1", false, required: true, onchange: "validateTerms(this)" %>
           <label for="terms">Acepto los términos y condiciones del tratamiento de datos personales <span class="required">*</span></label>
         </div>
+        <div class="field-error" id="terms_error"></div>
       </div>
     </div>
     
@@ -235,9 +283,41 @@
     background-color: #FFFFFF;
   }
   
+  .form-input.error,
+  .form-select.error,
+  .form-textarea.error {
+    border-color: #e74c3c;
+    background-color: #FFEBEE;
+  }
+  
+  .form-input.success,
+  .form-select.success,
+  .form-textarea.success {
+    border-color: #2ecc71;
+  }
+  
   .form-textarea {
     min-height: 120px;
     resize: vertical;
+  }
+  
+  .field-error {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 4px;
+    min-height: 16px;
+    display: none;
+  }
+  
+  .field-error.show {
+    display: block;
+  }
+  
+  .char-count {
+    color: #666;
+    font-size: 12px;
+    text-align: right;
+    margin-top: 4px;
   }
   
   .checkbox-group {
@@ -251,6 +331,11 @@
     width: 18px;
     height: 18px;
     accent-color: #0B5D3B;
+  }
+  
+  .checkbox-group input[type="checkbox"].error {
+    outline: 2px solid #e74c3c;
+    border-radius: 4px;
   }
   
   .checkbox-group label {
@@ -311,6 +396,37 @@
   .btn-reset:hover {
     background: #D4CDB9;
     transform: translateY(-2px);
+  }
+  
+  /* Mensajes de error generales */
+  .error-messages {
+    background: #FFEBEE;
+    border: 2px solid #e74c3c;
+    color: #c0392b;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 0 0 20px 0;
+    display: none;
+  }
+  
+  .error-messages.show {
+    display: block;
+  }
+  
+  .error-messages h4 {
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .error-messages ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  
+  .error-messages li {
+    margin-bottom: 5px;
   }
   
   /* Mensaje de confirmación */
@@ -386,9 +502,321 @@
 </style>
 
 <script>
+  // Función principal de validación del formulario
+  function validateForm() {
+    let isValid = true;
+    let errors = [];
+    
+    // Validar todos los campos
+    isValid = validateName(document.getElementById('full_name')) && isValid;
+    isValid = validateCURP(document.getElementById('document_id')) && isValid;
+    isValid = validateBirthDate(document.getElementById('birth_date')) && isValid;
+    isValid = validateSelect(document.getElementById('gender')) && isValid;
+    isValid = validateEmail(document.getElementById('email')) && isValid;
+    isValid = validatePhone(document.getElementById('phone')) && isValid;
+    isValid = validateAddress(document.getElementById('address')) && isValid;
+    isValid = validateCity(document.getElementById('city')) && isValid;
+    isValid = validateOccupation(document.getElementById('occupation')) && isValid;
+    isValid = validateTerms(document.getElementById('terms')) && isValid;
+    
+    if (!isValid) {
+      showErrorMessages(errors);
+      return false;
+    }
+    
+    return true;
+  }
+  
+  // Función para validar nombre completo
+  function validateName(input) {
+    const value = input.value.trim();
+    const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{5,100}$/;
+    const errorElement = document.getElementById('full_name_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'El nombre completo es obligatorio');
+      return false;
+    }
+    
+    if (!regex.test(value)) {
+      showError(input, errorElement, 'Solo letras y espacios, mínimo 5 caracteres');
+      return false;
+    }
+    
+    if (value.split(' ').length < 2) {
+      showError(input, errorElement, 'Ingrese al menos nombre y apellido');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar CURP
+  function validateCURP(input) {
+    const value = input.value.trim().toUpperCase();
+    const regex = /^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[0-9A-Z]{2}$/;
+    const errorElement = document.getElementById('document_id_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'La CURP es obligatoria');
+      return false;
+    }
+    
+    if (!regex.test(value)) {
+      showError(input, errorElement, 'Formato CURP inválido. Ej: GARM800101HDFRNN09');
+      return false;
+    }
+    
+    // Validar fecha en CURP (posiciones 5-10: YYMMDD)
+    const year = value.substring(4, 6);
+    const month = value.substring(6, 8);
+    const day = value.substring(8, 10);
+    
+    if (parseInt(month) < 1 || parseInt(month) > 12) {
+      showError(input, errorElement, 'Mes inválido en la CURP');
+      return false;
+    }
+    
+    if (parseInt(day) < 1 || parseInt(day) > 31) {
+      showError(input, errorElement, 'Día inválido en la CURP');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar fecha de nacimiento
+  function validateBirthDate(input) {
+    const value = input.value;
+    const errorElement = document.getElementById('birth_date_error');
+    const today = new Date();
+    const birthDate = new Date(value);
+    
+    if (!value) {
+      showError(input, errorElement, 'La fecha de nacimiento es obligatoria');
+      return false;
+    }
+    
+    if (birthDate > today) {
+      showError(input, errorElement, 'La fecha de nacimiento no puede ser futura');
+      return false;
+    }
+    
+    // Calcular edad
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    if (age < 18) {
+      showError(input, errorElement, 'Debe ser mayor de 18 años');
+      return false;
+    }
+    
+    if (age > 120) {
+      showError(input, errorElement, 'Edad inválida');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar select
+  function validateSelect(input) {
+    const value = input.value;
+    const errorElement = document.getElementById(input.id + '_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'Este campo es obligatorio');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar email
+  function validateEmail(input) {
+    const value = input.value.trim();
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const errorElement = document.getElementById('email_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'El email es obligatorio');
+      return false;
+    }
+    
+    if (!regex.test(value)) {
+      showError(input, errorElement, 'Formato de email inválido');
+      return false;
+    }
+    
+    // Validar dominio común
+    const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'empresa.com'];
+    const domain = value.split('@')[1];
+    
+    if (!domain.includes('.')) {
+      showError(input, errorElement, 'Dominio de email inválido');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar teléfono
+  function validatePhone(input) {
+    const value = input.value.trim().replace(/\s/g, '');
+    const regex = /^[0-9]{10}$/;
+    const errorElement = document.getElementById('phone_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'El teléfono es obligatorio');
+      return false;
+    }
+    
+    if (!regex.test(value)) {
+      showError(input, errorElement, 'Debe tener 10 dígitos numéricos');
+      return false;
+    }
+    
+    // Validar que no empiece con 0 (en México)
+    if (value.startsWith('0')) {
+      showError(input, errorElement, 'El teléfono no puede empezar con 0');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar dirección
+  function validateAddress(input) {
+    const value = input.value.trim();
+    const errorElement = document.getElementById('address_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'La dirección es obligatoria');
+      return false;
+    }
+    
+    if (value.length < 10) {
+      showError(input, errorElement, 'La dirección debe tener al menos 10 caracteres');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar ciudad
+  function validateCity(input) {
+    const value = input.value.trim();
+    const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,50}$/;
+    const errorElement = document.getElementById('city_error');
+    
+    if (value && !regex.test(value)) {
+      showError(input, errorElement, 'Solo letras y espacios, mínimo 3 caracteres');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar ocupación
+  function validateOccupation(input) {
+    const value = input.value.trim();
+    const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,100}$/;
+    const errorElement = document.getElementById('occupation_error');
+    
+    if (value && !regex.test(value)) {
+      showError(input, errorElement, 'Solo letras y espacios, mínimo 3 caracteres');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar términos y condiciones
+  function validateTerms(input) {
+    const errorElement = document.getElementById('terms_error');
+    
+    if (!input.checked) {
+      showError(input, errorElement, 'Debe aceptar los términos y condiciones');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para mostrar errores de campos
+  function showError(input, errorElement, message) {
+    input.classList.add('error');
+    input.classList.remove('success');
+    errorElement.textContent = message;
+    errorElement.classList.add('show');
+  }
+  
+  // Función para mostrar éxito de campos
+  function showSuccess(input, errorElement) {
+    input.classList.remove('error');
+    input.classList.add('success');
+    errorElement.classList.remove('show');
+  }
+  
+  // Función para mostrar mensajes de error generales
+  function showErrorMessages(errors) {
+    const errorContainer = document.getElementById('errorMessages');
+    
+    if (errors.length > 0) {
+      let html = '<h4><i class="fas fa-exclamation-triangle"></i> Errores en el formulario:</h4>';
+      html += '<ul>';
+      errors.forEach(error => {
+        html += `<li>${error}</li>`;
+      });
+      html += '</ul>';
+      errorContainer.innerHTML = html;
+      errorContainer.classList.add('show');
+      
+      // Scroll to top
+      errorContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+  
+  // Función para contar caracteres en textarea
+  function updateCharCount(textarea) {
+    const charCount = textarea.value.length;
+    document.getElementById('charCount').textContent = charCount;
+    
+    if (charCount > 500) {
+      textarea.value = textarea.value.substring(0, 500);
+      document.getElementById('charCount').textContent = 500;
+    }
+  }
+  
   // Función para resetear el formulario
   function resetForm() {
     document.getElementById('personalDataForm').reset();
+    
+    // Limpiar errores
+    document.querySelectorAll('.field-error').forEach(el => {
+      el.classList.remove('show');
+    });
+    
+    document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(el => {
+      el.classList.remove('error', 'success');
+    });
+    
+    document.getElementById('errorMessages').classList.remove('show');
+    document.getElementById('charCount').textContent = '0';
   }
   
   // Establecer fecha máxima para fecha de nacimiento (hoy)
@@ -397,6 +825,11 @@
     const birthDateField = document.getElementById('birth_date');
     if (birthDateField) {
       birthDateField.max = today;
+      
+      // Establecer fecha por defecto (hace 25 años)
+      const defaultDate = new Date();
+      defaultDate.setFullYear(defaultDate.getFullYear() - 25);
+      birthDateField.value = defaultDate.toISOString().split('T')[0];
     }
     
     // Actualizar breadcrumb para esta página
