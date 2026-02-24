@@ -17,9 +17,8 @@ group :production do
   gem "pg"
 end
 
-# Gemfile
+# ===== GEMAS PARA EL CARRUSEL DE IMÁGENES =====
 gem "carrierwave", "~> 3.0"
-
 # Solo incluir mini_magick en desarrollo/producción donde haya ImageMagick
 group :development, :production do
   gem "mini_magick", "~> 4.12", require: false
@@ -42,13 +41,6 @@ gem "jbuilder"
 
 # reCAPTCHA para seguridad
 gem "recaptcha", require: "recaptcha/rails"
-
-# Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
-
-# ===== GEMAS PARA EL CARRUSEL DE IMÁGENES =====
-gem "carrierwave", "~> 3.0"
-gem "mini_magick", "~> 4.12"  # Versión actualizada compatible con Rails 8
 
 # Para ordenar elementos (drag & drop)
 gem "acts_as_list", "~> 1.1"

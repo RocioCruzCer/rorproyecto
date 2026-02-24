@@ -1,0 +1,86 @@
+find_header: checking for prism.h in C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/prism-1.9.0/include... -------------------- yes
+
+PATH=".;c:/Ruby32-x64/lib;c:\Ruby32-x64\bin;c:\Ruby32-x64\msys64\ucrt64\bin;c:\Ruby32-x64\msys64\usr\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Program Files\HP\OMEN-Broadcast\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Ruby32-x64\bin;C:\Users\rocic\AppData\Local\Microsoft\WindowsApps;C:\Users\rocic\.dotnet\tools;C:\Users\rocic\AppData\Roaming\npm;C:\Users\rocic\AppData\Local\Programs\Microsoft VS Code\bin" "gcc -o conftest.exe -Ic:/Ruby32-x64/include/ruby-3.2.0/x64-mingw-ucrt -Ic:/Ruby32-x64/include/ruby-3.2.0/ruby/backward -Ic:/Ruby32-x64/include/ruby-3.2.0 -I.  -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong conftest.c  -L. -Lc:/Ruby32-x64/lib -L. -pipe -s -fstack-protector-strong -Wl,--no-as-needed  -m64   -lx64-ucrt-ruby320  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lbcrypt  "
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <winsock2.h>
+4: #include <windows.h>
+5: int main(int argc, char **argv)
+6: {
+7:   return !!argv[argc];
+8: }
+/* end */
+
+PATH=".;c:/Ruby32-x64/lib;c:\Ruby32-x64\bin;c:\Ruby32-x64\msys64\ucrt64\bin;c:\Ruby32-x64\msys64\usr\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Program Files\HP\OMEN-Broadcast\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Ruby32-x64\bin;C:\Users\rocic\AppData\Local\Microsoft\WindowsApps;C:\Users\rocic\.dotnet\tools;C:\Users\rocic\AppData\Roaming\npm;C:\Users\rocic\AppData\Local\Programs\Microsoft VS Code\bin" "gcc -Ic:/Ruby32-x64/include/ruby-3.2.0/x64-mingw-ucrt -Ic:/Ruby32-x64/include/ruby-3.2.0/ruby/backward -Ic:/Ruby32-x64/include/ruby-3.2.0 -I.  -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong -m64  -c conftest.c"
+conftest.c:5:10: fatal error: prism.h: No such file or directory
+    5 | #include <prism.h>
+      |          ^~~~~~~~~
+compilation terminated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <winsock2.h>
+4: #include <windows.h>
+5: #include <prism.h>
+/* end */
+
+PATH=".;c:/Ruby32-x64/lib;c:\Ruby32-x64\bin;c:\Ruby32-x64\msys64\ucrt64\bin;c:\Ruby32-x64\msys64\usr\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Program Files\HP\OMEN-Broadcast\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Ruby32-x64\bin;C:\Users\rocic\AppData\Local\Microsoft\WindowsApps;C:\Users\rocic\.dotnet\tools;C:\Users\rocic\AppData\Roaming\npm;C:\Users\rocic\AppData\Local\Programs\Microsoft VS Code\bin" "gcc -Ic:/Ruby32-x64/include/ruby-3.2.0/x64-mingw-ucrt -Ic:/Ruby32-x64/include/ruby-3.2.0/ruby/backward -Ic:/Ruby32-x64/include/ruby-3.2.0 -I.  -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong -m64 -IC:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/prism-1.9.0/include -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <winsock2.h>
+4: #include <windows.h>
+5: #include <prism.h>
+/* end */
+
+--------------------
+
+find_header: checking for prism/extension.h in C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/prism-1.9.0/ext... -------------------- yes
+
+PATH=".;c:/Ruby32-x64/lib;c:\Ruby32-x64\bin;c:\Ruby32-x64\msys64\ucrt64\bin;c:\Ruby32-x64\msys64\usr\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Program Files\HP\OMEN-Broadcast\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Ruby32-x64\bin;C:\Users\rocic\AppData\Local\Microsoft\WindowsApps;C:\Users\rocic\.dotnet\tools;C:\Users\rocic\AppData\Roaming\npm;C:\Users\rocic\AppData\Local\Programs\Microsoft VS Code\bin" "gcc -Ic:/Ruby32-x64/include/ruby-3.2.0/x64-mingw-ucrt -Ic:/Ruby32-x64/include/ruby-3.2.0/ruby/backward -Ic:/Ruby32-x64/include/ruby-3.2.0 -I. -IC:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/prism-1.9.0/include  -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong -m64  -c conftest.c"
+conftest.c:5:10: fatal error: prism/extension.h: No such file or directory
+    5 | #include <prism/extension.h>
+      |          ^~~~~~~~~~~~~~~~~~~
+compilation terminated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <winsock2.h>
+4: #include <windows.h>
+5: #include <prism/extension.h>
+/* end */
+
+PATH=".;c:/Ruby32-x64/lib;c:\Ruby32-x64\bin;c:\Ruby32-x64\msys64\ucrt64\bin;c:\Ruby32-x64\msys64\usr\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Program Files\HP\OMEN-Broadcast\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Ruby32-x64\bin;C:\Users\rocic\AppData\Local\Microsoft\WindowsApps;C:\Users\rocic\.dotnet\tools;C:\Users\rocic\AppData\Roaming\npm;C:\Users\rocic\AppData\Local\Programs\Microsoft VS Code\bin" "gcc -Ic:/Ruby32-x64/include/ruby-3.2.0/x64-mingw-ucrt -Ic:/Ruby32-x64/include/ruby-3.2.0/ruby/backward -Ic:/Ruby32-x64/include/ruby-3.2.0 -I. -IC:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/prism-1.9.0/include  -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong -m64 -IC:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/prism-1.9.0/ext -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <winsock2.h>
+4: #include <windows.h>
+5: #include <prism/extension.h>
+/* end */
+
+--------------------
+
+block in append_cflags: checking for whether -fvisibility=hidden is accepted as CFLAGS... -------------------- yes
+
+PATH=".;c:/Ruby32-x64/lib;c:\Ruby32-x64\bin;c:\Ruby32-x64\msys64\ucrt64\bin;c:\Ruby32-x64\msys64\usr\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Program Files\HP\OMEN-Broadcast\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Ruby32-x64\bin;C:\Users\rocic\AppData\Local\Microsoft\WindowsApps;C:\Users\rocic\.dotnet\tools;C:\Users\rocic\AppData\Roaming\npm;C:\Users\rocic\AppData\Local\Programs\Microsoft VS Code\bin" "gcc -Ic:/Ruby32-x64/include/ruby-3.2.0/x64-mingw-ucrt -Ic:/Ruby32-x64/include/ruby-3.2.0/ruby/backward -Ic:/Ruby32-x64/include/ruby-3.2.0 -I. -IC:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/prism-1.9.0/include -IC:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/prism-1.9.0/ext  -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong -m64 -fvisibility=hidden -Werror -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <winsock2.h>
+4: #include <windows.h>
+5: int main(int argc, char **argv)
+6: {
+7:   return !!argv[argc];
+8: }
+/* end */
+
+--------------------
+

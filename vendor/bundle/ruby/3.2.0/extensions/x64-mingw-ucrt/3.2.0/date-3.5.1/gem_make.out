@@ -1,0 +1,25 @@
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/date-3.5.1/ext/date
+c:/Ruby32-x64/bin/ruby.exe extconf.rb
+checking for rb_category_warn()... yes
+checking for timezone in time.h with  -Werror... no
+checking for altzone in time.h with  -Werror... no
+creating Makefile
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/date-3.5.1/ext/date
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-h54boa sitelibdir\=./.gem.20260224-39200-h54boa clean
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/date-3.5.1/ext/date
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-h54boa sitelibdir\=./.gem.20260224-39200-h54boa
+generating date_core-x64-mingw-ucrt.def
+compiling date_core.c
+compiling date_parse.c
+compiling date_strftime.c
+compiling date_strptime.c
+linking shared-object date_core.so
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/date-3.5.1/ext/date
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-h54boa sitelibdir\=./.gem.20260224-39200-h54boa install
+/usr/bin/install -c -m 0755 date_core.so ./.gem.20260224-39200-h54boa
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/date-3.5.1/ext/date
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-h54boa sitelibdir\=./.gem.20260224-39200-h54boa clean

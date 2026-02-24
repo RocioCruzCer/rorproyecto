@@ -1,0 +1,29 @@
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/psych-5.3.1/ext/psych
+c:/Ruby32-x64/bin/ruby.exe extconf.rb
+creating Makefile
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/psych-5.3.1/ext/psych
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-d9bjrt sitelibdir\=./.gem.20260224-39200-d9bjrt clean
+cd libyaml && make clean
+/bin/sh: línea 1: cd: libyaml: No such file or directory
+make: [Makefile:287: clean-so] Error 1 (no tiene efecto)
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/psych-5.3.1/ext/psych
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-d9bjrt sitelibdir\=./.gem.20260224-39200-d9bjrt
+generating psych-x64-mingw-ucrt.def
+compiling psych.c
+compiling psych_emitter.c
+compiling psych_parser.c
+compiling psych_to_ruby.c
+compiling psych_yaml_tree.c
+linking shared-object psych.so
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/psych-5.3.1/ext/psych
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-d9bjrt sitelibdir\=./.gem.20260224-39200-d9bjrt install
+/usr/bin/install -c -m 0755 psych.so ./.gem.20260224-39200-d9bjrt
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/psych-5.3.1/ext/psych
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-d9bjrt sitelibdir\=./.gem.20260224-39200-d9bjrt clean
+cd libyaml && make clean
+/bin/sh: línea 1: cd: libyaml: No such file or directory
+make: [Makefile:287: clean-so] Error 1 (no tiene efecto)

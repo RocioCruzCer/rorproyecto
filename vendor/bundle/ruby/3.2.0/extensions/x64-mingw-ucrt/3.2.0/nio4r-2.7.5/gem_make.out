@@ -1,0 +1,18 @@
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/nio4r-2.7.5/ext/nio4r
+c:/Ruby32-x64/bin/ruby.exe extconf.rb
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/nio4r-2.7.5/ext/nio4r
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-shrx8r sitelibdir\=./.gem.20260224-39200-shrx8r clean
+make: *** No hay ninguna regla para construir el objetivo 'clean'.  Alto.
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/nio4r-2.7.5/ext/nio4r
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-shrx8r sitelibdir\=./.gem.20260224-39200-shrx8r
+make: No se hace nada para 'all'.
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/nio4r-2.7.5/ext/nio4r
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-shrx8r sitelibdir\=./.gem.20260224-39200-shrx8r install
+make: No se hace nada para 'install'.
+
+current directory: C:/Projects/ProjectROR/vendor/bundle/ruby/3.2.0/gems/nio4r-2.7.5/ext/nio4r
+make DESTDIR\= sitearchdir\=./.gem.20260224-39200-shrx8r sitelibdir\=./.gem.20260224-39200-shrx8r clean
+make: *** No hay ninguna regla para construir el objetivo 'clean'.  Alto.
