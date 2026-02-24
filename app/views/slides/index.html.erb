@@ -1,0 +1,52 @@
+<%# app/views/slides/index.html.erb %>
+<div class="container mt-5">
+  <h1>Administrar Slides del Carrusel</h1>
+  
+  <!-- Incluir el carrusel -->
+  <%= render 'shared/carousel' %>
+  
+  <div class="mt-5">
+    <h2>Agregar Nuevo Slide</h2>
+    
+    <%= form_with(model: @slide, local: true, html: { multipart: true }) do |form| %>
+      <div class="mb-3">
+        <%= form.label :title, "Título", class: 'form-label' %>
+        <%= form.text_field :title, class: 'form-control', required: true %>
+      </div>
+      
+      <div class="mb-3">
+        <%= form.label :image, "Imagen", class: 'form-label' %>
+        <%= form.file_field :image, class: 'form-control', accept: 'image/png,image/jpeg,image/jpg', required: true %>
+        <div class="form-text">
+          Tamaño recomendado: 1200x600px
+        </div>
+      </div>
+      
+      <%= form.submit "Agregar Slide", class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+  
+  <% if @slides.any? %>
+    <div class="mt-5">
+      <h2>Slides Existentes</h2>
+      <div class="row">
+        <% @slides.each do |slide| %>
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <% if slide.image.attached? %>
+                <%= image_tag slide.image.variant(resize_to_limit: [300, 150]), class: 'card-img-top' %>
+              <% end %>
+              <div class="card-body">
+                <h5 class="card-title"><%= slide.title %></h5>
+                <%= button_to 'Eliminar', slide_path(slide), 
+                    method: :delete, 
+                    class: 'btn btn-danger btn-sm',
+                    data: { confirm: '¿Estás seguro de eliminar este slide?' } %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

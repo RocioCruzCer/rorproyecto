@@ -2,8 +2,10 @@ source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.2"
+
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
+
 # Use sqlite3 as the database for Active Record
 # SQLite solo para desarrollo y test
 group :development, :test do
@@ -14,29 +16,50 @@ end
 group :production do
   gem "pg"
 end
+
+# Gemfile
+gem "carrierwave", "~> 3.0"
+
+# Solo incluir mini_magick en desarrollo/producción donde haya ImageMagick
+group :development, :production do
+  gem "mini_magick", "~> 4.12", require: false
+end
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+gem "kaminari"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
+
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
+
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# reCAPTCHA para seguridad
 gem "recaptcha", require: "recaptcha/rails"
 
-# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+# Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
+
+# ===== GEMAS PARA EL CARRUSEL DE IMÁGENES =====
+gem "carrierwave", "~> 3.0"
+gem "mini_magick", "~> 4.12"  # Versión actualizada compatible con Rails 8
+
+# Para ordenar elementos (drag & drop)
+gem "acts_as_list", "~> 1.1"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
-# # gem "solid_cache"
-# # gem "solid_queue"
-# # gem "solid_cable"
+group :development, :test do
+  gem "solid_cable"
+end
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false

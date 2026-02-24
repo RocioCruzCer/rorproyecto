@@ -15,7 +15,7 @@
     <div class="empty-state">
       <i class="fas fa-chart-pie fa-4x"></i>
       <h3>Pantalla del Dashboard Avanzado</h3>
-      <p>Esta página esta en proceso<p>
+      <p>Esta página está en proceso</p>
     </div>
   </div>
   
@@ -28,23 +28,78 @@
 </div>
 
 <style>
+  /* ===== PALETA DE COLORES COMPLETA ===== */
+  :root {
+    /* VERDES */
+    --verde-primario: #00A86B;
+    --verde-bosque: #2E8B57;
+    --verde-suave: #6F8F7A;
+    --verde-neon: #00C853;
+    --verde-oscuro: #008F4C;
+    --verde-profundo: #0B5D3B;
+    --verde-intermedio: #1A7D55;
+    
+    /* ROSAS */
+    --rosa-clarito: #FFB6C1;
+    --rosa-suave: #FFC0CB;
+    --rosa-palo: #FFE4E1;
+    --rosa-glow: #FFD9E6;
+    --rosa-muy-palido: #FFF0F5;
+    
+    /* NEUTROS */
+    --casi-negro: #2F2F2A;
+    --gris-medio: #5C5C55;
+    --verde-muy-claro: #F0F7F3;
+    --blanco: #FFFFFF;
+    --verde-palido: #E8F3E9;
+    
+    /* SOMBRAS */
+    --sombra-rosa-claro: rgba(255, 182, 193, 0.3);
+    --sombra-rosa-semtransparente: rgba(255, 182, 193, 0.5);
+    --sombra-verde-transparente: rgba(11, 93, 59, 0.2);
+    
+    /* VARIABLES DE APLICACIÓN */
+    --primary-dark: var(--verde-profundo);
+    --primary-base: var(--verde-primario);
+    --primary-light: var(--verde-suave);
+    --accent-pink: var(--rosa-clarito);
+    --bg-light: var(--verde-muy-claro);
+    --bg-secondary: var(--verde-palido);
+    --bg-pink-soft: var(--rosa-muy-palido);
+    --text-dark: var(--casi-negro);
+    --text-soft: var(--gris-medio);
+    --border-light: rgba(11, 93, 59, 0.08);
+    --border-pink-light: rgba(255, 182, 193, 0.3);
+    --shadow-sm: 0 2px 8px var(--sombra-verde-transparente);
+    --shadow-md: 0 4px 16px rgba(11, 93, 59, 0.08);
+    --shadow-pink-sm: 0 2px 8px var(--sombra-rosa-claro);
+    --shadow-pink-md: 0 4px 16px var(--sombra-rosa-semtransparente);
+  }
+
   /* Dashboard simple */
   .simple-dashboard {
-    background: white;
-    border-radius: 12px;
+    background: var(--blanco);
+    border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
     margin-top: 20px;
+    border: 1px solid var(--border-pink-light);
+    transition: all 0.3s ease;
+  }
+  
+  .simple-dashboard:hover {
+    box-shadow: var(--shadow-pink-md);
+    border-color: var(--rosa-clarito);
   }
   
   .dashboard-header {
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid var(--border-pink-light);
   }
   
   .dashboard-title {
-    color: #0B5D3B;
+    color: var(--primary-dark);
     margin: 0 0 10px 0;
     font-size: 28px;
     display: flex;
@@ -52,8 +107,13 @@
     gap: 15px;
   }
   
+  .dashboard-title i {
+    color: var(--rosa-clarito);
+    font-size: 32px;
+  }
+  
   .dashboard-subtitle {
-    color: #666;
+    color: var(--text-soft);
     margin: 0;
     font-size: 16px;
   }
@@ -68,24 +128,32 @@
   .empty-state {
     text-align: center;
     padding: 40px;
-    color: #666;
+    color: var(--text-soft);
   }
   
   .empty-state i {
-    color: #0B5D3B;
+    color: var(--rosa-clarito);
     margin-bottom: 20px;
+    font-size: 64px;
+    opacity: 0.8;
   }
   
   .empty-state h3 {
-    color: #333;
+    color: var(--text-dark);
     margin-bottom: 10px;
+    font-size: 22px;
+  }
+  
+  .empty-state p {
+    color: var(--text-soft);
+    font-size: 15px;
   }
   
   /* Botón de volver */
   .dashboard-actions {
     text-align: center;
     padding-top: 20px;
-    border-top: 2px solid #f0f0f0;
+    border-top: 2px solid var(--border-pink-light);
     margin-top: 30px;
   }
   
@@ -93,19 +161,40 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 25px;
-    background: #0B5D3B;
-    color: white;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, var(--rosa-clarito) 0%, var(--rosa-suave) 100%);
+    color: var(--text-dark);
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 10px;
     font-weight: 600;
+    font-size: 16px;
     transition: all 0.3s ease;
+    border: none;
+    box-shadow: var(--shadow-pink-sm);
   }
   
   .back-button:hover {
-    background: #08462c;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, var(--rosa-suave) 0%, var(--rosa-clarito) 100%);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-pink-md);
+  }
+  
+  .back-button i {
+    font-size: 18px;
+  }
+  
+  /* Animación sutil para el icono */
+  .empty-state i {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
   
   /* Responsive */
@@ -118,12 +207,65 @@
       font-size: 24px;
     }
     
+    .dashboard-title i {
+      font-size: 28px;
+    }
+    
     .empty-state {
       padding: 20px;
     }
     
     .empty-state i {
-      font-size: 3em;
+      font-size: 48px;
+    }
+    
+    .empty-state h3 {
+      font-size: 18px;
+    }
+    
+    .empty-state p {
+      font-size: 14px;
+    }
+    
+    .back-button {
+      padding: 12px 24px;
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .simple-dashboard {
+      padding: 16px;
+    }
+    
+    .dashboard-title {
+      font-size: 20px;
+      gap: 10px;
+    }
+    
+    .dashboard-title i {
+      font-size: 24px;
+    }
+    
+    .dashboard-subtitle {
+      font-size: 14px;
+    }
+    
+    .empty-state i {
+      font-size: 40px;
+    }
+    
+    .empty-state h3 {
+      font-size: 16px;
+    }
+    
+    .empty-state p {
+      font-size: 13px;
+    }
+    
+    .back-button {
+      padding: 10px 20px;
+      font-size: 13px;
     }
   }
 </style>

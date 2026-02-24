@@ -19,83 +19,6 @@
       <% end %>
     </div>
     
-    <!-- Carrusel de imágenes de programación -->
-    <div class="carousel-section">
-      <h3 class="section-title">
-        <i class="fas fa-images"></i> Tecnologías del Sistema
-      </h3>
-      <div class="carousel-container">
-        <div class="carousel-slides" id="carouselSlides">
-          <div class="carousel-slide active">
-            <div class="slide-content">
-              <div class="slide-text">
-                <h4>Ruby on Rails</h4>
-                <p>Framework backend versión <%= Rails.version %></p>
-                <div class="tech-tags">
-                  <span class="tech-tag">MVC</span>
-                  <span class="tech-tag">REST API</span>
-                  <span class="tech-tag">ActiveRecord</span>
-                </div>
-              </div>
-              <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Código Ruby on Rails">
-            </div>
-          </div>
-          <div class="carousel-slide">
-            <div class="slide-content">
-              <div class="slide-text">
-                <h4>Base de Datos</h4>
-                <p>SQLite - Motor de base de datos ligero</p>
-                <div class="tech-tags">
-                  <span class="tech-tag">SQL</span>
-                  <span class="tech-tag">Transacciones</span>
-                  <span class="tech-tag">ACID</span>
-                </div>
-              </div>
-              <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Base de datos SQLite">
-            </div>
-          </div>
-          <div class="carousel-slide">
-            <div class="slide-content">
-              <div class="slide-text">
-                <h4>Frontend Moderno</h4>
-                <p>HTML5, CSS3, JavaScript ES6+</p>
-                <div class="tech-tags">
-                  <span class="tech-tag">Responsive</span>
-                  <span class="tech-tag">Animaciones</span>
-                  <span class="tech-tag">Interactivo</span>
-                </div>
-              </div>
-              <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="HTML, CSS y JavaScript">
-            </div>
-          </div>
-          <div class="carousel-slide">
-            <div class="slide-content">
-              <div class="slide-text">
-                <h4>Seguridad</h4>
-                <p>reCAPTCHA, CSP, CSRF Protection</p>
-                <div class="tech-tags">
-                  <span class="tech-tag">Autenticación</span>
-                  <span class="tech-tag">Encriptación</span>
-                  <span class="tech-tag">Protección</span>
-                </div>
-              </div>
-              <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Seguridad y protección">
-            </div>
-          </div>
-        </div>
-        
-        <div class="carousel-controls">
-          <button class="carousel-btn prev" onclick="prevSlide()">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <div class="carousel-dots" id="carouselDots"></div>
-          <button class="carousel-btn next" onclick="nextSlide()">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-    
     <!-- Información fundamental del sistema -->
     <div class="info-sections">
       <!-- Sección de Estado del Sistema -->
@@ -107,28 +30,28 @@
           <div class="info-item">
             <div class="info-label">Ambiente</div>
             <div class="info-value">
-              <i class="fas fa-cogs"></i> <%= Rails.env.capitalize %>
+              <i class="fas fa-cogs" style="color: var(--rosa-clarito);"></i> <%= Rails.env.capitalize %>
             </div>
           </div>
           
           <div class="info-item">
             <div class="info-label">Versión Ruby</div>
             <div class="info-value">
-              <i class="fab fa-ruby"></i> <%= RUBY_VERSION %>
+              <i class="fab fa-ruby" style="color: var(--rosa-clarito);"></i> <%= RUBY_VERSION %>
             </div>
           </div>
           
           <div class="info-item">
             <div class="info-label">Versión Rails</div>
             <div class="info-value">
-              <i class="fas fa-code"></i> <%= Rails.version %>
+              <i class="fas fa-code" style="color: var(--rosa-clarito);"></i> <%= Rails.version %>
             </div>
           </div>
           
           <div class="info-item">
             <div class="info-label">Tiempo Servidor</div>
             <div class="info-value" id="serverTime">
-              <i class="fas fa-clock"></i> <%= Time.current.strftime("%H:%M:%S") %>
+              <i class="fas fa-clock" style="color: var(--rosa-clarito);"></i> <%= Time.current.strftime("%H:%M:%S") %>
             </div>
           </div>
         </div>
@@ -143,14 +66,14 @@
           <div class="info-item">
             <div class="info-label">Motor</div>
             <div class="info-value">
-              <i class="fas fa-database"></i> SQLite3
+              <i class="fas fa-database" style="color: var(--rosa-clarito);"></i> SQLite3
             </div>
           </div>
           
           <div class="info-item">
             <div class="info-label">Registros Clicks</div>
             <div class="info-value">
-              <i class="fas fa-mouse-pointer"></i> 
+              <i class="fas fa-mouse-pointer" style="color: var(--rosa-clarito);"></i> 
               <% begin %>
                 <%= number_with_delimiter(Click.count) %>
               <% rescue => e %>
@@ -162,7 +85,7 @@
           <div class="info-item">
             <div class="info-label">Estado</div>
             <div class="info-value healthy">
-              <i class="fas fa-check-circle"></i> 
+              <i class="fas fa-check-circle" style="color: var(--verde-primario);"></i> 
               <% begin %>
                 <% ActiveRecord::Base.connection.execute("SELECT 1") %>
                 Operativa
@@ -175,7 +98,7 @@
           <div class="info-item">
             <div class="info-label">Conexión</div>
             <div class="info-value connected">
-              <i class="fas fa-plug"></i> Activa
+              <i class="fas fa-plug" style="color: var(--verde-primario);"></i> Activa
             </div>
           </div>
         </div>
@@ -190,48 +113,86 @@
           <div class="info-item">
             <div class="info-label">reCAPTCHA</div>
             <div class="info-value">
-              <i class="fas fa-shield-check"></i> Modo Test
+              <i class="fas fa-shield-check" style="color: var(--rosa-clarito);"></i> Modo Test
             </div>
           </div>
           
           <div class="info-item">
             <div class="info-label">CSP</div>
             <div class="info-value">
-              <i class="fas fa-lock"></i> Habilitado
+              <i class="fas fa-lock" style="color: var(--rosa-clarito);"></i> Habilitado
             </div>
           </div>
           
           <div class="info-item">
             <div class="info-label">CSRF</div>
             <div class="info-value">
-              <i class="fas fa-user-shield"></i> Protegido
+              <i class="fas fa-user-shield" style="color: var(--rosa-clarito);"></i> Protegido
             </div>
           </div>
           
           <div class="info-item">
             <div class="info-label">SSL/HTTPS</div>
             <div class="info-value">
-              <i class="fas fa-lock"></i> <%= request.ssl? ? "Sí" : "No (Dev)" %>
+              <i class="fas fa-lock" style="color: var(--rosa-clarito);"></i> <%= request.ssl? ? "Sí" : "No (Dev)" %>
             </div>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- Botones de acción -->
-    <div class="action-buttons">
-      <%= link_to advanced_dashboard_path, class: "action-button primary" do %>
-        <i class="fas fa-chart-line"></i> Ver Dashboard Avanzado
-      <% end %>
-      
-      <%= link_to root_path, class: "action-button secondary" do %>
-        <i class="fas fa-arrow-left"></i> Volver al Inicio
-      <% end %>
-    </div>
   </div>
 </div>
 
 <style>
+  /* ===== PALETA DE COLORES COMPLETA ===== */
+  :root {
+    /* VERDES */
+    --verde-primario: #00A86B;
+    --verde-bosque: #2E8B57;
+    --verde-suave: #6F8F7A;
+    --verde-neon: #00C853;
+    --verde-oscuro: #008F4C;
+    --verde-profundo: #0B5D3B;
+    --verde-intermedio: #1A7D55;
+    
+    /* ROSAS */
+    --rosa-clarito: #FFB6C1;
+    --rosa-suave: #FFC0CB;
+    --rosa-palo: #FFE4E1;
+    --rosa-glow: #FFD9E6;
+    --rosa-muy-palido: #FFF0F5;
+    
+    /* NEUTROS */
+    --casi-negro: #2F2F2A;
+    --gris-medio: #5C5C55;
+    --verde-muy-claro: #F0F7F3;
+    --blanco: #FFFFFF;
+    --verde-palido: #E8F3E9;
+    
+    /* SOMBRAS */
+    --sombra-rosa-claro: rgba(255, 182, 193, 0.3);
+    --sombra-rosa-semtransparente: rgba(255, 182, 193, 0.5);
+    --sombra-verde-transparente: rgba(11, 93, 59, 0.2);
+    
+    /* VARIABLES DE APLICACIÓN */
+    --primary-dark: var(--verde-profundo);
+    --primary-base: var(--verde-primario);
+    --primary-light: var(--verde-suave);
+    --accent-pink: var(--rosa-clarito);
+    --bg-light: var(--verde-muy-claro);
+    --bg-secondary: var(--verde-palido);
+    --bg-pink-soft: var(--rosa-muy-palido);
+    --text-dark: var(--casi-negro);
+    --text-soft: var(--gris-medio);
+    --border-light: rgba(11, 93, 59, 0.08);
+    --border-pink-light: rgba(255, 182, 193, 0.3);
+    --shadow-sm: 0 2px 8px var(--sombra-verde-transparente);
+    --shadow-md: 0 4px 16px rgba(11, 93, 59, 0.08);
+    --shadow-pink-sm: 0 2px 8px var(--sombra-rosa-claro);
+    --shadow-pink-md: 0 4px 16px var(--sombra-rosa-semtransparente);
+  }
+
   .system-info-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -239,36 +200,42 @@
   }
   
   .system-info-card {
-    background: linear-gradient(135deg, #FFFFFF 0%, #FAF5E9 100%);
+    background: linear-gradient(135deg, var(--blanco) 0%, var(--bg-pink-soft) 100%);
     border-radius: 24px;
     padding: 40px;
-    box-shadow: 0 20px 60px rgba(11, 93, 59, 0.1);
-    border: 1px solid #E4DDC9;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-pink-light);
+    transition: all 0.3s ease;
+  }
+  
+  .system-info-card:hover {
+    box-shadow: var(--shadow-pink-md);
+    border-color: var(--rosa-clarito);
   }
   
   .info-header {
     text-align: center;
     margin-bottom: 30px;
     padding-bottom: 25px;
-    border-bottom: 2px solid #E4DDC9;
+    border-bottom: 2px solid var(--border-pink-light);
   }
   
   .info-icon {
     font-size: 70px;
-    color: #0B5D3B;
+    color: var(--rosa-clarito);
     margin-bottom: 20px;
     animation: pulse 2s infinite;
   }
   
   .info-title {
-    color: #2F2F2A;
+    color: var(--text-dark);
     font-size: 36px;
     font-weight: 700;
     margin-bottom: 10px;
   }
   
   .info-subtitle {
-    color: #6F8F7A;
+    color: var(--text-soft);
     font-size: 18px;
     font-weight: 500;
   }
@@ -295,36 +262,55 @@
     text-decoration: none;
     min-width: 220px;
     justify-content: center;
+    border: none;
   }
   
   .action-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-pink-md);
   }
   
   .action-button.primary {
-    background: linear-gradient(135deg, #0B5D3B 0%, #1A7D55 100%);
-    color: #FAF5E9;
+    background: linear-gradient(135deg, var(--rosa-clarito) 0%, var(--rosa-suave) 100%);
+    color: var(--text-dark);
   }
   
   .action-button.primary:hover {
-    box-shadow: 0 10px 25px rgba(11, 93, 59, 0.3);
+    background: linear-gradient(135deg, var(--rosa-suave) 0%, var(--rosa-clarito) 100%);
+    box-shadow: 0 10px 25px var(--sombra-rosa-semtransparente);
   }
   
   .action-button.secondary {
-    background: #6F8F7A;
-    color: #FAF5E9;
-    border: none;
+    background: var(--bg-pink-soft);
+    color: var(--text-dark);
+    border: 1px solid var(--border-pink-light);
   }
   
   .action-button.secondary:hover {
-    background: #5E7E69;
-    box-shadow: 0 10px 25px rgba(111, 143, 122, 0.3);
+    background: var(--rosa-muy-palido);
+    border-color: var(--rosa-clarito);
   }
   
   /* Estilos del Carrusel Mejorado */
   .carousel-section {
     margin-bottom: 40px;
+  }
+  
+  .section-title {
+    color: var(--primary-dark);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-pink-light);
+  }
+  
+  .section-title i {
+    color: var(--rosa-clarito);
+    font-size: 24px;
   }
   
   .carousel-container {
@@ -333,7 +319,8 @@
     height: 450px;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(11, 93, 59, 0.2);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-pink-light);
   }
   
   .carousel-slides {
@@ -357,16 +344,23 @@
     align-items: center;
   }
   
-  .carousel-slide img {
+  .slide-image {
     width: 60%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .slide-image img {
+    width: 100%;
     height: 100%;
     object-fit: cover;
     filter: brightness(0.4);
-    transition: filter 0.5s ease;
+    transition: filter 0.5s ease, transform 0.8s ease;
   }
   
-  .carousel-slide.active img {
+  .carousel-slide.active .slide-image img {
     filter: brightness(0.7);
+    transform: scale(1.05);
   }
   
   .slide-text {
@@ -374,22 +368,24 @@
     left: 5%;
     width: 35%;
     padding: 40px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     z-index: 2;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-pink-light);
   }
   
   .slide-text h4 {
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 15px;
-    color: #0B5D3B;
+    color: var(--primary-dark);
   }
   
   .slide-text p {
     font-size: 18px;
-    color: #2F2F2A;
+    color: var(--text-dark);
     margin-bottom: 20px;
     line-height: 1.6;
   }
@@ -401,13 +397,20 @@
   }
   
   .tech-tag {
-    background: rgba(11, 93, 59, 0.1);
-    color: #0B5D3B;
+    background: var(--bg-pink-soft);
+    color: var(--primary-dark);
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
-    border: 2px solid rgba(11, 93, 59, 0.2);
+    border: 1px solid var(--border-pink-light);
+    transition: all 0.3s ease;
+  }
+  
+  .tech-tag:hover {
+    background: var(--rosa-muy-palido);
+    border-color: var(--rosa-clarito);
+    transform: translateY(-2px);
   }
   
   .carousel-controls {
@@ -439,8 +442,8 @@
   }
   
   .carousel-btn:hover {
-    background: rgba(224, 177, 0, 0.8);
-    border-color: #E0B100;
+    background: var(--rosa-clarito);
+    border-color: var(--blanco);
     transform: scale(1.15);
   }
   
@@ -460,14 +463,15 @@
   }
   
   .carousel-dot:hover {
-    background: rgba(224, 177, 0, 0.8);
+    background: var(--rosa-clarito);
     transform: scale(1.2);
   }
   
   .carousel-dot.active {
-    background: #E0B100;
+    background: var(--rosa-clarito);
     transform: scale(1.3);
-    border-color: white;
+    border-color: var(--blanco);
+    box-shadow: 0 0 10px var(--sombra-rosa-semtransparente);
   }
   
   /* Información del Sistema */
@@ -479,34 +483,18 @@
   }
   
   .info-section {
-    background-color: #FFFFFF;
+    background-color: var(--blanco);
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 8px 25px rgba(11, 93, 59, 0.08);
-    border: 1px solid #E4DDC9;
-    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-pink-light);
+    transition: all 0.3s ease;
   }
   
   .info-section:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(11, 93, 59, 0.15);
-  }
-  
-  .section-title {
-    color: #0B5D3B;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 25px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #E4DDC9;
-  }
-  
-  .section-title i {
-    color: #E0B100;
-    font-size: 24px;
+    box-shadow: var(--shadow-pink-md);
+    border-color: var(--rosa-clarito);
   }
   
   .section-grid {
@@ -516,21 +504,21 @@
   }
   
   .info-item {
-    background: linear-gradient(135deg, #FAF5E9 0%, #F5F0E0 100%);
+    background: linear-gradient(135deg, var(--bg-pink-soft) 0%, var(--blanco) 100%);
     padding: 25px;
     border-radius: 16px;
-    border: 1px solid #E4DDC9;
+    border: 1px solid var(--border-pink-light);
     transition: all 0.3s ease;
   }
   
   .info-item:hover {
-    background: linear-gradient(135deg, #F5F0E0 0%, #F0EBD7 100%);
-    border-color: #0B5D3B;
+    background: linear-gradient(135deg, var(--rosa-muy-palido) 0%, var(--blanco) 100%);
+    border-color: var(--rosa-clarito);
     transform: translateY(-3px);
   }
   
   .info-label {
-    color: #6F8F7A;
+    color: var(--text-soft);
     font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
@@ -540,7 +528,7 @@
   }
   
   .info-value {
-    color: #2F2F2A;
+    color: var(--text-dark);
     font-size: 18px;
     font-weight: 600;
     display: flex;
@@ -550,18 +538,18 @@
   }
   
   .info-value i {
-    color: #0B5D3B;
+    color: var(--rosa-clarito);
     font-size: 20px;
     flex-shrink: 0;
   }
   
   .info-value.connected i {
-    color: #0B5D3B;
+    color: var(--verde-primario);
     animation: pulse 1.5s infinite;
   }
   
   .info-value.healthy {
-    color: #155724;
+    color: var(--verde-primario);
   }
   
   @keyframes pulse {
@@ -581,7 +569,7 @@
       width: 45%;
     }
     
-    .carousel-slide img {
+    .slide-image {
       width: 55%;
     }
   }
@@ -615,7 +603,7 @@
       padding: 25px;
     }
     
-    .carousel-slide img {
+    .slide-image {
       width: 100%;
       height: 70%;
     }
@@ -780,22 +768,8 @@
         minute: '2-digit',
         second: '2-digit'
       });
-      serverTimeElement.innerHTML = `<i class="fas fa-clock"></i> ${timeString}`;
+      serverTimeElement.innerHTML = `<i class="fas fa-clock" style="color: var(--rosa-clarito);"></i> ${timeString}`;
     }
-  }
-  
-  // Efecto de entrada para los elementos
-  function animateOnScroll() {
-    const sections = document.querySelectorAll('.info-section');
-    sections.forEach((section, index) => {
-      const sectionTop = section.getBoundingClientRect().top;
-      const windowHeight = window.innerHeight;
-      
-      if (sectionTop < windowHeight * 0.8) {
-        section.style.opacity = '1';
-        section.style.transform = 'translateY(0)';
-      }
-    });
   }
   
   // Inicializar todo
@@ -810,20 +784,21 @@
     updateServerTime();
     setInterval(updateServerTime, 1000);
     
-    // Configurar animaciones de entrada
-    const sections = document.querySelectorAll('.info-section');
-    sections.forEach(section => {
-      section.style.opacity = '0';
-      section.style.transform = 'translateY(20px)';
-      section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    // Agregar efectos de entrada para las imágenes
+    const images = document.querySelectorAll('.slide-image img');
+    images.forEach(img => {
+      img.addEventListener('load', () => {
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.8s ease';
+        setTimeout(() => {
+          img.style.opacity = '1';
+        }, 100);
+      });
     });
     
-    setTimeout(() => {
-      animateOnScroll();
-      window.addEventListener('scroll', animateOnScroll);
-    }, 100);
-    
     // Actualizar breadcrumb
-    updateBreadcrumb('Información del Sistema', 'fa-server');
+    if (typeof updateBreadcrumb === 'function') {
+      updateBreadcrumb('Información del Sistema', 'fa-server');
+    }
   });
 </script>

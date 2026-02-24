@@ -1,0 +1,1146 @@
+<%# app/views/welcome/carousel.html.erb - VERSIÓN FINAL %>
+
+<% content_for :head do %>
+  <style>
+    /* ===== PALETA DE COLORES COMPLETA ===== */
+    :root {
+      /* VERDES */
+      --verde-primario: #00A86B;
+      --verde-bosque: #2E8B57;
+      --verde-suave: #6F8F7A;
+      --verde-neon: #00C853;
+      --verde-oscuro: #008F4C;
+      --verde-profundo: #0B5D3B;
+      --verde-intermedio: #1A7D55;
+      
+      /* ROSAS */
+      --rosa-clarito: #FFB6C1;
+      --rosa-suave: #FFC0CB;
+      --rosa-palo: #FFE4E1;
+      --rosa-glow: #FFD9E6;
+      --rosa-muy-palido: #FFF0F5;
+      
+      /* NEUTROS */
+      --casi-negro: #2F2F2A;
+      --gris-medio: #5C5C55;
+      --verde-muy-claro: #F0F7F3;
+      --blanco: #FFFFFF;
+      --verde-palido: #E8F3E9;
+      
+      /* SOMBRAS */
+      --sombra-rosa-claro: rgba(255, 182, 193, 0.3);
+      --sombra-rosa-semtransparente: rgba(255, 182, 193, 0.5);
+      --sombra-verde-transparente: rgba(11, 93, 59, 0.2);
+      
+      /* VARIABLES DE APLICACIÓN */
+      --primary-dark: var(--verde-profundo);
+      --primary-base: var(--verde-primario);
+      --primary-light: var(--verde-suave);
+      --accent-pink: var(--rosa-clarito);
+      --bg-light: var(--verde-muy-claro);
+      --bg-secondary: var(--verde-palido);
+      --bg-pink-soft: var(--rosa-muy-palido);
+      --text-dark: var(--casi-negro);
+      --text-soft: var(--gris-medio);
+      --border-light: rgba(11, 93, 59, 0.08);
+      --border-pink-light: rgba(255, 182, 193, 0.25);
+      --shadow-sm: 0 4px 12px var(--sombra-verde-transparente);
+      --shadow-md: 0 8px 24px rgba(11, 93, 59, 0.08);
+      --shadow-pink-sm: 0 4px 12px var(--sombra-rosa-claro);
+      --shadow-pink-md: 0 8px 24px var(--sombra-rosa-semtransparente);
+      --shadow-lg: 0 20px 40px rgba(11, 93, 59, 0.12);
+    }
+
+    /* Estilos generales */
+    body {
+      background-color: var(--bg-light);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+    
+    /* Contenedor principal */
+    .carousel-page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 30px;
+    }
+    
+    /* Encabezado */
+    .page-header {
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    .header-left h1 {
+      color: var(--primary-dark);
+      font-size: 32px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+    }
+    
+    .header-left h1 i {
+      color: var(--rosa-clarito);
+      font-size: 36px;
+      background: var(--bg-pink-soft);
+      padding: 10px;
+      border-radius: 16px;
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, var(--verde-primario), var(--verde-oscuro));
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 24px;
+      font-weight: 600;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 168, 107, 0.2);
+    }
+    
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 168, 107, 0.3);
+    }
+    
+    /* Sección del Carrusel */
+    .carousel-section {
+      margin-bottom: 40px;
+    }
+    
+    .carousel-container {
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-pink-light);
+      background: var(--blanco);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .carousel-container:hover {
+      box-shadow: 0 25px 50px var(--sombra-rosa-semtransparente);
+      border-color: var(--rosa-clarito);
+    }
+    
+    .carousel-item {
+      height: 600px;
+      background-position: center;
+      background-size: cover;
+      position: relative;
+    }
+    
+    .carousel-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 40%);
+      z-index: 1;
+    }
+    
+    .carousel-caption {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 30px 35px;
+      bottom: 40px;
+      max-width: 80%;
+      left: 40px;
+      right: auto;
+      transform: none;
+      text-align: left;
+      border: 1px solid var(--border-pink-light);
+      box-shadow: var(--shadow-pink-md);
+      z-index: 2;
+      width: auto;
+      animation: slideUp 0.5s ease;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .carousel-caption h5 {
+      color: var(--primary-dark);
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    
+    .carousel-caption p {
+      color: var(--text-soft);
+      margin-bottom: 0;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .carousel-caption p i {
+      color: var(--rosa-clarito);
+      font-size: 1.2rem;
+    }
+    
+    /* Contador de imágenes (esquina inferior derecha) */
+    .carousel-counter {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 24px;
+      border-radius: 50px;
+      border: 2px solid var(--border-pink-light);
+      box-shadow: var(--shadow-pink-md);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 16px;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .carousel-counter i {
+      color: var(--rosa-clarito);
+      font-size: 20px;
+    }
+    
+    .carousel-counter span {
+      background: var(--rosa-clarito);
+      color: var(--text-dark);
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 14px;
+      margin-left: 5px;
+    }
+    
+    /* Indicadores de posición (líneas horizontales centradas) */
+    .carousel-indicators {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    
+    .carousel-indicators button {
+      width: 40px;
+      height: 4px;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.4);
+      border: none;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .carousel-indicators button.active {
+      background-color: var(--rosa-clarito);
+      width: 60px;
+      box-shadow: 0 0 10px var(--rosa-clarito);
+    }
+    
+    .carousel-indicators button:hover {
+      background-color: var(--rosa-suave);
+    }
+    
+    .carousel-control-prev, .carousel-control-next {
+      width: 56px;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0 25px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      opacity: 0.8;
+    }
+    
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+      background: var(--rosa-clarito);
+      border-color: var(--blanco);
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    /* Estado vacío del carrusel */
+    .empty-carousel {
+      height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--bg-pink-soft), var(--bg-light));
+      border-radius: 28px;
+    }
+    
+    .empty-carousel-content {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .empty-carousel-content i {
+      font-size: 100px;
+      color: var(--rosa-clarito);
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+    
+    .empty-carousel-content h3 {
+      color: var(--primary-dark);
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .empty-carousel-content p {
+      color: var(--text-soft);
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+    
+    /* Sección de Galería */
+    .gallery-section {
+      margin-top: 20px;
+    }
+    
+    .gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .gallery-header h3 {
+      color: var(--primary-dark);
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .gallery-header h3 i {
+      color: var(--rosa-clarito);
+    }
+    
+    .gallery-badge {
+      background: var(--rosa-clarito);
+      color: var(--text-dark);
+      padding: 5px 15px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    /* Item de imagen en la galería */
+    .gallery-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--blanco);
+      border: 1px solid var(--border-pink-light);
+      border-radius: 18px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .gallery-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--rosa-clarito), var(--rosa-suave));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .gallery-item:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: var(--shadow-pink-md);
+      border-color: var(--rosa-clarito);
+    }
+    
+    .gallery-item:hover::before {
+      opacity: 1;
+    }
+    
+    .item-thumbnail {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--bg-pink-soft);
+      border: 2px solid var(--border-pink-light);
+      flex-shrink: 0;
+    }
+    
+    .item-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .item-thumbnail i {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 35px;
+      color: var(--rosa-clarito);
+    }
+    
+    .item-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .item-info h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin: 0 0 8px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .item-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    
+    .item-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .item-meta i {
+      color: var(--rosa-clarito);
+      font-size: 11px;
+    }
+    
+    /* Botón de eliminar */
+    .btn-delete {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 14px !important;
+      background: transparent !important;
+      border: 2px solid var(--border-pink-light) !important;
+      color: var(--text-soft) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 18px !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      flex-shrink: 0 !important;
+      padding: 0 !important;
+      text-decoration: none !important;
+      margin: 0 !important;
+      position: relative !important;
+    }
+    
+    .btn-delete:hover {
+      background: var(--rosa-clarito) !important;
+      border-color: var(--rosa-clarito) !important;
+      color: var(--text-dark) !important;
+      transform: rotate(90deg) scale(1.1) !important;
+      box-shadow: 0 4px 12px var(--sombra-rosa-claro) !important;
+    }
+    
+    /* Tooltip personalizado */
+    .btn-delete::after {
+      content: 'Eliminar';
+      position: absolute;
+      top: -35px;
+      right: 0;
+      background: var(--casi-negro);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    .btn-delete:hover::after {
+      opacity: 1;
+      visibility: visible;
+      top: -45px;
+    }
+    
+    /* Ajuste para button_to */
+    form.button_to {
+      display: inline !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    
+    /* Estado vacío de la galería */
+    .empty-gallery {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--bg-pink-soft);
+      border-radius: 28px;
+      border: 2px dashed var(--border-pink-light);
+    }
+    
+    .empty-gallery i {
+      font-size: 60px;
+      color: var(--rosa-clarito);
+      margin-bottom: 15px;
+      opacity: 0.8;
+    }
+    
+    .empty-gallery p {
+      color: var(--text-soft);
+      font-size: 16px;
+      margin: 0;
+    }
+    
+    /* Modal de confirmación personalizado */
+    .confirm-modal .modal-content {
+      border: none;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .confirm-modal .modal-header {
+      background: linear-gradient(135deg, var(--rosa-clarito), var(--rosa-suave));
+      border-bottom: 1px solid var(--border-pink-light);
+      padding: 24px 28px;
+    }
+    
+    .confirm-modal .modal-title {
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .confirm-modal .modal-title i {
+      color: var(--verde-profundo);
+      font-size: 24px;
+    }
+    
+    .confirm-modal .modal-body {
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .confirm-modal .modal-body i {
+      font-size: 60px;
+      color: var(--rosa-clarito);
+      margin-bottom: 20px;
+    }
+    
+    .confirm-modal .modal-body h4 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .confirm-modal .modal-body p {
+      color: var(--text-soft);
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    
+    .confirm-modal .modal-body .image-title {
+      color: var(--rosa-clarito);
+      font-weight: 600;
+      font-size: 18px;
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--bg-pink-soft);
+      border-radius: 12px;
+    }
+    
+    .confirm-modal .modal-footer {
+      border-top: 1px solid var(--border-pink-light);
+      padding: 20px 30px;
+      background: var(--bg-pink-soft);
+      gap: 15px;
+    }
+    
+    .confirm-modal .btn-cancel {
+      background: white;
+      border: 2px solid var(--border-pink-light);
+      color: var(--text-dark);
+      padding: 12px 30px;
+      border-radius: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .confirm-modal .btn-cancel:hover {
+      background: var(--bg-pink-soft);
+      border-color: var(--rosa-clarito);
+    }
+    
+    .confirm-modal .btn-delete-confirm {
+      background: linear-gradient(135deg, var(--rosa-clarito), var(--rosa-suave));
+      border: none;
+      color: var(--text-dark);
+      padding: 12px 35px;
+      border-radius: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px -8px var(--sombra-rosa-claro);
+    }
+    
+    .confirm-modal .btn-delete-confirm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px -8px var(--sombra-rosa-semtransparente);
+    }
+    
+    /* Modal para agregar imagen */
+    .modal-content {
+      border: none;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, var(--rosa-clarito), var(--rosa-suave));
+      border-bottom: 1px solid var(--border-pink-light);
+      padding: 24px 28px;
+    }
+    
+    .modal-header .modal-title {
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 20px;
+    }
+    
+    .modal-header .modal-title i {
+      color: var(--verde-profundo);
+      margin-right: 10px;
+    }
+    
+    .modal-body {
+      padding: 28px;
+    }
+    
+    .modal-footer {
+      border-top: 1px solid var(--border-pink-light);
+      padding: 20px 28px;
+      background: var(--bg-pink-soft);
+    }
+    
+    .form-label {
+      color: var(--text-dark);
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    
+    .form-control {
+      border: 2px solid var(--border-pink-light);
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--rosa-clarito);
+      box-shadow: 0 0 0 4px var(--sombra-rosa-claro);
+      outline: none;
+    }
+    
+    .form-text {
+      color: var(--text-soft);
+      font-size: 13px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .form-text i {
+      color: var(--rosa-clarito);
+    }
+    
+    .btn-outline-secondary {
+      background: transparent;
+      border: 2px solid var(--border-pink-light);
+      color: var(--text-dark);
+      border-radius: 14px;
+      padding: 12px 24px;
+    }
+    
+    .btn-outline-secondary:hover {
+      background: var(--bg-pink-soft);
+      border-color: var(--rosa-clarito);
+    }
+    
+    /* Animaciones */
+    .fade-in {
+      animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes fadeIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+      .carousel-item {
+        height: 500px;
+      }
+      
+      .empty-carousel {
+        height: 500px;
+      }
+      
+      .carousel-caption h5 {
+        font-size: 1.8rem;
+      }
+      
+      .carousel-counter {
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 18px;
+        font-size: 14px;
+      }
+      
+      .carousel-indicators button {
+        width: 30px;
+      }
+      
+      .carousel-indicators button.active {
+        width: 45px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .carousel-page {
+        padding: 20px 15px;
+      }
+      
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .header-right {
+        width: 100%;
+      }
+      
+      .header-right .btn {
+        width: 100%;
+      }
+      
+      .carousel-item {
+        height: 400px;
+      }
+      
+      .empty-carousel {
+        height: 400px;
+      }
+      
+      .carousel-caption {
+        padding: 20px 25px;
+        max-width: 90%;
+        left: 20px;
+        right: 20px;
+      }
+      
+      .carousel-caption h5 {
+        font-size: 1.5rem;
+      }
+      
+      .carousel-counter {
+        bottom: 15px;
+        right: 15px;
+        padding: 8px 15px;
+        font-size: 13px;
+      }
+      
+      .carousel-indicators {
+        bottom: 25px;
+        gap: 8px;
+      }
+      
+      .carousel-indicators button {
+        width: 25px;
+      }
+      
+      .carousel-indicators button.active {
+        width: 35px;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .carousel-item {
+        height: 300px;
+      }
+      
+      .empty-carousel {
+        height: 300px;
+      }
+      
+      .carousel-caption {
+        padding: 15px 20px;
+      }
+      
+      .carousel-caption h5 {
+        font-size: 1.2rem;
+      }
+      
+      .carousel-caption p {
+        font-size: 0.9rem;
+      }
+      
+      .carousel-counter {
+        bottom: 10px;
+        right: 10px;
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      
+      .carousel-counter i {
+        font-size: 14px;
+      }
+      
+      .carousel-indicators {
+        bottom: 20px;
+        gap: 6px;
+      }
+      
+      .carousel-indicators button {
+        width: 20px;
+        height: 3px;
+      }
+      
+      .carousel-indicators button.active {
+        width: 30px;
+      }
+      
+      .carousel-control-prev, .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        margin: 0 10px;
+      }
+    }
+  </style>
+<% end %>
+
+<div class="carousel-page">
+  <!-- Encabezado (solo título y botón) -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>
+        <i class="bi bi-images"></i>
+        Carrusel de Imágenes
+      </h1>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addSlideModal">
+        <i class="bi bi-plus-circle"></i>
+        Nueva Imagen
+      </button>
+    </div>
+  </div>
+
+  <!-- Sección del Carrusel -->
+  <div class="carousel-section">
+    <div id="carrusel" class="carousel-container fade-in">
+      <% if @slides.any? %>
+        <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+          <!-- Indicadores (líneas horizontales centradas) -->
+          <div class="carousel-indicators">
+            <% @slides.each_with_index do |slide, index| %>
+              <button type="button" data-bs-target="#imageCarousel" 
+                      data-bs-slide-to="<%= index %>" 
+                      class="<%= 'active' if index.zero? %>"
+                      aria-label="Slide <%= index + 1 %>"></button>
+            <% end %>
+          </div>
+          
+          <!-- Slides -->
+          <div class="carousel-inner">
+            <% @slides.each_with_index do |slide, index| %>
+              <div class="carousel-item <%= 'active' if index.zero? %>"
+                   style="background-image: url('<%= url_for(slide.image) if slide.image.attached? %>');">
+                <div class="carousel-caption">
+                  <h5><%= slide.title %></h5>
+                  <p>
+                    <i class="bi bi-calendar3"></i>
+                    <%= slide.created_at.strftime('%d de %B, %Y') %>
+                  </p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <!-- Controles -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+          
+          <!-- Contador de imágenes (esquina inferior derecha) -->
+          <div class="carousel-counter">
+            <i class="bi bi-images"></i>
+            <span><%= @slides.count %></span> imágenes
+          </div>
+        </div>
+      <% else %>
+        <div class="empty-carousel">
+          <div class="empty-carousel-content">
+            <i class="bi bi-images"></i>
+            <h3>No hay imágenes en el carrusel</h3>
+            <p>Comienza agregando tu primera imagen</p>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addSlideModal">
+              <i class="bi bi-plus-circle"></i>
+              Agregar Imagen
+            </button>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Sección de Galería -->
+  <div class="gallery-section">
+    <div class="gallery-header">
+      <h3>
+        <i class="bi bi-grid-3x3-gap-fill"></i>
+        Galería de Imágenes
+      </h3>
+      <span class="gallery-badge"><%= @slides.count %> items</span>
+    </div>
+    
+    <div class="gallery-grid">
+      <% if @slides.any? %>
+        <% @slides.each do |slide| %>
+          <div class="gallery-item fade-in" id="slide-<%= slide.id %>">
+            <div class="item-thumbnail">
+              <% if slide.image.attached? %>
+                <%= image_tag slide.image %>
+              <% else %>
+                <i class="bi bi-image"></i>
+              <% end %>
+            </div>
+            
+            <div class="item-info">
+              <h4><%= slide.title %></h4>
+              <div class="item-meta">
+                <span>
+                  <i class="bi bi-calendar3"></i>
+                  <%= slide.created_at.strftime('%d %b %Y') %>
+                </span>
+                <span>
+                  <i class="bi bi-clock"></i>
+                  <%= slide.created_at.strftime('%H:%M') %>
+                </span>
+              </div>
+            </div>
+            
+            <!-- Botón que abre el modal de confirmación -->
+            <button type="button" class="btn-delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" 
+                    data-slide-id="<%= slide.id %>" data-slide-title="<%= slide.title %>">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="empty-gallery">
+          <i class="bi bi-inbox"></i>
+          <p>No hay imágenes disponibles. ¡Agrega tu primera imagen!</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade confirm-modal" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          Confirmar eliminación
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <i class="bi bi-image"></i>
+        <h4>¿Estás seguro?</h4>
+        <p>Esta acción no se puede deshacer.</p>
+        <p>Estás a punto de eliminar la imagen:</p>
+        <div class="image-title" id="modalImageTitle"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancelar</button>
+        <%= button_to destroy_slide_path(0), method: :delete, class: "btn-delete-confirm", id: "confirmDeleteButton" do %>
+          <i class="bi bi-trash3"></i> Eliminar
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para agregar imagen -->
+<div class="modal fade" id="addSlideModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-plus-circle"></i>
+          Agregar Imagen al Carrusel
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <%= form_with(model: @slide || Slide.new, url: create_slide_path, local: true) do |form| %>
+        <div class="modal-body">
+          <div class="mb-4">
+            <%= form.label :title, "Título de la imagen", class: "form-label" %>
+            <%= form.text_field :title, class: "form-control", required: true, 
+                placeholder: "Ej: Paisaje montañoso" %>
+          </div>
+          
+          <div class="mb-3">
+            <%= form.label :image, "Seleccionar imagen", class: "form-label" %>
+            <%= form.file_field :image, class: "form-control", required: true, accept: "image/*" %>
+            <div class="form-text">
+              <i class="bi bi-info-circle"></i>
+              Formatos: JPG, PNG, GIF. Tamaño máximo: 5MB.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <%= form.submit "Guardar Imagen", class: "btn btn-success" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% content_for :javascript do %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar carrusel
+      const carousel = document.querySelector('#imageCarousel');
+      if (carousel) {
+        new bootstrap.Carousel(carousel, {
+          interval: 6000,
+          wrap: true,
+          touch: true
+        });
+      }
+      
+      // Animación para los items de la galería
+      const items = document.querySelectorAll('.gallery-item');
+      items.forEach((item, index) => {
+        item.style.animation = `fadeIn 0.3s ease forwards ${index * 0.1}s`;
+        item.style.opacity = '0';
+      });
+      
+      // Configurar modal de confirmación
+      const confirmModal = document.getElementById('confirmDeleteModal');
+      const modalImageTitle = document.getElementById('modalImageTitle');
+      const confirmButton = document.getElementById('confirmDeleteButton');
+      
+      if (confirmModal) {
+        confirmModal.addEventListener('show.bs.modal', function(event) {
+          const button = event.relatedTarget;
+          const slideId = button.getAttribute('data-slide-id');
+          const slideTitle = button.getAttribute('data-slide-title');
+          
+          // Actualizar el título en el modal
+          modalImageTitle.textContent = `"${slideTitle}"`;
+          
+          // Actualizar la URL del botón de confirmación
+          const actionUrl = "<%= destroy_slide_path('SLIDE_ID') %>".replace('SLIDE_ID', slideId);
+          confirmButton.form.action = actionUrl;
+        });
+      }
+    });
+  </script>
+<% end %>

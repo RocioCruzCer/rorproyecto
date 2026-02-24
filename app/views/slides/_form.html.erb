@@ -1,0 +1,70 @@
+<%# app/views/welcome/_form_modal.html.erb %>
+<div class="modal fade" id="addSlideModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar Imagen al Carrusel</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      
+      <%= form_with(model: @slide, url: create_slide_path, local: true) do |f| %>
+        <div class="modal-body">
+          <div class="mb-3">
+            <%= f.label :title, "Título", class: 'form-label' %>
+            <%= f.text_field :title, class: 'form-control', required: true %>
+          </div>
+          
+          <div class="mb-3">
+            <%= f.label :image, "Imagen", class: 'form-label' %>
+            <%= f.file_field :image, class: 'form-control', accept: 'image/*', required: true %>
+            <div class="form-text">
+              Formatos: JPG, PNG, GIF. Máximo 5MB
+            </div>
+            
+            <!-- Vista previa -->
+            <div class="mt-3 text-center">
+              <%= image_tag '', id: 'image_preview', class: 'img-fluid rounded d-none', 
+                    style: 'max-height: 200px;' %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <%= f.submit "Agregar Imagen", class: 'btn btn-primary', 
+                data: { disable_with: 'Subiendo...' } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Vista previa de imagen
+  const imageInput = document.querySelector('input[type="file"]');
+  const imagePreview = document.getElementById('image_preview');
+  
+  if (imageInput && imagePreview) {
+    imageInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          imagePreview.classList.remove('d-none');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+  
+  // Inicializar carrusel
+  const carouselElement = document.getElementById('imageCarousel');
+  if (carouselElement) {
+    const carousel = new bootstrap.Carousel(carouselElement, {
+      interval: 3000
+    });
+  }
+});
+</script>

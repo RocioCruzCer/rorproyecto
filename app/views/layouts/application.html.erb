@@ -1,821 +1,807 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Contador de Interacciones</title>
+  <title>Mi Aplicación Rails</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   
-  <!-- Cargar reCAPTCHA de Google -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
   
-  <!-- Fuente Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
   
-  <!-- Font Awesome para iconos -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <%= yield :head if content_for?(:head) %>
   
   <style>
-    /* Reset y configuración base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* ============================================
+       ESTILOS CON NUEVA PALETA DE COLORES
+       Verdes y Rosas (reemplazando dorados)
+       ============================================ */
+    :root {
+      /* VERDES - Primarios y secundarios */
+      --verde-primario: #00A86B;      /* Verde vibrante principal */
+      --verde-bosque: #2E8B57;         /* Verde secundario (bosque) */
+      --verde-suave: #6F8F7A;          /* Verde suave/medio */
+      --verde-neon: #00C853;           /* Verde neón brillante */
+      --verde-oscuro: #008F4C;         /* Verde oscuro */
+      --verde-profundo: #0B5D3B;       /* Verde profundo (textos) */
+      --verde-intermedio: #1A7D55;      /* Verde intermedio */
+      
+      /* ROSAS - Nuevos, reemplazan los dorados */
+      --rosa-clarito: #FFB6C1;          /* Rosa clarito principal (Light Pink) */
+      --rosa-suave: #FFC0CB;            /* Rosa suave (Pink) */
+      --rosa-palo: #FFE4E1;             /* Rosa palo (Misty Rose) */
+      --rosa-glow: #FFD9E6;              /* Rosa para glow/brillos (Cosmetic Pink) */
+      --rosa-muy-palido: #FFF0F5;        /* Rosa muy pálido (Lavender Blush) - fondos sutiles */
+      
+      /* NEUTROS */
+      --casi-negro: #2F2F2A;             /* Textos principales */
+      --gris-medio: #5C5C55;              /* Textos secundarios */
+      --verde-muy-claro: #F0F7F3;         /* Fondo general (reemplaza el beige) */
+      --blanco: #FFFFFF;                   /* Blanco (ojos, detalles) */
+      --verde-palido: #E8F3E9;             /* Fondos alternos */
+      
+      /* SOMBRAS Y EFECTOS */
+      --sombra-rosa-claro: rgba(255, 182, 193, 0.3);
+      --sombra-rosa-sem-transparente: rgba(255, 182, 193, 0.5);
+      --sombra-verde-transparente: rgba(11, 93, 59, 0.2);
+      
+      /* VARIABLES DE APLICACIÓN */
+      --primary-dark: var(--verde-profundo);
+      --primary-base: var(--verde-primario);
+      --primary-light: var(--verde-suave);
+      --accent-pink: var(--rosa-clarito);
+      --accent-pink-soft: var(--rosa-suave);
+      --bg-light: var(--verde-muy-claro);
+      --bg-secondary: var(--verde-palido);
+      --bg-pink-soft: var(--rosa-muy-palido);
+      --text-dark: var(--casi-negro);
+      --text-soft: var(--gris-medio);
+      --border-light: rgba(11, 93, 59, 0.08);
+      --border-pink-light: rgba(255, 182, 193, 0.3);
+      --shadow-sm: 0 2px 8px var(--sombra-verde-transparente);
+      --shadow-md: 0 4px 16px rgba(11, 93, 59, 0.08);
+      --shadow-pink-sm: 0 2px 8px var(--sombra-rosa-claro);
+      --shadow-pink-md: 0 4px 16px var(--sombra-rosa-sem-transparente);
     }
     
     body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      min-height: 100vh;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: #FAF5E9; /* Fondo principal claro */
-      color: #2F2F2A; /* Texto principal */
-      line-height: 1.6;
-      min-height: 100vh;
+      font-weight: 400;
+      line-height: 1.5;
+      padding-top: 64px;
+      -webkit-font-smoothing: antialiased;
     }
     
-    /* Layout container */
-    .app-container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    /* Menú hamburguesa - INICIALMENTE CERRADO */
-    .sidebar {
-      width: 280px;
-      background-color: #0B5D3B; /* Verde oscuro */
-      height: 100vh;
+    /* ===== NAVBAR MINIMALISTA CON DETALLES ROSA ===== */
+    .global-navbar {
+      background: var(--blanco) !important;
+      box-shadow: var(--shadow-sm);
       position: fixed;
-      left: -280px; /* Fuera de pantalla por defecto */
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 1000;
-      padding-top: 80px;
-      box-shadow: 4px 0 20px rgba(11, 93, 59, 0.2);
+      top: 0;
+      width: 100%;
+      z-index: 1030;
+      padding: 0.75rem 2rem;
+      border-bottom: 1px solid var(--border-pink-light);
     }
     
-    .sidebar.active {
-      left: 0; /* Se muestra cuando está activo */
+    .navbar-brand {
+      color: var(--primary-dark) !important;
+      font-weight: 500;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
     }
     
+    .navbar-brand i {
+      color: var(--rosa-clarito);
+    }
+    
+    /* BOTÓN MENÚ HAMBURGUESA CON ESTILO ROSA */
     .menu-toggle {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background-color: #0B5D3B; /* Verde oscuro */
-      color: #FAF5E9; /* Texto claro */
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
+      background: transparent;
+      border: 1px solid var(--border-pink-light);
+      border-radius: 8px;
+      color: var(--text-soft);
+      padding: 6px 10px;
       cursor: pointer;
-      z-index: 1001;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(11, 93, 59, 0.3);
+      transition: all 0.2s ease;
+      line-height: 1;
     }
     
     .menu-toggle:hover {
-      background-color: #0A4D32;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(11, 93, 59, 0.4);
+      background: var(--bg-pink-soft);
+      border-color: var(--rosa-clarito);
+      color: var(--primary-dark);
+      box-shadow: var(--shadow-pink-sm);
     }
     
-    .menu-toggle.active {
-      left: 300px;
-      background-color: #E0B100; /* Dorado cuando está activo */
-      color: #2F2F2A;
+    .menu-toggle i {
+      font-size: 1.25rem;
     }
     
-    .sidebar-header {
-      padding: 30px 25px;
-      text-align: center;
-      border-bottom: 1px solid rgba(250, 245, 233, 0.1);
-      margin-bottom: 20px;
+    /* ===== OFFCANVAS MENÚ CON ACENTOS ROSA ===== */
+    .offcanvas {
+      background-color: var(--blanco);
+      border-right: none;
+      box-shadow: var(--shadow-md);
     }
     
-    .sidebar-header h2 {
-      color: #FAF5E9;
-      font-size: 22px;
-      font-weight: 600;
+    .offcanvas-header {
+      background: var(--blanco);
+      color: var(--text-dark);
+      border-bottom: 1px solid var(--border-pink-light);
+      padding: 1.25rem 1.5rem;
+    }
+    
+    .offcanvas-title {
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      letter-spacing: -0.01em;
+    }
+    
+    .offcanvas-title i {
+      color: var(--rosa-clarito);
+    }
+    
+    .btn-close {
+      filter: none;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    
+    .btn-close:hover {
+      opacity: 0.8;
+    }
+    
+    .offcanvas-body {
+      padding: 1.5rem;
+    }
+    
+    .menu-section {
+      margin-bottom: 2rem;
+    }
+    
+    .menu-section-title {
+      color: var(--rosa-clarito);
+      font-size: 0.7rem;
+      text-transform: uppercase;
       letter-spacing: 0.5px;
-    }
-    
-    .sidebar-header p {
-      color: #6F8F7A; /* Verde medio */
-      font-size: 14px;
-      margin-top: 5px;
-    }
-    
-    .menu-items {
-      list-style: none;
-      padding: 0 15px;
-    }
-    
-    .menu-items li {
-      margin-bottom: 8px;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      padding: 0 0.75rem;
     }
     
     .menu-item {
-      padding: 16px 20px;
-      color: #E4DDC9; /* Texto claro secundario */
-      cursor: pointer;
-      transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 15px;
-      border-radius: 10px;
-      font-weight: 500;
+      padding: 0.6rem 1rem;
+      color: var(--text-dark);
       text-decoration: none;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-    }
-    
-    .menu-item:hover {
-      background-color: rgba(111, 143, 122, 0.2); /* Verde medio con transparencia */
-      color: #FAF5E9;
-      transform: translateX(5px);
-    }
-    
-    .menu-item.active {
-      background-color: #E0B100; /* Dorado */
-      color: #2F2F2A;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(224, 177, 0, 0.3);
+      border-radius: 6px;
+      margin-bottom: 0.125rem;
+      transition: all 0.2s ease;
+      font-weight: 400;
+      font-size: 0.95rem;
     }
     
     .menu-item i {
-      width: 24px;
-      text-align: center;
-      font-size: 18px;
+      width: 20px;
+      margin-right: 12px;
+      color: var(--text-soft);
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    
+    .menu-item:hover {
+      background-color: var(--bg-pink-soft);
+      color: var(--primary-dark);
+    }
+    
+    .menu-item:hover i {
+      color: var(--rosa-clarito);
+    }
+    
+    .menu-item.active {
+      background-color: var(--bg-pink-soft);
+      color: var(--primary-dark);
+      font-weight: 500;
+      border-left: 2px solid var(--rosa-clarito);
     }
     
     .menu-item.active i {
-      color: #2F2F2A;
+      color: var(--rosa-clarito);
     }
     
-    /* Overlay para cerrar menú */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(47, 47, 42, 0.5); /* Oscuro semitransparente */
-      z-index: 999;
-      display: none;
-      backdrop-filter: blur(3px);
+    .submenu {
+      margin-left: 32px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border-pink-light);
     }
     
-    .overlay.active {
-      display: block;
+    .submenu .menu-item {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
     }
     
-    /* HEADER UNIFICADO CON MENÚ Y BREADCRUMBS */
-    .header-container {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: linear-gradient(135deg, #FAF5E9 0%, #E4DDC9 100%);
-      border-bottom: 1px solid rgba(11, 93, 59, 0.1);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      animation: slideDown 0.3s ease-out;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
+    /* ===== BREADCRUMB CON DETALLE ROSA ===== */
+    .custom-breadcrumb {
+      background: transparent;
+      border-radius: 0;
+      padding: 0 0 1.5rem 0;
+      margin-bottom: 1rem;
+      border-left: none;
+      box-shadow: none;
+      border-bottom: 1px solid var(--border-pink-light);
     }
     
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    /* Contenedor para alinear menú y breadcrumbs */
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      width: 100%;
-      gap: 10px; /* Espacio reducido entre botón y breadcrumbs */
-    }
-    
-    /* Breadcrumbs - ESTILO MEJORADO Y ALINEADO */
-    .breadcrumbs-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 5px; /* Espacio reducido entre items */
-      flex-wrap: wrap;
-      margin-left: 0; /* Eliminar margen izquierdo */
-    }
-    
-    /* Quitamos el icono especial de breadcrumbs */
-    .breadcrumb-icon {
-      display: none;
+    .breadcrumb {
+      margin: 0;
     }
     
     .breadcrumb-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-size: 0.9rem;
     }
     
-    .breadcrumb-link {
-      color: #6F8F7A;
+    .breadcrumb-item a {
+      color: var(--text-soft);
       text-decoration: none;
-      font-size: 14px;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    
+    .breadcrumb-item a:hover {
+      color: var(--rosa-clarito);
+    }
+    
+    .breadcrumb-item.active {
+      color: var(--text-dark);
       font-weight: 500;
-      padding: 6px 10px; /* Padding reducido */
-      border-radius: 6px;
-      background-color: rgba(255, 255, 255, 0.7);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer; /* Mantenemos cursor pointer para navegación */
     }
     
-    .breadcrumb-link:hover {
-      background-color: #FFFFFF;
-      color: #0B5D3B;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .breadcrumb-link i {
-      font-size: 12px;
-      color: #6F8F7A;
-    }
-    
-    .breadcrumb-link:hover i {
-      color: #0B5D3B;
-    }
-    
-    .breadcrumb-current {
-      color: #2F2F2A;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 6px 10px; /* Padding reducido */
-      background-color: #FFFFFF;
-      border-radius: 6px;
-      border: 1px solid #E4DDC9;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .breadcrumb-current i {
-      color: #0B5D3B;
-      font-size: 12px;
-    }
-    
-    .breadcrumb-separator {
-      color: #6F8F7A;
-      font-size: 12px;
+    .breadcrumb-item + .breadcrumb-item::before {
+      color: var(--rosa-clarito);
+      content: "/";
+      font-size: 0.9rem;
       font-weight: 300;
-      margin: 0 2px;
+      opacity: 0.5;
     }
     
-    /* Contenido principal - NO SE DESPLAZA CON SIDEBAR */
-    .main-content {
-      flex: 1;
-      padding: 20px;
-      max-width: 1200px;
+    /* ===== CONTENEDOR PRINCIPAL ===== */
+    .main-container {
+      max-width: 1280px;
       margin: 0 auto;
-      width: 100%;
+      padding: 0 2rem;
     }
     
-    /* Footer - FIJO AL FINAL */
-    .footer {
-      background: linear-gradient(135deg, #2F2F2A 0%, #4A4A42 100%);
-      color: #FAF5E9;
-      padding: 25px 20px;
-      border-top: 1px solid rgba(250, 245, 233, 0.1);
-      margin-top: auto;
+    .content-wrapper {
+      background: transparent;
+      border-radius: 0;
+      padding: 2rem 0;
+      box-shadow: none;
+      margin-top: 0;
+      margin-bottom: 0;
     }
     
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    
-    .footer-info {
-      flex: 1;
-      min-width: 300px;
-    }
-    
-    .footer-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #E0B100;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .footer-text {
-      color: #E4DDC9;
-      font-size: 14px;
-      line-height: 1.6;
-      opacity: 0.9;
-    }
-    
-    .footer-links {
-      display: flex;
-      gap: 15px;
-    }
-    
-    .footer-link {
-      color: #FAF5E9;
-      text-decoration: none;
-      padding: 8px 16px;
+    /* ===== ALERTAS CON ESTILO ROSA ===== */
+    .alert-global {
       border-radius: 6px;
-      background-color: rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
+      border: 1px solid var(--border-pink-light);
+      border-left: 3px solid;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--blanco);
+      font-size: 0.95rem;
+      box-shadow: var(--shadow-sm);
     }
     
-    .footer-link:hover {
-      background-color: rgba(224, 177, 0, 0.2);
-      color: #E0B100;
-      transform: translateY(-2px);
+    .alert-success {
+      border-left-color: var(--verde-primario);
+      color: var(--text-dark);
     }
     
-    /* Responsive */
+    .alert-success i {
+      color: var(--verde-primario);
+    }
+    
+    .alert-danger {
+      border-left-color: var(--rosa-clarito);
+      color: var(--text-dark);
+    }
+    
+    .alert-danger i {
+      color: var(--rosa-clarito);
+    }
+    
+    .btn-close {
+      font-size: 0.8rem;
+    }
+    
+    /* ===== BOTONES CON PALETA ACTUALIZADA ===== */
+    .btn {
+      border-radius: 6px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--verde-oscuro);
+      border-color: var(--verde-oscuro);
+    }
+    
+    .btn-accent {
+      background-color: transparent;
+      border: 1px solid var(--rosa-clarito);
+      color: var(--text-dark);
+    }
+    
+    .btn-accent:hover {
+      background-color: var(--rosa-clarito);
+      border-color: var(--rosa-clarito);
+      color: var(--text-dark);
+      box-shadow: var(--shadow-pink-sm);
+    }
+    
+    .btn-outline-pink {
+      background-color: transparent;
+      border: 1px solid var(--rosa-clarito);
+      color: var(--rosa-clarito);
+    }
+    
+    .btn-outline-pink:hover {
+      background-color: var(--rosa-clarito);
+      color: var(--text-dark);
+    }
+    
+    /* ===== FOOTER CON DETALLES ROSA ===== */
+    .global-footer {
+      background: var(--blanco) !important;
+      color: var(--text-soft);
+      padding: 2rem 0;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border-pink-light);
+    }
+    
+    .global-footer h6 {
+      color: var(--text-dark);
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .global-footer h6 i {
+      color: var(--rosa-clarito);
+    }
+    
+    .global-footer p {
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .global-footer a {
+      color: var(--text-soft);
+      transition: color 0.2s;
+    }
+    
+    .global-footer a:hover {
+      color: var(--rosa-clarito);
+      text-decoration: none;
+    }
+    
+    .global-footer .small {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+    
+    .global-footer i {
+      color: var(--rosa-clarito);
+    }
+    
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        left: -100%;
+      body {
+        padding-top: 56px;
       }
       
-      .sidebar.active {
-        left: 0;
+      .global-navbar {
+        padding: 0.5rem 1rem;
       }
       
-      .menu-toggle.active {
-        left: calc(100% - 70px);
+      .main-container {
+        padding: 0 1rem;
       }
       
-      .header-container {
-        padding: 0 15px;
-        min-height: 70px;
+      .content-wrapper {
+        padding: 1.5rem 0;
       }
       
-      .header-content {
-        gap: 8px;
-      }
-      
-      .breadcrumb-link,
-      .breadcrumb-current {
-        font-size: 13px;
-        padding: 5px 8px; /* Padding más reducido en móviles */
-      }
-      
-      .footer-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-      }
-      
-      .footer-info {
-        min-width: auto;
-      }
-      
-      .main-content {
-        padding: 15px;
+      .custom-breadcrumb {
+        padding: 0 0 1rem 0;
       }
     }
     
-    @media (max-width: 480px) {
-      .breadcrumb-link span,
-      .breadcrumb-current span {
-        display: none;
-      }
-      
-      .breadcrumb-link,
-      .breadcrumb-current {
-        padding: 5px 6px;
-      }
-      
-      .breadcrumb-link i,
-      .breadcrumb-current i {
-        margin: 0;
-        font-size: 10px;
-      }
-      
-      .breadcrumb-separator {
-        margin: 0 1px;
-        font-size: 10px;
-      }
-      
-      .menu-toggle {
-        width: 45px;
-        height: 45px;
-        top: 15px;
-        left: 15px;
-        font-size: 20px;
-      }
-      
-      .header-container {
-        padding: 0 10px;
-        min-height: 65px;
-      }
-      
-      .header-content {
-        gap: 5px;
-      }
-      
-      .footer {
-        padding: 20px 15px;
-      }
-      
-      .footer-links {
-        flex-direction: column;
-        width: 100%;
-      }
-      
-      .footer-link {
-        justify-content: center;
-      }
+    /* ===== TIPOGRAFÍA ===== */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
     }
     
-    /* Estilo para pantallas muy pequeñas */
-    @media (max-width: 360px) {
-      .header-container {
-        padding: 0 8px;
-      }
-      
-      .breadcrumb-link,
-      .breadcrumb-current {
-        padding: 4px 5px;
-        font-size: 12px;
-      }
-      
-      .breadcrumb-separator {
-        font-size: 9px;
-      }
+    h1 {
+      font-size: 2rem;
+      color: var(--primary-dark);
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      border-left: 3px solid var(--rosa-clarito);
+      padding-left: 1rem;
+    }
+    
+    /* ===== TABLAS ===== */
+    .table {
+      color: var(--text-dark);
+    }
+    
+    .table thead th {
+      border-bottom: 1px solid var(--border-pink-light);
+      font-weight: 500;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-soft);
+    }
+    
+    .table td {
+      border-bottom: 1px solid var(--border-pink-light);
+      padding: 1rem 0.5rem;
+      vertical-align: middle;
+    }
+    
+    .table tbody tr:hover {
+      background-color: var(--bg-pink-soft);
+    }
+    
+    /* ===== CARDS CON EFECTOS ROSA ===== */
+    .card {
+      border: 1px solid var(--border-pink-light);
+      border-radius: 8px;
+      background: var(--blanco);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-pink-md);
+      border-color: var(--rosa-clarito);
+    }
+    
+    .card-header {
+      background: var(--blanco);
+      border-bottom: 1px solid var(--border-pink-light);
+      padding: 1rem 1.25rem;
+      font-weight: 500;
+      color: var(--primary-dark);
+    }
+    
+    .card-body {
+      padding: 1.25rem;
+    }
+    
+    /* ===== FORMULARIOS ===== */
+    .form-control, .form-select {
+      border: 1px solid var(--border-pink-light);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--rosa-clarito);
+      box-shadow: 0 0 0 3px var(--sombra-rosa-claro);
+    }
+    
+    .form-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-soft);
+      margin-bottom: 0.25rem;
+    }
+    
+    /* ===== BADGES CON COLORES ===== */
+    .badge-verde {
+      background-color: var(--verde-primario);
+      color: white;
+    }
+    
+    .badge-rosa {
+      background-color: var(--rosa-clarito);
+      color: var(--text-dark);
+    }
+    
+    /* ===== ANIMACIONES ===== */
+    .fade-in {
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* ===== EFECTOS ESPECIALES ROSA ===== */
+    .glow-pink {
+      box-shadow: 0 0 15px var(--sombra-rosa-sem-transparente);
+    }
+    
+    .border-pink {
+      border-color: var(--rosa-clarito) !important;
+    }
+    
+    .text-pink {
+      color: var(--rosa-clarito) !important;
+    }
+    
+    .bg-pink-soft {
+      background-color: var(--bg-pink-soft) !important;
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Botón hamburguesa - VISIBLE SIEMPRE -->
-    <button class="menu-toggle" id="menuToggle">
-      <i class="fas fa-bars"></i>
-    </button>
-    
-    <!-- Overlay para cerrar menú en móviles -->
-    <div class="overlay" id="overlay"></div>
-    
-    <!-- Menú lateral - OCULTO POR DEFECTO -->
-    <!-- En tu menú lateral (sidebar) -->
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <h2>Sistema de Interacciones</h2>
-    <p>Menú de navegación</p>
-  </div>
-  <ul class="menu-items">
-    <li>
-      <%= link_to root_path, class: "menu-item", data: {url: "/"} do %>
-        <i class="fas fa-home"></i>
-        <span>Inicio</span>
-      <% end %>
-    </li>
-    <li>
-      <%= link_to dashboard_path, class: "menu-item", data: {url: "/dashboard"} do %>
-        <i class="fas fa-database"></i>
-        <span>Interacción con DB</span>
-      <% end %>
-    </li>
-    <li>
-      <%= link_to error_page_path, class: "menu-item", data: {url: "/error_page"} do %>
-        <i class="fas fa-exclamation-triangle"></i>
-        <span>Pantalla de Error</span>
-      <% end %>
-    </li>
-    <li>
-      <%= link_to personal_data_path, class: "menu-item", data: {url: "/personal_data"} do %>
-        <i class="fas fa-user-circle"></i>
-        <span>Datos Personales</span>
-      <% end %>
-    </li>
-    <li>
-      <%= link_to system_info_path, class: "menu-item", data: {url: "/system_info"} do %>
-        <i class="fas fa-server"></i>
-        <span>Información del Sistema</span>
-      <% end %>
-    </li>
-  </ul>
-</nav>
-    
-    <!-- HEADER UNIFICADO CON MENÚ Y BREADCRUMBS -->
-    <header class="header-container">
-      <div class="header-content">
-        <!-- Los breadcrumbs dinámicos se insertarán aquí -->
-        <div class="breadcrumbs-wrapper" id="breadcrumbsWrapper"></div>
+  <!-- NAVBAR FIJO CON BOTÓN MENÚ HAMBURGUESA IZQUIERDO -->
+  <nav class="global-navbar">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <!-- Botón menú hamburguesa -->
+        <button class="menu-toggle me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuOffcanvas" aria-controls="menuOffcanvas">
+          <i class="bi bi-list"></i>
+        </button>
+        
+        <!-- Logo/Brand -->
+        <a class="navbar-brand fw-bold" href="/">
+          <i class="bi bi-flower2 me-2"></i>Mi App Rails
+        </a>
       </div>
-    </header>
-    
-    <!-- Contenido principal - CENTRADO -->
-    <main class="main-content" id="mainContent">
+      
+      <!-- Info rápida con toque rosa -->
+      <div class="text-dark small d-none d-md-block">
+        <i class="bi bi-person-circle me-1" style="color: var(--rosa-clarito);"></i>
+        <span style="color: var(--text-soft);">Usuario</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- OFFCANVAS MENÚ LATERAL IZQUIERDO -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="menuOffcanvas" aria-labelledby="menuOffcanvasLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="menuOffcanvasLabel">
+        <i class="bi bi-flower2 me-2"></i>Menú Principal
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- SECCIÓN PRINCIPAL -->
+      <div class="menu-section">
+        <div class="menu-section-title">
+          Principal
+        </div>
+        <%= link_to root_path, class: "menu-item #{'active' if current_page?(root_path)}" do %>
+          <i class="bi bi-house"></i> Inicio
+        <% end %>
+        <%= link_to dashboard_path, class: "menu-item #{'active' if current_page?(dashboard_path)}" do %>
+          <i class="bi bi-speedometer2"></i> Interacción BDD
+        <% end %>
+        <%= link_to personal_data_path, class: "menu-item #{'active' if current_page?(personal_data_path)}" do %>
+          <i class="bi bi-person-badge"></i> Datos Personales
+        <% end %>
+      </div>
+
+      <!-- SECCIÓN SISTEMA -->
+      <div class="menu-section">
+        <div class="menu-section-title">
+          Sistema
+        </div>
+        <%= link_to system_info_path, class: "menu-item #{'active' if current_page?(system_info_path)}" do %>
+          <i class="bi bi-info-circle"></i> Info Sistema
+        <% end %>
+        
+        <!-- Submenú de advanced_dashboard -->
+        <div class="submenu">
+          <%= link_to advanced_dashboard_path, class: "menu-item #{'active' if current_page?(advanced_dashboard_path)}" do %>
+            <i class="bi bi-graph-up"></i> Dashboard Avanzado
+          <% end %>
+        </div>
+      </div>
+
+      <!-- SECCIÓN MÓDULOS -->
+      <div class="menu-section">
+        <div class="menu-section-title">
+          Módulos
+        </div>
+        <%= link_to carousel_path, class: "menu-item #{'active' if current_page?(carousel_path)}" do %>
+          <i class="bi bi-images"></i> Carrusel
+        <% end %>
+        <%= link_to products_path, class: "menu-item #{'active' if current_page?(products_path)}" do %>
+          <i class="bi bi-box-seam"></i> Productos
+        <% end %>
+      </div>
+
+      <!-- SECCIÓN UTILIDADES -->
+      <div class="menu-section">
+        <div class="menu-section-title">
+          Utilidades
+        </div>
+        <%= link_to error_page_path, class: "menu-item #{'active' if current_page?(error_page_path)}" do %>
+          <i class="bi bi-exclamation-triangle"></i> Error Aleatorio
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="main-container">
+    <div class="content-wrapper">
+      <!-- BREADCRUMB DINÁMICO -->
+      <nav aria-label="breadcrumb" class="custom-breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <% if content_for?(:breadcrumb) %>
+            <%= yield :breadcrumb %>
+          <% else %>
+            <!-- Breadcrumb automático -->
+            <li class="breadcrumb-item">
+              <%= link_to root_path do %>
+                <i class="bi bi-house-door"></i> Inicio
+              <% end %>
+            </li>
+            
+            <%# Determinar breadcrumb según la ruta actual %>
+            <% if current_page?(dashboard_path) %>
+              <li class="breadcrumb-item active">Dashboard</li>
+            <% elsif current_page?(personal_data_path) %>
+              <li class="breadcrumb-item active">Datos Personales</li>
+            <% elsif current_page?(system_info_path) %>
+              <li class="breadcrumb-item active">Información del Sistema</li>
+            <% elsif current_page?(advanced_dashboard_path) %>
+              <li class="breadcrumb-item"><%= link_to "Sistema", system_info_path %></li>
+              <li class="breadcrumb-item active">Dashboard Avanzado</li>
+            <% elsif current_page?(carousel_path) %>
+              <li class="breadcrumb-item active">Carrusel</li>
+            <% elsif current_page?(questionnaire_path) %>
+              <li class="breadcrumb-item active">Formulario</li>
+            <% elsif current_page?(questionnaire_list_path) %>
+              <li class="breadcrumb-item active">Lista de Respuestas</li>
+            <% elsif current_page?(random_error_path) %>
+              <li class="breadcrumb-item active">Error Aleatorio</li>
+            <% end %>
+          <% end %>
+        </ol>
+      </nav>
+
+      <!-- MENSAJES FLASH -->
+      <% if flash.any? %>
+        <div class="flash-messages">
+          <% flash.each do |type, message| %>
+            <% alert_class = case type.to_sym
+              when :notice, :success then "alert-success"
+              when :alert, :error, :danger then "alert-danger"
+              else "alert-info"
+            end %>
+            
+            <div class="alert <%= alert_class %> alert-global fade-in alert-dismissible" role="alert">
+              <i class="bi <%= type.to_sym == :success ? 'bi-check-circle' : 'bi-exclamation-circle' %> me-2"></i>
+              <%= message %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- CONTENIDO ESPECÍFICO DE CADA VISTA -->
       <%= yield %>
-    </main>
-    
-    <!-- Footer - FIJO AL FINAL -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-info">
-          <h3 class="footer-title">
-            <i class="fas fa-shield-check"></i> Sistema Seguro Demo
-          </h3>
-          <p class="footer-text">
-            Aplicación de demostración con interacciones de base de datos, 
-            manejo de errores y verificación de seguridad.
+    </div>
+  </main>
+
+  <!-- FOOTER GLOBAL -->
+  <footer class="global-footer">
+    <div class="main-container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-start">
+          <h6 class="mb-2">
+            <i class="bi bi-flower2 me-2"></i>Aplicación de Prueba
+          </h6>
+          <p class="small mb-0">
+            Proyecto avanzado en producción con Ruby on Rails
+          </p>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="small">
+            <i class="bi bi-cpu me-1"></i> Rails 
+            <span class="mx-2" style="color: var(--rosa-clarito);">•</span>
+            <i class="bi bi-database me-1"></i> PostgreSQL
+            <span class="mx-2" style="color: var(--rosa-clarito);">•</span>
+            <i class="bi bi-cloud me-1"></i> Render
+          </div>
+          <p class="small mt-2 mb-0">
+            <i class="bi bi-heart-fill me-1" style="color: var(--rosa-clarito);"></i>
+            Diseñado con la nueva paleta de colores
           </p>
         </div>
       </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
+
+  <!-- BOOTSTRAP JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   
-  <!-- JavaScript para breadcrumbs y menú -->
+  <!-- JAVASCRIPT ESPECÍFICO -->
+  <%= yield :javascript if content_for?(:javascript) %>
+  
+  <!-- JAVASCRIPT GLOBAL -->
   <script>
-    // ============ CONFIGURACIÓN DE MENÚ ============
-    const menuToggle = document.getElementById('menuToggle');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const menuItems = document.querySelectorAll('.menu-item');
-    const breadcrumbsWrapper = document.getElementById('breadcrumbsWrapper');
-    
-    // Función para abrir/cerrar menú
-    function toggleMenu() {
-      const isOpening = !sidebar.classList.contains('active');
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('✅ Aplicación Rails cargada - Nueva paleta: Verdes y Rosas');
       
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-      menuToggle.classList.toggle('active');
+      // Auto-ocultar alertas
+      setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+          const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+          bsAlert.close();
+        });
+      }, 5000);
       
-      // Cambiar icono del botón
-      const icon = menuToggle.querySelector('i');
-      if (sidebar.classList.contains('active')) {
-        icon.className = 'fas fa-times';
-        // Posicionar botón correctamente cuando sidebar está abierto
-        if (window.innerWidth > 768) {
-          menuToggle.style.left = '300px';
-        } else {
-          menuToggle.style.left = 'calc(100% - 70px)';
-        }
-      } else {
-        icon.className = 'fas fa-bars';
-        menuToggle.style.left = '20px';
-      }
+      // Cerrar offcanvas al hacer clic en un enlace (mobile)
+      const menuItems = document.querySelectorAll('.menu-item');
+      const offcanvas = document.getElementById('menuOffcanvas');
       
-      // Prevenir scroll en body cuando menú está abierto
-      document.body.style.overflow = isOpening ? 'hidden' : '';
-    }
-    
-    // Inicializar event listeners
-    menuToggle.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
-    
-    // Cerrar menú con tecla ESC
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && sidebar.classList.contains('active')) {
-        toggleMenu();
-      }
-    });
-    
-    // Ajustar posición del botón en resize
-    window.addEventListener('resize', () => {
-      if (sidebar.classList.contains('active')) {
-        if (window.innerWidth > 768) {
-          menuToggle.style.left = '300px';
-        } else {
-          menuToggle.style.left = 'calc(100% - 70px)';
-        }
-      } else {
-        menuToggle.style.left = '20px';
-      }
-    });
-    
-    // Marcar elemento activo según la página actual
-    function setActiveMenuItem() {
-      const currentPath = window.location.pathname;
       menuItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.url === currentPath) {
-          item.classList.add('active');
-        }
+        item.addEventListener('click', () => {
+          if (window.innerWidth < 992) {
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+            if (bsOffcanvas) bsOffcanvas.hide();
+          }
+        });
       });
-    }
-    
-    // ============ CONFIGURACIÓN DE BREADCRUMBS ============
-const breadcrumbsConfig = {
-  '/': {
-    title: 'Inicio',
-    icon: 'fa-home',
-    breadcrumbs: []
-  },
-  '/dashboard': {
-    title: 'Interacción con Base de Datos',
-    icon: 'fa-database',
-    breadcrumbs: [
-      { path: '/', title: 'Inicio', icon: 'fa-home' }
-    ]
-  },
-  '/error_page': {
-    title: 'Simulación de Error',
-    icon: 'fa-exclamation-triangle',
-    breadcrumbs: [
-      { path: '/', title: 'Inicio', icon: 'fa-home' }
-    ]
-  },
-  '/personal_data': {
-    title: 'Datos Personales',
-    icon: 'fa-user-circle',
-    breadcrumbs: [
-      { path: '/', title: 'Inicio', icon: 'fa-home' }
-    ]
-  },
-  '/system_info': {
-    title: 'Información del Sistema',
-    icon: 'fa-server',
-    breadcrumbs: [
-      { path: '/', title: 'Inicio', icon: 'fa-home' }
-    ]
-  },
-  
-  '/advanced_dashboard': {
-    title: 'Dashboard Avanzado',
-    icon: 'fa-chart-line',
-    breadcrumbs: [
-      { path: '/', title: 'Inicio', icon: 'fa-home' },
-      { path: '/system_info', title: 'Información del Sistema', icon: 'fa-server' }
-    ]
-  }
-};
-    
-    // Función para crear breadcrumbs dinámicamente
-    function createBreadcrumbs() {
-      const currentPath = window.location.pathname;
-      const config = breadcrumbsConfig[currentPath] || breadcrumbsConfig['/'];
-      
-      // Limpiar breadcrumbs existentes
-      breadcrumbsWrapper.innerHTML = '';
-      
-      // Crear breadcrumbs según la configuración
-      if (config.breadcrumbs && config.breadcrumbs.length > 0) {
-        // Crear breadcrumbs intermedios
-        config.breadcrumbs.forEach((crumb, index) => {
-          const breadcrumbItem = createBreadcrumbItem(crumb, false);
-          breadcrumbsWrapper.appendChild(breadcrumbItem);
-          
-          // Añadir separador después de cada breadcrumb
-          if (index < config.breadcrumbs.length - 1 || (config.breadcrumbs.length === 1 && currentPath !== '/')) {
-            const nextSeparator = document.createElement('span');
-            nextSeparator.className = 'breadcrumb-separator';
-            nextSeparator.textContent = '/';
-            breadcrumbsWrapper.appendChild(nextSeparator);
-          }
-        });
-      }
-      
-      // Añadir breadcrumb actual si no es la página de inicio
-      if (currentPath !== '/') {
-        const finalSeparator = document.createElement('span');
-        finalSeparator.className = 'breadcrumb-separator';
-        finalSeparator.textContent = '/';
-        breadcrumbsWrapper.appendChild(finalSeparator);
-        
-        const currentBreadcrumb = createBreadcrumbItem(
-          { path: currentPath, title: config.title, icon: config.icon },
-          true
-        );
-        breadcrumbsWrapper.appendChild(currentBreadcrumb);
-      }
-    }
-    
-    // Función para crear un elemento de breadcrumb
-    function createBreadcrumbItem(crumb, isCurrent = false) {
-      const item = document.createElement('div');
-      item.className = 'breadcrumb-item';
-      
-      if (isCurrent) {
-        const currentElement = document.createElement('span');
-        currentElement.className = 'breadcrumb-current';
-        
-        if (crumb.icon) {
-          const icon = document.createElement('i');
-          icon.className = `fas ${crumb.icon}`;
-          currentElement.appendChild(icon);
-        }
-        
-        const text = document.createElement('span');
-        text.textContent = crumb.title;
-        currentElement.appendChild(text);
-        
-        item.appendChild(currentElement);
-      } else {
-        const link = document.createElement('a');
-        link.href = crumb.path;
-        link.className = 'breadcrumb-link';
-        
-        // QUITAMOS el evento que abre el menú - SOLO NAVEGACIÓN
-        link.addEventListener('click', function(e) {
-          // Solo navegamos, no abrimos el menú
-          if (sidebar.classList.contains('active')) {
-            toggleMenu(); // Cerramos menú si está abierto
-          }
-        });
-        
-        if (crumb.icon) {
-          const icon = document.createElement('i');
-          icon.className = `fas ${crumb.icon}`;
-          link.appendChild(icon);
-        }
-        
-        const text = document.createElement('span');
-        text.textContent = crumb.title;
-        link.appendChild(text);
-        
-        item.appendChild(link);
-      }
-      
-      return item;
-    }
-    
-    // Función para actualizar breadcrumbs dinámicamente
-    function updateBreadcrumb(title, icon = null) {
-      const currentPath = window.location.pathname;
-      if (!breadcrumbsConfig[currentPath]) {
-        breadcrumbsConfig[currentPath] = {
-          title: title,
-          icon: icon,
-          breadcrumbs: [
-            { path: '/', title: 'Inicio', icon: 'fa-home' }
-          ]
-        };
-      } else {
-        breadcrumbsConfig[currentPath].title = title;
-        if (icon) breadcrumbsConfig[currentPath].icon = icon;
-      }
-      createBreadcrumbs();
-    }
-    
-    // Función para navegar y actualizar breadcrumbs
-    function navigateWithBreadcrumbs(path, title, icon = null) {
-      if (path !== window.location.pathname) {
-        if (!breadcrumbsConfig[path]) {
-          breadcrumbsConfig[path] = {
-            title: title,
-            icon: icon,
-            breadcrumbs: [
-              { path: '/', title: 'Inicio', icon: 'fa-home' },
-              ...breadcrumbsConfig[window.location.pathname]?.breadcrumbs || []
-            ]
-          };
-        }
-        
-        // Cerrar menú si está abierto
-        if (sidebar.classList.contains('active')) {
-          toggleMenu();
-        }
-        
-        window.location.href = path;
-      }
-    }
-    
-    // Inicializar todo cuando se carga la página
-    document.addEventListener('DOMContentLoaded', () => {
-      setActiveMenuItem();
-      createBreadcrumbs();
-      
-      // Actualizar breadcrumbs cuando cambia la URL
-      window.addEventListener('popstate', createBreadcrumbs);
-      
-      // Ajustar posición inicial del botón
-      if (window.innerWidth <= 768) {
-        menuToggle.style.fontSize = '20px';
-      }
     });
+    
+    // Función global para mostrar alertas
+    window.showAlert = function(type, message, duration = 5000) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type} alert-global alert-dismissible fade show`;
+      alertDiv.innerHTML = `
+        <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      const container = document.querySelector('.flash-messages');
+      if (container) {
+        container.appendChild(alertDiv);
+      } else {
+        const contentWrapper = document.querySelector('.content-wrapper');
+        if (contentWrapper) {
+          contentWrapper.prepend(alertDiv);
+        }
+      }
+      
+      setTimeout(() => {
+        const bsAlert = bootstrap.Alert.getInstance(alertDiv);
+        if (bsAlert) bsAlert.close();
+      }, duration);
+    };
   </script>
 </body>
 </html>

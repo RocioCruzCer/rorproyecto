@@ -1,0 +1,153 @@
+<%# app/views/welcome/_product_list.html.erb %>
+
+<% if products && products.any? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Marca</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.each_with_index do |product, index| %>
+          <tr>
+            <td data-label="#">#<%= ((products.current_page - 1) * 15) + index + 1 %></td>
+            <td data-label="Nombre"><strong><%= product.name %></strong></td>
+            <td data-label="Categoría">
+              <span class="category-badge"><i class="bi bi-tag"></i> <%= product.category %></span>
+            </td>
+            <td data-label="Precio">
+              <span class="price-badge"><i class="bi bi-currency-dollar"></i> $<%= number_with_delimiter(product.price) %></span>
+            </td>
+            <td data-label="Marca">
+              <span class="brand-badge"><i class="bi bi-building"></i> <%= product.brand %></span>
+            </td>
+            <td data-label="Fecha">
+              <small class="text-muted"><i class="bi bi-calendar3"></i> <%= product.created_at.strftime("%d/%m/%Y") %></small>
+            </td>
+            <td data-label="Acciones">
+              <div class="action-buttons">
+                <button type="button" class="btn-action btn-edit" onclick='editProduct(<%= product.id %>, <%= product.name.to_json.html_safe %>, <%= product.category.to_json.html_safe %>, <%= product.price %>, <%= product.brand.to_json.html_safe %>)'>
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button type="button" class="btn-action btn-delete" onclick='confirmDelete(<%= product.id %>, <%= product.name.to_json.html_safe %>)'>
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación con PRIMERO y ÚLTIMO -->
+  <% if products.total_pages > 1 %>
+    <div class="pagination-container">
+      <nav>
+        <ul class="pagination">
+          <!-- Botón PRIMERO -->
+          <% if products.current_page > 1 %>
+            <li class="page-item">
+              <a href="?page=1" class="page-link" data-remote="true" title="Ir a la primera página">
+                <i class="bi bi-chevron-double-left"></i> Primero
+              </a>
+            </li>
+          <% else %>
+            <li class="page-item disabled">
+              <span class="page-link" title="Ya estás en la primera página">
+                <i class="bi bi-chevron-double-left"></i> Primero
+              </span>
+            </li>
+          <% end %>
+
+          <!-- Botón ANTERIOR -->
+          <% if products.prev_page %>
+            <li class="page-item">
+              <a href="?page=<%= products.prev_page %>" class="page-link" data-remote="true" title="Página anterior">
+                <i class="bi bi-chevron-left"></i> Anterior
+              </a>
+            </li>
+          <% else %>
+            <li class="page-item disabled">
+              <span class="page-link" title="Ya estás en la primera página">
+                <i class="bi bi-chevron-left"></i> Anterior
+              </span>
+            </li>
+          <% end %>
+
+          <!-- Números de página (mostramos solo algunos para no saturar) -->
+          <% 
+            start_page = [products.current_page - 2, 1].max
+            end_page = [start_page + 4, products.total_pages].min
+            start_page = [end_page - 4, 1].max
+          %>
+          
+          <% if start_page > 1 %>
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+          <% end %>
+
+          <% (start_page..end_page).each do |page| %>
+            <li class="page-item <%= 'active' if page == products.current_page %>">
+              <a href="?page=<%= page %>" class="page-link" data-remote="true"><%= page %></a>
+            </li>
+          <% end %>
+
+          <% if end_page < products.total_pages %>
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+          <% end %>
+
+          <!-- Botón SIGUIENTE -->
+          <% if products.next_page %>
+            <li class="page-item">
+              <a href="?page=<%= products.next_page %>" class="page-link" data-remote="true" title="Página siguiente">
+                Siguiente <i class="bi bi-chevron-right"></i>
+              </a>
+            </li>
+          <% else %>
+            <li class="page-item disabled">
+              <span class="page-link" title="Ya estás en la última página">
+                Siguiente <i class="bi bi-chevron-right"></i>
+              </span>
+            </li>
+          <% end %>
+
+          <!-- Botón ÚLTIMO -->
+          <% if products.current_page < products.total_pages %>
+            <li class="page-item">
+              <a href="?page=<%= products.total_pages %>" class="page-link" data-remote="true" title="Ir a la última página">
+                Último <i class="bi bi-chevron-double-right"></i>
+              </a>
+            </li>
+          <% else %>
+            <li class="page-item disabled">
+              <span class="page-link" title="Ya estás en la última página">
+                Último <i class="bi bi-chevron-double-right"></i>
+              </span>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+      
+      <!-- Información de páginas -->
+      <div class="pagination-info text-center mt-2">
+        <small class="text-muted">
+          Página <strong><%= products.current_page %></strong> de <strong><%= products.total_pages %></strong>
+          | Total de productos: <strong><%= products.total_count %></strong>
+        </small>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <div class="text-center py-5">
+    <i class="bi bi-inbox" style="font-size: 60px; color: var(--rosa-clarito);"></i>
+    <h4 class="mt-3 text-muted">No hay productos registrados</h4>
+    <p class="text-muted">Comienza agregando tu primer producto</p>
+  </div>
+<% end %>
