@@ -41,14 +41,12 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
     bundle exec bootsnap precompile -j 1 --gemfile
 
 # Copy application code
 COPY . .
 
 # Precompile bootsnap code for faster boot times.
-# -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
 # Adjust binfiles to be executable on Linux
@@ -58,9 +56,6 @@ RUN chmod +x bin/* && \
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
-
-
-
 
 # Final stage for app image
 FROM base
@@ -77,8 +72,8 @@ COPY --chown=rails:rails --from=build /rails /rails
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Start server via Thruster by default, this can be overwritten at runtime
-EXPOSE 80
+# Start server on port 3000 (Non-root users cannot bind to port 80)
+EXPOSE 3000
 
-# Fix deploy
-CMD ["bin/rails", "server", "-b", "0.0.0.0"]
+# Fix deploy: Borrar PIDs viejos, preparar la BD y arrancar Puma
+CMD bash -c "rm -f tmp/pids/server.pid && sleep 10 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p ${PORT:-3000}"
