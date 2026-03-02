@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  # ===== HEALTHCHECK PARA RAILWAY (DEBE IR PRIMERO) =====
+  # Estas rutas responden inmediatamente sin cargar la app completa
+  get "up" => "rails/health#show", as: :rails_health_check
+  get "healthcheck" => "rails/health#show"
+  
+  # Ruta raíz para el healthcheck de Railway (responde en /)
+  # IMPORTANTE: Esto NO reemplaza tu root, solo asegura que / responda OK
+  root to: proc { [200, {}, ["OK"]] }, constraints: ->(req) { req.path == "/" }
+  
+  # ===== TUS RUTAS EXISTENTES (todo igual) =====
   # Rutas existentes
   root "welcome#index"
 
