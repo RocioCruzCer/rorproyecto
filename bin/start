@@ -1,0 +1,19 @@
+#!/bin/bash
+# bin/start
+
+echo "⏳ Esperando a que PostgreSQL esté listo..."
+max_retries=30
+retries=0
+
+until pg_isready -h postgres.railway.internal -p 5432; do
+  retries=$((retries + 1))
+  if [ $retries -eq $max_retries ]; then
+    echo "❌ PostgreSQL no está listo después de $max_retries intentos"
+    exit 1
+  fi
+  echo "🔄 PostgreSQL no está listo, reintentando en 2s... ($retries/$max_retries)"
+  sleep 2
+done
+
+echo "✅ PostgreSQL está listo, iniciando Rails..."
+bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p 3000
