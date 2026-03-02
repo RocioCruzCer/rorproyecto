@@ -1,17 +1,13 @@
 Rails.application.routes.draw do
-  # ===== HEALTHCHECK PARA RAILWAY (DEBE IR PRIMERO) =====
-  # Estas rutas responden inmediatamente sin cargar la app completa
+  # ===== HEALTHCHECK PARA RAILWAY =====
+  # Estas rutas son las que usa Railway para verificar que la app está viva
   get "up" => "rails/health#show", as: :rails_health_check
   get "healthcheck" => "rails/health#show"
   
-  # Ruta raíz para el healthcheck de Railway (responde en /)
-  # IMPORTANTE: Esto NO reemplaza tu root, solo asegura que / responda OK
-  root to: proc { [200, {}, ["OK"]] }, constraints: ->(req) { req.path == "/" }
-  
-  # ===== TUS RUTAS EXISTENTES (todo igual) =====
-  # Rutas existentes
+  # ===== TU RUTA RAÍZ ORIGINAL (SOLO UNA) =====
   root "welcome#index"
 
+  # ===== TUS DEMÁS RUTAS (todo igual) =====
   get "dashboard", to: "welcome#dashboard"
   get "error_page", to: "welcome#error_page"
   get "personal_data", to: "welcome#personal_data"
@@ -31,7 +27,7 @@ Rails.application.routes.draw do
   get "questionnaire_data", to: "welcome#questionnaire_data"
   get "questionnaire_list", to: "welcome#questionnaire_list"
 
-  # ===== RUTAS PARA PRODUCTOS (CORREGIDAS) =====
+  # Rutas para productos
   get "products", to: "welcome#products"
   post "products", to: "welcome#create_product"
   patch "products/:id", to: "welcome#update_product"
