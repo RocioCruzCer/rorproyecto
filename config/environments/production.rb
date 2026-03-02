@@ -1,3 +1,4 @@
+# config/environments/production.rb
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -18,59 +19,58 @@ Rails.application.configure do
   # Cache assets for far-future expiry since they are all digest stamped.
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
-  # IMPORTANTE: Esta línea debe estar así para Render
-  config.public_file_server.enabled = true  # Render necesita esto en true
-
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # ===== RAILWAY: Configuración para archivos estáticos =====
+  # Railway necesita esto para servir assets
+  config.public_file_server.enabled = true
+  
+  # ===== RAILWAY: Configuración para Active Storage con S3 =====
+  # Usamos el servicio :local en desarrollo, pero en producción queremos S3
+  # Asegúrate de tener config/storage.yml configurado con :amazon
+  config.active_storage.service = :amazon  # Cambiado de :local a :amazon
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  # config.assume_ssl = true
+  config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true  # Activar SSL para producción
+  config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" || request.path == "/healthcheck" } } }
 
-  # Log to STDOUT with the current request id as a default log tag.
+  # ===== RAILWAY: Log a STDOUT =====
   config.log_tags = [ :request_id ]
   config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
 
-  # Change to "debug" to log everything (including potentially personally-identifiable information!).
+  # Change to "debug" to log everything
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
-  # Prevent health checks from clogging up the logs.
+  # ===== RAILWAY: Prevent health checks from clogging logs =====
   config.silence_healthcheck_path = "/up"
 
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # IMPORTANTE: Cambia solid_cache_store por algo básico
-  config.cache_store = :null_store  # Temporal - cambia después si necesitas cache
-  
-  # O si prefieres memory_store (solo para una instancia):
-  # config.cache_store = :memory_store, { size: 64.megabytes }
+  # ===== RAILWAY: Configuración de caché =====
+  # Para Railway, podemos usar memory_store inicialmente
+  # Si necesitas caché persistente, considera usar Redis o solid_cache
+  config.cache_store = :memory_store, { size: 64.megabytes }
 
-  # IMPORTANTE: Mantén :async para Active Job
+  # ===== RAILWAY: Active Job =====
+  # Usamos async para simplicidad inicial
   config.active_job.queue_adapter = :async
-  
-  # COMENTA o ELIMINA estas líneas de solid_queue:
-  # config.active_job.queue_adapter = :solid_queue
-  # config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = false
 
-  # Set host to be used by links generated in mailer templates.
-  # IMPORTANTE: Cambia example.com por tu dominio real
-  config.action_mailer.default_url_options = { host: ENV.fetch('HOST', 'localhost:3000') }
+  # ===== RAILWAY: Configuración de Action Mailer =====
+  # IMPORTANTE: Configura el host cuando tengas tu dominio
+  host = ENV.fetch("RAILS_HOST", "localhost:3000")
+  config.action_mailer.default_url_options = { host: host, protocol: "https" }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
+  # Specify outgoing SMTP server if needed
   # config.action_mailer.smtp_settings = {
   #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
   #   password: Rails.application.credentials.dig(:smtp, :password),
@@ -79,8 +79,7 @@ Rails.application.configure do
   #   authentication: :plain
   # }
 
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
-  # the I18n.default_locale when a translation cannot be found).
+  # Enable locale fallbacks for I18n
   config.i18n.fallbacks = true
 
   # Do not dump schema after migrations.
@@ -89,12 +88,23 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  #
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # ===== RAILWAY: Configuración de hosts permitidos =====
+  # Importante para seguridad, permite el dominio de Railway
+  config.hosts = [
+    IPAddr.new("0.0.0.0/0"),        # Permite todas las IPs (necesario para Railway)
+    IPAddr.new("::/0"),              # Permite IPv6
+    /.*\.railway\.app/,              # Permite subdominios de railway.app
+    ENV["RAILS_HOST"].presence,      # Tu dominio personalizado si existe
+    "localhost",                     # Para healthchecks locales
+    "127.0.0.1"                      # Para healthchecks locales
+  ].compact
+
+  # Skip DNS rebinding protection for health check endpoints
+  config.host_authorization = { 
+    exclude: ->(request) {
+      request.path == "/up" || 
+      request.path == "/healthcheck" ||
+      request.path.start_with?("/rails/active_storage")  # Permitir acceso a imágenes
+    }
+  }
 end
