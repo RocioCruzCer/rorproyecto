@@ -10,6 +10,8 @@ Rails.application.configure do
   # Eager load code on boot for better performance and memory savings (ignored by Rake tasks).
   config.eager_load = true
 
+  config.secret_key_base = ENV["SECRET_KEY_BASE"] if ENV["SECRET_KEY_BASE"]
+
   # Full error reports are disabled.
   config.consider_all_requests_local = false
 
@@ -25,7 +27,7 @@ Rails.application.configure do
   # ===== RAILWAY: Configuración para archivos estáticos =====
   # Railway necesita esto para servir assets
   config.public_file_server.enabled = true
-  
+
   # ===== RAILWAY: Configuración para Active Storage con S3 =====
   # Usamos el servicio :local en desarrollo, pero en producción queremos S3
   # Asegúrate de tener config/storage.yml configurado con :amazon
@@ -100,9 +102,9 @@ Rails.application.configure do
   ].compact
 
   # Skip DNS rebinding protection for health check endpoints
-  config.host_authorization = { 
+  config.host_authorization = {
     exclude: ->(request) {
-      request.path == "/up" || 
+      request.path == "/up" ||
       request.path == "/healthcheck" ||
       request.path.start_with?("/rails/active_storage")  # Permitir acceso a imágenes
     }
