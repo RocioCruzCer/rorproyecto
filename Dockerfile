@@ -79,4 +79,6 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start server via Thruster by default, this can be overwritten at runtime
 EXPOSE 80
+
+# Fix deploy
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]
