@@ -1,18 +1,28 @@
-# config/storage.yml
-test:
-  service: Disk
-  root: <%= Rails.root.join("tmp/storage") %>
-
-local:
-  service: Disk
-  root: <%= Rails.root.join("storage") %>
-
-# ===== RAILWAY: Configuración para S3 =====
-amazon:
-  service: S3
-  access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
-  secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
-  region: <%= ENV['AWS_REGION'] %>
-  bucket: <%= ENV['S3_BUCKET_NAME'] %>
-  endpoint: <%= ENV['AWS_ENDPOINT_URL'] %>
-  force_path_style: <%= ENV['S3_FORCE_PATH_STYLE'] || false %>
+# config/initializers/carrierwave.rb
+CarrierWave.configure do |config|
+  # Configuración para producción (Railway)
+  if Rails.env.production?
+    config.storage = :fog
+    config.fog_credentials = {
+      provider: 'AWS',
+      aws_access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      aws_secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+      region: ENV['AWS_REGION'],
+      endpoint: ENV['AWS_ENDPOINT_URL'],
+      path_style: true
+    }
+    config.fog_directory = ENV['S3_BUCKET_NAME']
+    config.fog_public = true
+    config.fog_attributes = { cache_control: "public, max-age=#{365.days.to_i}" }
+    
+    # URL base para acceder a las imágenes
+    config.asset_host = ENV['AWS_ENDPOINT_URL']
+  else
+    # Desarrollo y test: almacenamiento local
+    config.storage = :file
+    config.enable_processing = false if Rails.env.test?
+  end
+  
+  config.cache_dir = "#{Rails.root}/tmp/uploads"
+  config.root = Rails.root
+end
