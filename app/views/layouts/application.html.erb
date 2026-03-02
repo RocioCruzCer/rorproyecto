@@ -594,62 +594,55 @@
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-      <!-- SECCIÓN PRINCIPAL -->
-      <div class="menu-section">
-        <div class="menu-section-title">
-          Principal
-        </div>
-        <%= link_to root_path, class: "menu-item #{'active' if current_page?(root_path)}" do %>
-          <i class="bi bi-house"></i> Inicio
-        <% end %>
-        <%= link_to dashboard_path, class: "menu-item #{'active' if current_page?(dashboard_path)}" do %>
-          <i class="bi bi-speedometer2"></i> Interacción BDD
-        <% end %>
-        <%= link_to personal_data_path, class: "menu-item #{'active' if current_page?(personal_data_path)}" do %>
-          <i class="bi bi-person-badge"></i> Datos Personales
-        <% end %>
-      </div>
+  <!-- PRINCIPAL: solo Inicio -->
+  <div class="menu-section">
+    <div class="menu-section-title">PRINCIPAL</div>
+    <%= link_to root_path, class: "menu-item #{'active' if current_page?(root_path)}" do %>
+      <i class="bi bi-house"></i> Inicio
+    <% end %>
+  </div>
 
-      <!-- SECCIÓN SISTEMA -->
-      <div class="menu-section">
-        <div class="menu-section-title">
-          Sistema
-        </div>
-        <%= link_to system_info_path, class: "menu-item #{'active' if current_page?(system_info_path)}" do %>
-          <i class="bi bi-info-circle"></i> Info Sistema
-        <% end %>
-        
-        <!-- Submenú de advanced_dashboard -->
-        <div class="submenu">
-          <%= link_to advanced_dashboard_path, class: "menu-item #{'active' if current_page?(advanced_dashboard_path)}" do %>
-            <i class="bi bi-graph-up"></i> Dashboard Avanzado
-          <% end %>
-        </div>
-      </div>
-
-      <!-- SECCIÓN MÓDULOS -->
-      <div class="menu-section">
-        <div class="menu-section-title">
-          Módulos
-        </div>
-        <%= link_to carousel_path, class: "menu-item #{'active' if current_page?(carousel_path)}" do %>
-          <i class="bi bi-images"></i> Carrusel
-        <% end %>
-        <%= link_to products_path, class: "menu-item #{'active' if current_page?(products_path)}" do %>
-          <i class="bi bi-box-seam"></i> Productos
-        <% end %>
-      </div>
-
-      <!-- SECCIÓN UTILIDADES -->
-      <div class="menu-section">
-        <div class="menu-section-title">
-          Utilidades
-        </div>
-        <%= link_to error_page_path, class: "menu-item #{'active' if current_page?(error_page_path)}" do %>
-          <i class="bi bi-exclamation-triangle"></i> Error Aleatorio
-        <% end %>
-      </div>
+  <!-- UNIDAD 1: Interacción BDD, Datos Personales, Info Sistema, Error Aleatorio -->
+  <div class="menu-section">
+    <div class="menu-section-title">UNIDAD 1</div>
+    
+    <%= link_to dashboard_path, class: "menu-item #{'active' if current_page?(dashboard_path)}" do %>
+      <i class="bi bi-speedometer2"></i> Interacción BDD
+    <% end %>
+    
+    <%= link_to personal_data_path, class: "menu-item #{'active' if current_page?(personal_data_path)}" do %>
+      <i class="bi bi-person-badge"></i> Datos Personales
+    <% end %>
+    
+    <%= link_to system_info_path, class: "menu-item #{'active' if current_page?(system_info_path)}" do %>
+      <i class="bi bi-info-circle"></i> Info Sistema
+    <% end %>
+    
+    <!-- Submenú de advanced_dashboard (depende de Info Sistema) -->
+    <div class="submenu">
+      <%= link_to advanced_dashboard_path, class: "menu-item #{'active' if current_page?(advanced_dashboard_path)}" do %>
+        <i class="bi bi-graph-up"></i> Dashboard Avanzado
+      <% end %>
     </div>
+    
+    <%= link_to error_page_path, class: "menu-item #{'active' if current_page?(error_page_path)}" do %>
+      <i class="bi bi-exclamation-triangle"></i> Error Aleatorio
+    <% end %>
+  </div>
+
+  <!-- UNIDAD 2: Carrusel y Productos -->
+  <div class="menu-section">
+    <div class="menu-section-title">UNIDAD 2</div>
+    
+    <%= link_to carousel_path, class: "menu-item #{'active' if current_page?(carousel_path)}" do %>
+      <i class="bi bi-images"></i> Carrusel
+    <% end %>
+    
+    <%= link_to products_path, class: "menu-item #{'active' if current_page?(products_path)}" do %>
+      <i class="bi bi-box-seam"></i> Productos
+    <% end %>
+  </div>
+</div>
   </div>
 
   <!-- CONTENEDOR PRINCIPAL -->

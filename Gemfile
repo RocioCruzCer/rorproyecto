@@ -6,27 +6,29 @@ gem "rails", "~> 8.1.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 
-# Use sqlite3 as the database for Active Record
-# SQLite solo para desarrollo y test
+# ===== CONFIGURACIÓN DE BASE DE DATOS =====
+# SQLite para desarrollo y test
 group :development, :test do
   gem "sqlite3"
 end
 
-# PostgreSQL solo para producción
+# PostgreSQL para producción (Railway)
 group :production do
   gem "pg"
+  gem "fog-aws" # Para almacenar archivos en AWS S3 en producción
 end
 
 # ===== GEMAS PARA EL CARRUSEL DE IMÁGENES =====
 gem "carrierwave", "~> 3.0"
-# Solo incluir mini_magick en desarrollo/producción donde haya ImageMagick
-group :development, :production do
-  gem "mini_magick", "~> 4.12", require: false
-end
+# mini_magick para procesamiento de imágenes (requiere ImageMagick)
+gem "mini_magick", "~> 4.12", require: false
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+
+# Paginación
 gem "kaminari"
+
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 
@@ -45,13 +47,16 @@ gem "recaptcha", require: "recaptcha/rails"
 # Para ordenar elementos (drag & drop)
 gem "acts_as_list", "~> 1.1"
 
+# Para Action Cable (WebSockets) - disponible en todos los entornos
+gem "solid_cable"
+
+# Use the database-backed adapters for Rails.cache and Active Job
+# Comentados por ahora, descomenta si los necesitas
+# gem "solid_cache"
+# gem "solid_queue"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-
-# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
-group :development, :test do
-  gem "solid_cable"
-end
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false

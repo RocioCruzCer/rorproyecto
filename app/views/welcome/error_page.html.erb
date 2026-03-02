@@ -104,13 +104,55 @@
           <li>Regresar a una página funcional del sistema</li>
         </ul>
       </div>
-      
     </div>
   </div>
 </div>
 
 <style>
-  /* Estilos ajustados para el layout con sidebar */
+  :root {
+    --verde-primario: #00A86B;
+    --verde-bosque: #2E8B57;
+    --verde-suave: #6F8F7A;
+    --verde-neon: #00C853;
+    --verde-oscuro: #008F4C;
+    --verde-profundo: #0B5D3B;
+    --verde-intermedio: #1A7D55;
+    --verde-muy-claro: #F0F7F3;
+    --verde-palido: #E8F3E9;
+    
+    --rosa-clarito: #FFB6C1;
+    --rosa-suave: #FFC0CB;
+    --rosa-palo: #FFE4E1;
+    --rosa-glow: #FFD9E6;
+    --rosa-muy-palido: #FFF0F5;
+    
+    --casi-negro: #2F2F2A;
+    --gris-medio: #5C5C55;
+    --blanco: #FFFFFF;
+    
+    --sombra-rosa-claro: rgba(255, 182, 193, 0.3);
+    --sombra-rosa-sem-transparente: rgba(255, 182, 193, 0.5);
+    --sombra-verde-transparente: rgba(11, 93, 59, 0.2);
+    
+    --primary-dark: var(--verde-profundo);
+    --primary-base: var(--verde-primario);
+    --primary-light: var(--verde-suave);
+    --accent-pink: var(--rosa-clarito);
+    --accent-pink-soft: var(--rosa-suave);
+    --bg-light: var(--verde-muy-claro);
+    --bg-secondary: var(--verde-palido);
+    --bg-pink-soft: var(--rosa-muy-palido);
+    --text-dark: var(--casi-negro);
+    --text-soft: var(--gris-medio);
+    --border-light: rgba(11, 93, 59, 0.08);
+    --border-pink-light: rgba(255, 182, 193, 0.3);
+    --shadow-sm: 0 2px 8px var(--sombra-verde-transparente);
+    --shadow-md: 0 4px 16px rgba(11, 93, 59, 0.08);
+    --shadow-pink-sm: 0 2px 8px var(--sombra-rosa-claro);
+    --shadow-pink-md: 0 4px 16px var(--sombra-rosa-sem-transparente);
+  }
+
+  /* Estilos del error container */
   .error-container {
     min-height: calc(100vh - 150px);
     display: flex;
@@ -120,13 +162,13 @@
   }
   
   .error-wrapper {
-    background-color: #FFFFFF;
+    background-color: var(--blanco);
     border-radius: 24px;
     padding: 40px;
     max-width: 900px;
     width: 100%;
-    box-shadow: 0 20px 60px rgba(11, 93, 59, 0.1);
-    border: 1px solid #E4DDC9;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-pink-light);
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -143,7 +185,7 @@
   .error-shape {
     width: 140px;
     height: 140px;
-    background: linear-gradient(135deg, #E0B100 0%, #F0C900 100%);
+    background: linear-gradient(135deg, var(--rosa-clarito) 0%, var(--rosa-suave) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -152,12 +194,12 @@
     top: 20px;
     left: 20px;
     z-index: 2;
-    box-shadow: 0 10px 30px rgba(224, 177, 0, 0.3);
+    box-shadow: var(--shadow-pink-md);
   }
   
   .error-shape i {
     font-size: 60px;
-    color: #2F2F2A;
+    color: var(--text-dark);
   }
   
   .error-rays {
@@ -170,7 +212,7 @@
   
   .ray {
     position: absolute;
-    background: linear-gradient(135deg, rgba(224, 177, 0, 0.2) 0%, transparent 100%);
+    background: linear-gradient(135deg, var(--sombra-rosa-sem-transparente) 0%, transparent 100%);
     border-radius: 4px;
   }
   
@@ -221,25 +263,25 @@
   }
   
   .error-code {
-    color: #2F2F2A;
+    color: var(--text-dark);
     font-size: 42px;
     font-weight: 800;
     margin-bottom: 10px;
   }
   
   .error-code .code-number {
-    color: #E0B100;
+    color: var(--rosa-clarito);
   }
   
   .error-title {
-    color: #0B5D3B;
+    color: var(--verde-profundo);
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 20px;
   }
   
   .error-description {
-    color: #6F8F7A;
+    color: var(--verde-suave);
     font-size: 16px;
     line-height: 1.6;
     margin-bottom: 30px;
@@ -248,20 +290,20 @@
     margin-right: auto;
   }
   
-  /* Estilos del contador */
+  /* Contador */
   .countdown-container {
     margin-bottom: 30px;
   }
   
   .countdown-card {
-    background: linear-gradient(135deg, #0B5D3B 0%, #1A7D55 100%);
+    background: linear-gradient(135deg, var(--verde-profundo) 0%, var(--verde-intermedio) 100%);
     border-radius: 16px;
     padding: 20px;
     display: flex;
     align-items: center;
     gap: 15px;
     position: relative;
-    box-shadow: 0 10px 30px rgba(11, 93, 59, 0.3);
+    box-shadow: var(--shadow-pink-md);
     animation: pulseCountdown 2s infinite;
   }
   
@@ -272,7 +314,7 @@
   
   .countdown-card i {
     font-size: 32px;
-    color: #FAF5E9;
+    color: var(--blanco);
   }
   
   .countdown-content {
@@ -281,14 +323,14 @@
   }
   
   .countdown-content h3 {
-    color: #FAF5E9;
+    color: var(--blanco);
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 5px;
   }
   
   .countdown-content p {
-    color: rgba(250, 245, 233, 0.9);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 13px;
     margin-bottom: 10px;
   }
@@ -303,14 +345,14 @@
   #countdown-display {
     font-size: 40px;
     font-weight: 800;
-    color: #FAF5E9;
+    color: var(--blanco);
     font-family: 'Courier New', monospace;
     min-width: 50px;
     text-align: center;
   }
   
   .seconds-text {
-    color: rgba(250, 245, 233, 0.9);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 16px;
     font-weight: 500;
   }
@@ -321,14 +363,14 @@
   
   .progress-bar {
     height: 6px;
-    background-color: rgba(250, 245, 233, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     overflow: hidden;
   }
   
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #FAF5E9 0%, #E0B100 100%);
+    background: linear-gradient(90deg, var(--blanco) 0%, var(--rosa-clarito) 100%);
     width: 100%;
     border-radius: 4px;
     transition: width 1s linear;
@@ -338,7 +380,7 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(250, 245, 233, 0.2);
+    background: rgba(255, 255, 255, 0.2);
     border: none;
     width: 28px;
     height: 28px;
@@ -347,26 +389,26 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #FAF5E9;
+    color: var(--blanco);
     transition: all 0.3s ease;
   }
   
   .cancel-btn:hover {
-    background: rgba(250, 245, 233, 0.4);
+    background: rgba(255, 255, 255, 0.4);
     transform: rotate(90deg);
   }
   
   .error-details-card {
-    background-color: #FAF5E9;
+    background-color: var(--bg-pink-soft);
     border-radius: 16px;
     padding: 25px;
     margin-bottom: 30px;
-    border: 1px solid #E4DDC9;
+    border: 1px solid var(--border-pink-light);
     text-align: left;
   }
   
   .error-details-card h3 {
-    color: #2F2F2A;
+    color: var(--text-dark);
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 20px;
@@ -376,7 +418,7 @@
   }
   
   .error-details-card h3 i {
-    color: #6F8F7A;
+    color: var(--verde-suave);
   }
   
   .details-grid {
@@ -390,7 +432,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid rgba(111, 143, 122, 0.2);
+    border-bottom: 1px solid var(--border-pink-light);
   }
   
   .detail-item:last-child {
@@ -398,20 +440,20 @@
   }
   
   .detail-label {
-    color: #6F8F7A;
+    color: var(--verde-suave);
     font-weight: 600;
     font-size: 13px;
   }
   
   .detail-value {
-    color: #2F2F2A;
+    color: var(--text-dark);
     font-weight: 500;
     font-size: 14px;
   }
   
   .severity-tag {
-    background-color: #E4DDC9;
-    color: #2F2F2A;
+    background-color: var(--border-pink-light);
+    color: var(--text-dark);
     padding: 4px 12px;
     border-radius: 50px;
     font-size: 12px;
@@ -443,38 +485,26 @@
   
   .action-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-pink-md);
   }
   
   .primary-btn {
-    background: linear-gradient(135deg, #0B5D3B 0%, #1A7D55 100%);
-    color: #FAF5E9;
-  }
-  
-  .primary-btn:hover {
-    box-shadow: 0 10px 25px rgba(11, 93, 59, 0.3);
+    background: linear-gradient(135deg, var(--verde-profundo) 0%, var(--verde-intermedio) 100%);
+    color: var(--blanco);
   }
   
   .secondary-btn {
-    background-color: #6F8F7A;
-    color: #FAF5E9;
-  }
-  
-  .secondary-btn:hover {
-    box-shadow: 0 10px 25px rgba(111, 143, 122, 0.3);
+    background-color: var(--verde-suave);
+    color: var(--blanco);
   }
   
   .tertiary-btn {
-    background-color: #E4DDC9;
-    color: #2F2F2A;
-  }
-  
-  .tertiary-btn:hover {
-    box-shadow: 0 10px 25px rgba(47, 47, 42, 0.1);
+    background-color: var(--border-pink-light);
+    color: var(--text-dark);
   }
   
   .error-tips {
-    background-color: #E4DDC9;
+    background-color: var(--border-pink-light);
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
@@ -482,7 +512,7 @@
   }
   
   .error-tips h4 {
-    color: #2F2F2A;
+    color: var(--text-dark);
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 12px;
@@ -492,7 +522,7 @@
   }
   
   .error-tips h4 i {
-    color: #E0B100;
+    color: var(--rosa-clarito);
   }
   
   .error-tips ul {
@@ -501,7 +531,7 @@
   }
   
   .error-tips li {
-    color: #6F8F7A;
+    color: var(--verde-suave);
     padding: 6px 0;
     padding-left: 25px;
     position: relative;
@@ -510,7 +540,7 @@
   
   .error-tips li:before {
     content: '•';
-    color: #0B5D3B;
+    color: var(--verde-profundo);
     font-size: 18px;
     position: absolute;
     left: 0;
@@ -711,7 +741,7 @@
     
     // Efecto visual
     const countdownDisplay = document.getElementById('countdown-display');
-    countdownDisplay.style.color = '#FAF5E9';
+    countdownDisplay.style.color = 'var(--blanco)';
     countdownDisplay.style.animation = 'none';
     
     setTimeout(() => {
@@ -774,12 +804,6 @@
     setInterval(updateTimestamp, 1000);
     setTimeout(typeEffect, 1000);
     startCountdown();
-    
-    // Actualizar breadcrumb específico para esta página
-    // Esta función está definida en el layout principal
-    if (typeof updateBreadcrumb === 'function') {
-      updateBreadcrumb('Simulación de Error', 'fa-exclamation-triangle');
-    }
     
     // Agregar animación de pulso para los últimos segundos
     const style = document.createElement('style');

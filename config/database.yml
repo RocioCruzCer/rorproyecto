@@ -12,6 +12,10 @@ test:
   database: storage/test.sqlite3
 
 production:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 5 } %>
   url: <%= ENV['DATABASE_URL'] %>
-  cable:
-    url: <%= ENV['DATABASE_URL'] %>
+  database: <%= ENV['DATABASE_NAME'] || 'railway_production' %>
+  username: <%= ENV['DATABASE_USER'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
