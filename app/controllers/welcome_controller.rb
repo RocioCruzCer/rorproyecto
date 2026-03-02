@@ -1,9 +1,9 @@
 class WelcomeController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [ 
-    :submit_questionnaire, 
-    :create_product, 
-    :update_product, 
-    :destroy_product 
+  skip_before_action :verify_authenticity_token, only: [
+    :submit_questionnaire,
+    :create_product,
+    :update_product,
+    :destroy_product
   ]
 
   def index
@@ -112,7 +112,7 @@ class WelcomeController < ApplicationController
 
   # ========== ACCIONES PARA PRODUCTOS ==========
   def products
-    @products = Product.order(created_at: :desc).page(params[:page]).per(15)
+    @products = Product.order(created_at: :desc).page(params[:page]).per(5)
     @product = Product.new
   rescue => e
     @products = []
@@ -120,29 +120,27 @@ class WelcomeController < ApplicationController
     flash.now[:alert] = "Error al cargar productos: #{e.message}"
   end
 
-# En WelcomeController - reemplaza SOLO estas acciones:
-
   def create_product
     @product = Product.new(product_params)
 
     respond_to do |format|
       if @product.save
-        @products = Product.order(created_at: :desc).page(params[:page]).per(15)
+        @products = Product.order(created_at: :desc).page(params[:page]).per(5)
         format.html { redirect_to products_path, notice: "Producto guardado exitosamente." }
-        format.json { 
+        format.json {
           render json: {
             success: true,
             message: "Producto guardado exitosamente.",
             product: @product,
-            html: render_to_string(partial: 'welcome/product_list', locals: { products: @products }, formats: [:html])
+            html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
           }
         }
       else
-        format.json { 
+        format.json {
           render json: {
             success: false,
             errors: @product.errors.full_messages
-          }, status: :unprocessable_entity 
+          }, status: :unprocessable_entity
         }
       end
     end
@@ -153,21 +151,21 @@ class WelcomeController < ApplicationController
 
     respond_to do |format|
       if @product.update(product_params)
-        @products = Product.order(created_at: :desc).page(params[:page]).per(15)
-        format.json { 
+        @products = Product.order(created_at: :desc).page(params[:page]).per(5)
+        format.json {
           render json: {
             success: true,
             message: "Producto actualizado exitosamente.",
             product: @product,
-            html: render_to_string(partial: 'welcome/product_list', locals: { products: @products }, formats: [:html])
+            html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
           }
         }
       else
-        format.json { 
+        format.json {
           render json: {
             success: false,
             errors: @product.errors.full_messages
-          }, status: :unprocessable_entity 
+          }, status: :unprocessable_entity
         }
       end
     end
@@ -176,14 +174,14 @@ class WelcomeController < ApplicationController
   def destroy_product
     @product = Product.find(params[:id])
     @product.destroy
-    
+
     respond_to do |format|
-      @products = Product.order(created_at: :desc).page(params[:page]).per(15)
-      format.json { 
+      @products = Product.order(created_at: :desc).page(params[:page]).per(5)
+      format.json {
         render json: {
           success: true,
           message: "Producto eliminado exitosamente.",
-          html: render_to_string(partial: 'welcome/product_list', locals: { products: @products }, formats: [:html])
+          html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
         }
       }
       format.html { redirect_to products_path, notice: "Producto eliminado exitosamente." }
@@ -191,13 +189,15 @@ class WelcomeController < ApplicationController
   end
 
   def search_products
-    @products = Product.where("name ILIKE :search OR category ILIKE :search OR brand ILIKE :search", 
-                              search: "%#{params[:q]}%")
-                      .order(created_at: :desc)
-                      .page(params[:page]).per(15)
-    
+    @products = if params[:q].present?
+      Product.where("name ILIKE :search OR category ILIKE :search OR brand ILIKE :search",
+                    search: "%#{params[:q]}%")
+    else
+      Product.all
+    end.order(created_at: :desc).page(params[:page]).per(5)
+
     render json: {
-      html: render_to_string(partial: 'welcome/product_list', locals: { products: @products }, formats: [:html])
+      html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
     }
   rescue => e
     render json: { html: "<p>Error: #{e.message}</p>" }

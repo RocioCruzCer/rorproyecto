@@ -32,6 +32,9 @@
     /* Header */
     .page-header {
       margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .page-header h1 {
@@ -52,114 +55,28 @@
       border-radius: 16px;
     }
 
-    /* Formulario */
-    .form-container {
-      background: var(--blanco);
-      border-radius: 30px;
-      padding: 30px;
-      margin-bottom: 40px;
-      box-shadow: 0 10px 30px var(--sombra-rosa-claro);
-      border: 1px solid rgba(255, 182, 193, 0.3);
-    }
-
-    .form-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-
-    .form-title h2 {
-      color: var(--verde-profundo);
-      font-size: 24px;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .form-title i {
-      color: var(--rosa-clarito);
-      font-size: 28px;
-    }
-
-    .products-form {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 0;
-    }
-
-    .form-group label {
-      color: var(--verde-profundo);
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .form-group label i {
-      color: var(--rosa-clarito);
-    }
-
-    .form-group .required {
-      color: #dc3545;
-      margin-left: 3px;
-    }
-
-    .form-control, .form-select {
-      border: 2px solid rgba(255, 182, 193, 0.3);
-      border-radius: 12px;
-      padding: 12px 15px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      width: 100%;
-    }
-
-    .form-control:focus, .form-select:focus {
-      border-color: var(--rosa-clarito);
-      box-shadow: 0 0 0 4px var(--sombra-rosa-claro);
-      outline: none;
-    }
-
-    .form-control.is-invalid {
-      border-color: #dc3545;
-    }
-
-    .invalid-feedback {
-      color: #dc3545;
-      font-size: 12px;
-      margin-top: 5px;
-      display: none;
-    }
-
-    .btn-submit {
+    .btn-add {
       background: linear-gradient(135deg, var(--verde-primario), var(--verde-oscuro));
       color: white;
       border: none;
-      border-radius: 12px;
+      border-radius: 50px;
       padding: 12px 30px;
       font-weight: 600;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
-      grid-column: span 4;
-      justify-self: start;
+      font-size: 16px;
     }
 
-    .btn-submit:hover {
+    .btn-add:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(0, 168, 107, 0.3);
     }
 
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    .btn-add i {
+      font-size: 20px;
     }
 
     /* Buscador */
@@ -307,7 +224,7 @@
       color: white;
     }
 
-    /* Paginación MEJORADA con Primero/Último */
+    /* Paginación */
     .pagination-container {
       display: flex;
       flex-direction: column;
@@ -372,7 +289,7 @@
       display: inline-block;
     }
 
-    /* Stats Cards - AHORA EN LA PARTE INFERIOR */
+    /* Stats Cards */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -422,7 +339,7 @@
       font-size: 14px;
     }
 
-    /* Modal */
+    /* Modales */
     .modal {
       display: none;
       position: fixed;
@@ -557,7 +474,12 @@
       border-radius: 12px;
       padding: 15px 20px;
       margin-top: 20px;
-      position: relative;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 2000;
+      min-width: 300px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
     .alert-success {
@@ -585,11 +507,15 @@
 
     /* Responsive */
     @media (max-width: 992px) {
-      .products-form {
-        grid-template-columns: repeat(2, 1fr);
+      .page-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
       }
-      .btn-submit {
-        grid-column: span 2;
+      
+      .btn-add {
+        width: 100%;
+        justify-content: center;
       }
     }
 
@@ -597,25 +523,22 @@
       .products-page {
         padding: 15px;
       }
-      .products-form {
-        grid-template-columns: 1fr;
-      }
-      .btn-submit {
-        grid-column: span 1;
-        width: 100%;
-      }
+      
       .stats-grid {
         grid-template-columns: 1fr;
       }
+      
       .table thead {
         display: none;
       }
+      
       .table tbody tr {
         display: block;
         margin-bottom: 15px;
         border: 1px solid rgba(255, 182, 193, 0.3);
         border-radius: 15px;
       }
+      
       .table tbody td {
         display: flex;
         justify-content: space-between;
@@ -623,9 +546,11 @@
         padding: 12px 15px;
         border-bottom: 1px solid rgba(255, 182, 193, 0.1);
       }
+      
       .table tbody td:last-child {
         border-bottom: none;
       }
+      
       .table tbody td::before {
         content: attr(data-label);
         font-weight: 600;
@@ -655,7 +580,7 @@
 
     @media (max-width: 576px) {
       .page-link span {
-        display: none; /* Oculta el texto "Primero", "Anterior", etc. en móviles */
+        display: none;
       }
       
       .page-link i {
@@ -670,103 +595,16 @@
 <% end %>
 
 <div class="products-page">
-  <!-- Header -->
+  <!-- Header con botón de agregar -->
   <div class="page-header">
     <h1>
       <i class="bi bi-box-seam"></i>
       Gestión de Productos
     </h1>
-  </div>
-
-  <!-- Formulario -->
-  <div class="form-container">
-    <div class="form-title">
+    <button class="btn-add" onclick="openModal('addModal')">
       <i class="bi bi-plus-circle"></i>
-      <h2>Registrar Nuevo Producto</h2>
-    </div>
-
-    <form id="productForm" class="products-form">
-      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-      
-      <div class="form-group">
-        <label for="product_name">
-          <i class="bi bi-card-heading"></i>
-          Nombre <span class="required">*</span>
-        </label>
-        <input type="text" id="product_name" name="product[name]" class="form-control" placeholder="Ej: Smartphone Galaxy S23" required>
-        <div class="invalid-feedback" id="name-error"></div>
-      </div>
-
-      <div class="form-group">
-        <label for="product_category">
-          <i class="bi bi-grid"></i>
-          Categoría <span class="required">*</span>
-        </label>
-        <select id="product_category" name="product[category]" class="form-select" required>
-          <option value="">Selecciona una categoría</option>
-          <% if defined?(Product::CATEGORIES) %>
-            <% Product::CATEGORIES.each do |cat| %>
-              <option value="<%= cat %>"><%= cat %></option>
-            <% end %>
-          <% else %>
-            <option value="Electrónica">Electrónica</option>
-            <option value="Ropa y Accesorios">Ropa y Accesorios</option>
-            <option value="Hogar y Muebles">Hogar y Muebles</option>
-            <option value="Deportes">Deportes</option>
-            <option value="Juguetes">Juguetes</option>
-            <option value="Libros">Libros</option>
-            <option value="Alimentos y Bebidas">Alimentos y Bebidas</option>
-            <option value="Belleza y Cuidado Personal">Belleza y Cuidado Personal</option>
-            <option value="Automotriz">Automotriz</option>
-            <option value="Mascotas">Mascotas</option>
-          <% end %>
-        </select>
-        <div class="invalid-feedback" id="category-error"></div>
-      </div>
-
-      <div class="form-group">
-        <label for="product_price">
-          <i class="bi bi-currency-dollar"></i>
-          Precio <span class="required">*</span>
-        </label>
-        <input type="number" id="product_price" name="product[price]" class="form-control" placeholder="0.00" step="0.01" min="0" required>
-        <div class="invalid-feedback" id="price-error"></div>
-      </div>
-
-      <div class="form-group">
-        <label for="product_brand">
-          <i class="bi bi-building"></i>
-          Marca <span class="required">*</span>
-        </label>
-        <select id="product_brand" name="product[brand]" class="form-select" required>
-          <option value="">Selecciona una marca</option>
-          <% if defined?(Product::BRANDS) %>
-            <% Product::BRANDS.each do |brand| %>
-              <option value="<%= brand %>"><%= brand %></option>
-            <% end %>
-          <% else %>
-            <option value="Samsung">Samsung</option>
-            <option value="Apple">Apple</option>
-            <option value="Sony">Sony</option>
-            <option value="LG">LG</option>
-            <option value="Nike">Nike</option>
-            <option value="Adidas">Adidas</option>
-            <option value="Microsoft">Microsoft</option>
-            <option value="Xiaomi">Xiaomi</option>
-            <option value="HP">HP</option>
-            <option value="Dell">Dell</option>
-            <option value="Lenovo">Lenovo</option>
-            <option value="Otros">Otros</option>
-          <% end %>
-        </select>
-        <div class="invalid-feedback" id="brand-error"></div>
-      </div>
-
-      <button type="submit" class="btn-submit" id="submitBtn">
-        <i class="bi bi-check-circle"></i> Guardar Producto
-      </button>
-    </form>
-    <div id="formMessage"></div>
+      Agregar Producto
+    </button>
   </div>
 
   <!-- Buscador -->
@@ -788,7 +626,6 @@
           <table class="table">
             <thead>
               <tr>
-                <th>#</th>
                 <th>Nombre</th>
                 <th>Categoría</th>
                 <th>Precio</th>
@@ -800,7 +637,6 @@
             <tbody>
               <% @products.each_with_index do |product, index| %>
                 <tr>
-                  <td data-label="#">#<%= ((@products.current_page - 1) * 15) + index + 1 %></td>
                   <td data-label="Nombre"><strong><%= product.name %></strong></td>
                   <td data-label="Categoría">
                     <span class="category-badge"><i class="bi bi-tag"></i> <%= product.category %></span>
@@ -816,7 +652,6 @@
                   </td>
                   <td data-label="Acciones">
                     <div class="action-buttons">
-                      <!-- VERSIÓN SEGURA - Usando data-atributos en lugar de interpolación peligrosa -->
                       <button type="button" 
                               class="btn-action btn-edit" 
                               data-id="<%= product.id %>"
@@ -842,7 +677,7 @@
           </table>
         </div>
 
-        <!-- Paginación MEJORADA con botones Primero y Último -->
+        <!-- Paginación (5 productos por página) -->
         <% if @products.total_pages > 1 %>
           <div class="pagination-container">
             <nav>
@@ -877,7 +712,7 @@
                   </li>
                 <% end %>
 
-                <!-- Números de página (mostramos solo algunos para no saturar) -->
+                <!-- Números de página -->
                 <% 
                   start_page = [@products.current_page - 2, 1].max
                   end_page = [start_page + 4, @products.total_pages].min
@@ -949,7 +784,7 @@
     </div>
   </div>
 
-  <!-- Stats Cards - AHORA EN LA PARTE INFERIOR -->
+  <!-- Stats Cards -->
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon">
@@ -979,6 +814,98 @@
         <h3 id="totalBrands"><%= Product.distinct.count(:brand) %></h3>
         <p>Marcas</p>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de agregar producto -->
+<div class="modal" id="addModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Agregar Nuevo Producto</h5>
+        <button type="button" class="btn-close" onclick="closeModal('addModal')">×</button>
+      </div>
+      <form id="productForm">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="product_name" class="form-label">
+              Nombre <span class="text-danger">*</span>
+            </label>
+            <input type="text" id="product_name" name="product[name]" class="form-control" placeholder="Ej: Smartphone Galaxy S23" required>
+            <div class="invalid-feedback" id="name-error"></div>
+          </div>
+
+          <div class="mb-3">
+            <label for="product_category" class="form-label">
+              Categoría <span class="text-danger">*</span>
+            </label>
+            <select id="product_category" name="product[category]" class="form-select" required>
+              <option value="">Selecciona una categoría</option>
+              <% if defined?(Product::CATEGORIES) %>
+                <% Product::CATEGORIES.each do |cat| %>
+                  <option value="<%= cat %>"><%= cat %></option>
+                <% end %>
+              <% else %>
+                <option value="Electrónica">Electrónica</option>
+                <option value="Ropa y Accesorios">Ropa y Accesorios</option>
+                <option value="Hogar y Muebles">Hogar y Muebles</option>
+                <option value="Deportes">Deportes</option>
+                <option value="Juguetes">Juguetes</option>
+                <option value="Libros">Libros</option>
+                <option value="Alimentos y Bebidas">Alimentos y Bebidas</option>
+                <option value="Belleza y Cuidado Personal">Belleza y Cuidado Personal</option>
+                <option value="Automotriz">Automotriz</option>
+                <option value="Mascotas">Mascotas</option>
+              <% end %>
+            </select>
+            <div class="invalid-feedback" id="category-error"></div>
+          </div>
+
+          <div class="mb-3">
+            <label for="product_price" class="form-label">
+              Precio <span class="text-danger">*</span>
+            </label>
+            <input type="number" id="product_price" name="product[price]" class="form-control" placeholder="0.00" step="0.01" min="0" required>
+            <div class="invalid-feedback" id="price-error"></div>
+          </div>
+
+          <div class="mb-3">
+            <label for="product_brand" class="form-label">
+              Marca <span class="text-danger">*</span>
+            </label>
+            <select id="product_brand" name="product[brand]" class="form-select" required>
+              <option value="">Selecciona una marca</option>
+              <% if defined?(Product::BRANDS) %>
+                <% Product::BRANDS.each do |brand| %>
+                  <option value="<%= brand %>"><%= brand %></option>
+                <% end %>
+              <% else %>
+                <option value="Samsung">Samsung</option>
+                <option value="Apple">Apple</option>
+                <option value="Sony">Sony</option>
+                <option value="LG">LG</option>
+                <option value="Nike">Nike</option>
+                <option value="Adidas">Adidas</option>
+                <option value="Microsoft">Microsoft</option>
+                <option value="Xiaomi">Xiaomi</option>
+                <option value="HP">HP</option>
+                <option value="Dell">Dell</option>
+                <option value="Lenovo">Lenovo</option>
+                <option value="Otros">Otros</option>
+              <% end %>
+            </select>
+            <div class="invalid-feedback" id="brand-error"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" onclick="closeModal('addModal')">Cancelar</button>
+          <button type="submit" class="btn btn-success" id="submitBtn">
+            <i class="bi bi-check-circle"></i> Guardar Producto
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -1083,6 +1010,8 @@
   </div>
 </div>
 
+<div id="formMessage"></div>
+
 <script>
   // ========== VARIABLES GLOBALES ==========
   let currentEditId = null;
@@ -1107,10 +1036,7 @@
     }
   });
 
-  // ========== FUNCIONES PARA PRODUCTOS - VERSIÓN SEGURA ==========
-  // Estas funciones ahora reciben el botón y leen los datos de sus atributos data-*
-  // Esto es más seguro porque Rails escapa automáticamente los valores en los atributos data
-  
+  // ========== FUNCIONES PARA PRODUCTOS ==========
   window.editProduct = function(button) {
     currentEditId = button.dataset.id;
     document.getElementById('edit_name').value = button.dataset.name;
@@ -1132,7 +1058,7 @@
     const searchInput = document.getElementById('searchInput');
     const clearSearch = document.getElementById('clearSearch');
 
-    // ========== ENVÍO DEL FORMULARIO PRINCIPAL ==========
+    // ========== ENVÍO DEL FORMULARIO DE AGREGAR ==========
     if (form) {
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -1161,6 +1087,7 @@
           const result = await response.json();
           
           if (result.success) {
+            closeModal('addModal');
             if (result.html) {
               document.getElementById('productsTableContainer').innerHTML = result.html;
             }
@@ -1190,14 +1117,13 @@
         e.preventDefault();
         
         const formData = new FormData(this);
-        // Agregar _method para que Rails lo interprete como PATCH
         formData.append('_method', 'patch');
         
         const csrfToken = document.querySelector('input[name="authenticity_token"]').value;
         
         try {
           const response = await fetch(`/products/${currentEditId}`, {
-            method: 'POST', // Usamos POST pero con _method=patch
+            method: 'POST',
             headers: {
               'X-CSRF-Token': csrfToken,
               'Accept': 'application/json'
@@ -1231,14 +1157,13 @@
         e.preventDefault();
         
         const formData = new FormData(this);
-        // Agregar _method para que Rails lo interprete como DELETE
         formData.append('_method', 'delete');
         
         const csrfToken = document.querySelector('input[name="authenticity_token"]').value;
         
         try {
           const response = await fetch(`/products/${currentDeleteId}`, {
-            method: 'POST', // Usamos POST pero con _method=delete
+            method: 'POST',
             headers: {
               'X-CSRF-Token': csrfToken,
               'Accept': 'application/json'
@@ -1270,18 +1195,15 @@
       searchInput.addEventListener('input', function() {
         const query = this.value.trim().toLowerCase();
         
-        // Mostrar/ocultar botón de limpiar
         clearSearch.style.display = query.length > 0 ? 'block' : 'none';
         
-        // Obtener todas las filas de la tabla
         const tableBody = document.querySelector('#productsTableContainer table tbody');
-        if (!tableBody) return; // Si no hay tabla, salir
+        if (!tableBody) return;
         
         const tableRows = tableBody.querySelectorAll('tr');
         let visibleCount = 0;
         
         tableRows.forEach(row => {
-          // Obtener el texto de las celdas que queremos buscar
           const nombreCell = row.querySelector('td[data-label="Nombre"]');
           const categoriaCell = row.querySelector('td[data-label="Categoría"]');
           const marcaCell = row.querySelector('td[data-label="Marca"]');
@@ -1290,12 +1212,10 @@
           const categoria = categoriaCell ? categoriaCell.textContent.toLowerCase() : '';
           const marca = marcaCell ? marcaCell.textContent.toLowerCase() : '';
           
-          // Si el query está vacío, mostrar todas las filas
           if (query.length === 0) {
             row.style.display = '';
             visibleCount++;
           } else {
-            // Buscar en nombre, categoría y marca
             if (nombre.includes(query) || categoria.includes(query) || marca.includes(query)) {
               row.style.display = '';
               visibleCount++;
@@ -1305,16 +1225,13 @@
           }
         });
         
-        // Manejar el mensaje de "no resultados"
         const tableContainer = document.getElementById('productsTableContainer');
         let noResultsMsg = document.getElementById('noResultsMessage');
         
         if (visibleCount === 0 && query.length > 0) {
-          // Ocultar la tabla si no hay resultados
           const table = document.querySelector('#productsTableContainer table');
           if (table) table.style.display = 'none';
           
-          // Mostrar mensaje de no resultados
           if (!noResultsMsg) {
             noResultsMsg = document.createElement('div');
             noResultsMsg.id = 'noResultsMessage';
@@ -1329,11 +1246,9 @@
             noResultsMsg.querySelector('p').innerHTML = `No hay resultados para "<strong>${this.value}</strong>"`;
           }
         } else {
-          // Mostrar la tabla si hay resultados
           const table = document.querySelector('#productsTableContainer table');
           if (table) table.style.display = '';
           
-          // Eliminar mensaje de no resultados si existe
           if (noResultsMsg) {
             noResultsMsg.remove();
           }
@@ -1347,17 +1262,14 @@
         searchInput.value = '';
         clearSearch.style.display = 'none';
         
-        // Mostrar todas las filas
         const tableRows = document.querySelectorAll('#productsTableContainer table tbody tr');
         tableRows.forEach(row => {
           row.style.display = '';
         });
         
-        // Mostrar la tabla
         const table = document.querySelector('#productsTableContainer table');
         if (table) table.style.display = '';
         
-        // Eliminar mensaje de no resultados
         const noResultsMsg = document.getElementById('noResultsMessage');
         if (noResultsMsg) {
           noResultsMsg.remove();
