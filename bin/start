@@ -1,6 +1,4 @@
 #!/bin/bash
-echo "===== INICIANDO SCRIPT DE ESPERA ====="
-echo "Esperando 30 segundos para que Postgres arranque..."
-sleep 30
-echo "¡Ya pasaron 30 segundos! Iniciando Rails..."
-bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p 3000
+echo "===== INICIANDO RAILS ====="
+# Quitamos el sleep tan largo y usamos el puerto dinámico
+bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p ${PORT:-3000}
