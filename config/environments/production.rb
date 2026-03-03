@@ -31,7 +31,7 @@ Rails.application.configure do
   # ===== RAILWAY: Configuración para Active Storage con S3 =====
   # Usamos el servicio :local en desarrollo, pero en producción queremos S3
   # Asegúrate de tener config/storage.yml configurado con :amazon
-  config.active_storage.service = :amazon  # Cambiado de :local a :amazon
+  config.active_storage.service = :local  # Cambiado de :local a :amazon
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
