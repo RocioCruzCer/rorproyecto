@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # app/controllers/questionnaires_controller.rb
 class QuestionnairesController < ApplicationController
   protect_from_forgery with: :exception
@@ -45,11 +46,10 @@ class QuestionnairesController < ApplicationController
     end
 
     send_data csv_data, filename: "questionnaires.csv"
-  end
 
-  private
 
   def questionnaire_params
     params.require(:questionnaire).permit(:name, :email)
   end
 end
+
