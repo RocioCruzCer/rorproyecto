@@ -49,6 +49,7 @@ class QuestionnairesController < ApplicationController
 
 
   def questionnaire_params
+  end
     params.require(:questionnaire).permit(:name, :email)
   end
 end
