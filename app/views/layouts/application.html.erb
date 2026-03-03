@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mi Aplicación Rails</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+  
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+  
+  <%= yield :head if content_for?(:head) %>
+  
+  <style>
+    /* ============================================
+       ESTILOS CON NUEVA PALETA DE COLORES
+       Verdes y Rosas (reemplazando dorados)
+       ============================================ */
+    :root {
+      /* VERDES - Primarios y secundarios */
+      --verde-primario: #00A86B;      /* Verde vibrante principal */
+      --verde-bosque: #2E8B57;         /* Verde secundario (bosque) */
+      --verde-suave: #6F8F7A;          /* Verde suave/medio */
+      --verde-neon: #00C853;           /* Verde neón brillante */
+      --verde-oscuro: #008F4C;         /* Verde oscuro */
+      --verde-profundo: #0B5D3B;       /* Verde profundo (textos) */
+      --verde-intermedio: #1A7D55;      /* Verde intermedio */
+      
+      /* ROSAS - Nuevos, reemplazan los dorados */
+      --rosa-clarito: #FFB6C1;          /* Rosa clarito principal (Light Pink) */
+      --rosa-suave: #FFC0CB;            /* Rosa suave (Pink) */
+      --rosa-palo: #FFE4E1;             /* Rosa palo (Misty Rose) */
+      --rosa-glow: #FFD9E6;              /* Rosa para glow/brillos (Cosmetic Pink) */
+      --rosa-muy-palido: #FFF0F5;        /* Rosa muy pálido (Lavender Blush) - fondos sutiles */
+      
+      /* NEUTROS */
+      --casi-negro: #2F2F2A;             /* Textos principales */
+      --gris-medio: #5C5C55;              /* Textos secundarios */
+      --verde-muy-claro: #F0F7F3;         /* Fondo general (reemplaza el beige) */
+      --blanco: #FFFFFF;                   /* Blanco (ojos, detalles) */
+      --verde-palido: #E8F3E9;             /* Fondos alternos */
+      
+      /* SOMBRAS Y EFECTOS */
+      --sombra-rosa-claro: rgba(255, 182, 193, 0.3);
+      --sombra-rosa-sem-transparente: rgba(255, 182, 193, 0.5);
+      --sombra-verde-transparente: rgba(11, 93, 59, 0.2);
+      
+      /* VARIABLES DE APLICACIÓN */
+      --primary-dark: var(--verde-profundo);
+      --primary-base: var(--verde-primario);
+      --primary-light: var(--verde-suave);
+      --accent-pink: var(--rosa-clarito);
+      --accent-pink-soft: var(--rosa-suave);
+      --bg-light: var(--verde-muy-claro);
+      --bg-secondary: var(--verde-palido);
+      --bg-pink-soft: var(--rosa-muy-palido);
+      --text-dark: var(--casi-negro);
+      --text-soft: var(--gris-medio);
+      --border-light: rgba(11, 93, 59, 0.08);
+      --border-pink-light: rgba(255, 182, 193, 0.3);
+      --shadow-sm: 0 2px 8px var(--sombra-verde-transparente);
+      --shadow-md: 0 4px 16px rgba(11, 93, 59, 0.08);
+      --shadow-pink-sm: 0 2px 8px var(--sombra-rosa-claro);
+      --shadow-pink-md: 0 4px 16px var(--sombra-rosa-sem-transparente);
+    }
+    
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 400;
+      line-height: 1.5;
+      padding-top: 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* ===== NAVBAR MINIMALISTA CON DETALLES ROSA ===== */
+    .global-navbar {
+      background: var(--blanco) !important;
+      box-shadow: var(--shadow-sm);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1030;
+      padding: 0.75rem 2rem;
+      border-bottom: 1px solid var(--border-pink-light);
+    }
+    
+    .navbar-brand {
+      color: var(--primary-dark) !important;
+      font-weight: 500;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+    }
+    
+    .navbar-brand i {
+      color: var(--rosa-clarito);
+    }
+    
+    /* BOTÓN MENÚ HAMBURGUESA CON ESTILO ROSA */
+    .menu-toggle {
+      background: transparent;
+      border: 1px solid var(--border-pink-light);
+      border-radius: 8px;
+      color: var(--text-soft);
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+    
+    .menu-toggle:hover {
+      background: var(--bg-pink-soft);
+      border-color: var(--rosa-clarito);
+      color: var(--primary-dark);
+      box-shadow: var(--shadow-pink-sm);
+    }
+    
+    .menu-toggle i {
+      font-size: 1.25rem;
+    }
+    
+    /* ===== OFFCANVAS MENÚ CON ACENTOS ROSA ===== */
+    .offcanvas {
+      background-color: var(--blanco);
+      border-right: none;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .offcanvas-header {
+      background: var(--blanco);
+      color: var(--text-dark);
+      border-bottom: 1px solid var(--border-pink-light);
+      padding: 1.25rem 1.5rem;
+    }
+    
+    .offcanvas-title {
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      letter-spacing: -0.01em;
+    }
+    
+    .offcanvas-title i {
+      color: var(--rosa-clarito);
+    }
+    
+    .btn-close {
+      filter: none;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    
+    .btn-close:hover {
+      opacity: 0.8;
+    }
+    
+    .offcanvas-body {
+      padding: 1.5rem;
+    }
+    
+    .menu-section {
+      margin-bottom: 2rem;
+    }
+    
+    .menu-section-title {
+      color: var(--rosa-clarito);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      padding: 0 0.75rem;
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 1rem;
+      color: var(--text-dark);
+      text-decoration: none;
+      border-radius: 6px;
+      margin-bottom: 0.125rem;
+      transition: all 0.2s ease;
+      font-weight: 400;
+      font-size: 0.95rem;
+    }
+    
+    .menu-item i {
+      width: 20px;
+      margin-right: 12px;
+      color: var(--text-soft);
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    
+    .menu-item:hover {
+      background-color: var(--bg-pink-soft);
+      color: var(--primary-dark);
+    }
+    
+    .menu-item:hover i {
+      color: var(--rosa-clarito);
+    }
+    
+    .menu-item.active {
+      background-color: var(--bg-pink-soft);
+      color: var(--primary-dark);
+      font-weight: 500;
+      border-left: 2px solid var(--rosa-clarito);
+    }
+    
+    .menu-item.active i {
+      color: var(--rosa-clarito);
+    }
+    
+    .submenu {
+      margin-left: 32px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border-pink-light);
+    }
+    
+    .submenu .menu-item {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    /* ===== BREADCRUMB CON DETALLE ROSA ===== */
+    .custom-breadcrumb {
+      background: transparent;
+      border-radius: 0;
+      padding: 0 0 1.5rem 0;
+      margin-bottom: 1rem;
+      border-left: none;
+      box-shadow: none;
+      border-bottom: 1px solid var(--border-pink-light);
+    }
+    
+    .breadcrumb {
+      margin: 0;
+    }
+    
+    .breadcrumb-item {
+      font-size: 0.9rem;
+    }
+    
+    .breadcrumb-item a {
+      color: var(--text-soft);
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    
+    .breadcrumb-item a:hover {
+      color: var(--rosa-clarito);
+    }
+    
+    .breadcrumb-item.active {
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+      color: var(--rosa-clarito);
+      content: "/";
+      font-size: 0.9rem;
+      font-weight: 300;
+      opacity: 0.5;
+    }
+    
+    /* ===== CONTENEDOR PRINCIPAL ===== */
+    .main-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    
+    .content-wrapper {
+      background: transparent;
+      border-radius: 0;
+      padding: 2rem 0;
+      box-shadow: none;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    
+    /* ===== ALERTAS CON ESTILO ROSA ===== */
+    .alert-global {
+      border-radius: 6px;
+      border: 1px solid var(--border-pink-light);
+      border-left: 3px solid;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--blanco);
+      font-size: 0.95rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .alert-success {
+      border-left-color: var(--verde-primario);
+      color: var(--text-dark);
+    }
+    
+    .alert-success i {
+      color: var(--verde-primario);
+    }
+    
+    .alert-danger {
+      border-left-color: var(--rosa-clarito);
+      color: var(--text-dark);
+    }
+    
+    .alert-danger i {
+      color: var(--rosa-clarito);
+    }
+    
+    .btn-close {
+      font-size: 0.8rem;
+    }
+    
+    /* ===== BOTONES CON PALETA ACTUALIZADA ===== */
+    .btn {
+      border-radius: 6px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--verde-oscuro);
+      border-color: var(--verde-oscuro);
+    }
+    
+    .btn-accent {
+      background-color: transparent;
+      border: 1px solid var(--rosa-clarito);
+      color: var(--text-dark);
+    }
+    
+    .btn-accent:hover {
+      background-color: var(--rosa-clarito);
+      border-color: var(--rosa-clarito);
+      color: var(--text-dark);
+      box-shadow: var(--shadow-pink-sm);
+    }
+    
+    .btn-outline-pink {
+      background-color: transparent;
+      border: 1px solid var(--rosa-clarito);
+      color: var(--rosa-clarito);
+    }
+    
+    .btn-outline-pink:hover {
+      background-color: var(--rosa-clarito);
+      color: var(--text-dark);
+    }
+    
+    /* ===== FOOTER CON DETALLES ROSA ===== */
+    .global-footer {
+      background: var(--blanco) !important;
+      color: var(--text-soft);
+      padding: 2rem 0;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border-pink-light);
+    }
+    
+    .global-footer h6 {
+      color: var(--text-dark);
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .global-footer h6 i {
+      color: var(--rosa-clarito);
+    }
+    
+    .global-footer p {
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .global-footer a {
+      color: var(--text-soft);
+      transition: color 0.2s;
+    }
+    
+    .global-footer a:hover {
+      color: var(--rosa-clarito);
+      text-decoration: none;
+    }
+    
+    .global-footer .small {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+    
+    .global-footer i {
+      color: var(--rosa-clarito);
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 56px;
+      }
+      
+      .global-navbar {
+        padding: 0.5rem 1rem;
+      }
+      
+      .main-container {
+        padding: 0 1rem;
+      }
+      
+      .content-wrapper {
+        padding: 1.5rem 0;
+      }
+      
+      .custom-breadcrumb {
+        padding: 0 0 1rem 0;
+      }
+    }
+    
+    /* ===== TIPOGRAFÍA ===== */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      color: var(--primary-dark);
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      border-left: 3px solid var(--rosa-clarito);
+      padding-left: 1rem;
+    }
+    
+    /* ===== TABLAS ===== */
+    .table {
+      color: var(--text-dark);
+    }
+    
+    .table thead th {
+      border-bottom: 1px solid var(--border-pink-light);
+      font-weight: 500;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-soft);
+    }
+    
+    .table td {
+      border-bottom: 1px solid var(--border-pink-light);
+      padding: 1rem 0.5rem;
+      vertical-align: middle;
+    }
+    
+    .table tbody tr:hover {
+      background-color: var(--bg-pink-soft);
+    }
+    
+    /* ===== CARDS CON EFECTOS ROSA ===== */
+    .card {
+      border: 1px solid var(--border-pink-light);
+      border-radius: 8px;
+      background: var(--blanco);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-pink-md);
+      border-color: var(--rosa-clarito);
+    }
+    
+    .card-header {
+      background: var(--blanco);
+      border-bottom: 1px solid var(--border-pink-light);
+      padding: 1rem 1.25rem;
+      font-weight: 500;
+      color: var(--primary-dark);
+    }
+    
+    .card-body {
+      padding: 1.25rem;
+    }
+    
+    /* ===== FORMULARIOS ===== */
+    .form-control, .form-select {
+      border: 1px solid var(--border-pink-light);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--rosa-clarito);
+      box-shadow: 0 0 0 3px var(--sombra-rosa-claro);
+    }
+    
+    .form-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-soft);
+      margin-bottom: 0.25rem;
+    }
+    
+    /* ===== BADGES CON COLORES ===== */
+    .badge-verde {
+      background-color: var(--verde-primario);
+      color: white;
+    }
+    
+    .badge-rosa {
+      background-color: var(--rosa-clarito);
+      color: var(--text-dark);
+    }
+    
+    /* ===== ANIMACIONES ===== */
+    .fade-in {
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* ===== EFECTOS ESPECIALES ROSA ===== */
+    .glow-pink {
+      box-shadow: 0 0 15px var(--sombra-rosa-sem-transparente);
+    }
+    
+    .border-pink {
+      border-color: var(--rosa-clarito) !important;
+    }
+    
+    .text-pink {
+      color: var(--rosa-clarito) !important;
+    }
+    
+    .bg-pink-soft {
+      background-color: var(--bg-pink-soft) !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR FIJO CON BOTÓN MENÚ HAMBURGUESA IZQUIERDO -->
+  <nav class="global-navbar">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <!-- Botón menú hamburguesa -->
+        <button class="menu-toggle me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuOffcanvas" aria-controls="menuOffcanvas">
+          <i class="bi bi-list"></i>
+        </button>
+        
+        <!-- Logo/Brand -->
+        <a class="navbar-brand fw-bold" href="/">
+          <i class="bi bi-flower2 me-2"></i>Mi App Rails
+        </a>
+      </div>
+      
+      <!-- Info rápida con toque rosa -->
+      <div class="text-dark small d-none d-md-block">
+        <i class="bi bi-person-circle me-1" style="color: var(--rosa-clarito);"></i>
+        <span style="color: var(--text-soft);">Usuario</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- OFFCANVAS MENÚ LATERAL IZQUIERDO -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="menuOffcanvas" aria-labelledby="menuOffcanvasLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="menuOffcanvasLabel">
+        <i class="bi bi-flower2 me-2"></i>Menú Principal
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+  <!-- PRINCIPAL: solo Inicio -->
+  <div class="menu-section">
+    <div class="menu-section-title">PRINCIPAL</div>
+    <%= link_to root_path, class: "menu-item #{'active' if current_page?(root_path)}" do %>
+      <i class="bi bi-house"></i> Inicio
+    <% end %>
+  </div>
+
+  <!-- UNIDAD 1: Interacción BDD, Datos Personales, Info Sistema, Error Aleatorio -->
+  <div class="menu-section">
+    <div class="menu-section-title">UNIDAD 1</div>
+    
+    <%= link_to dashboard_path, class: "menu-item #{'active' if current_page?(dashboard_path)}" do %>
+      <i class="bi bi-speedometer2"></i> Interacción BDD
+    <% end %>
+    
+    <%= link_to personal_data_path, class: "menu-item #{'active' if current_page?(personal_data_path)}" do %>
+      <i class="bi bi-person-badge"></i> Datos Personales
+    <% end %>
+    
+    <%= link_to system_info_path, class: "menu-item #{'active' if current_page?(system_info_path)}" do %>
+      <i class="bi bi-info-circle"></i> Info Sistema
+    <% end %>
+    
+    <!-- Submenú de advanced_dashboard (depende de Info Sistema) -->
+    <div class="submenu">
+      <%= link_to advanced_dashboard_path, class: "menu-item #{'active' if current_page?(advanced_dashboard_path)}" do %>
+        <i class="bi bi-graph-up"></i> Dashboard Avanzado
+      <% end %>
+    </div>
+    
+    <%= link_to error_page_path, class: "menu-item #{'active' if current_page?(error_page_path)}" do %>
+      <i class="bi bi-exclamation-triangle"></i> Error Aleatorio
+    <% end %>
+  </div>
+
+  <!-- UNIDAD 2: Carrusel y Productos -->
+  <div class="menu-section">
+    <div class="menu-section-title">UNIDAD 2</div>
+    
+    <%= link_to carousel_path, class: "menu-item #{'active' if current_page?(carousel_path)}" do %>
+      <i class="bi bi-images"></i> Carrusel
+    <% end %>
+    
+    <%= link_to products_path, class: "menu-item #{'active' if current_page?(products_path)}" do %>
+      <i class="bi bi-box-seam"></i> Productos
+    <% end %>
+  </div>
+</div>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="main-container">
+    <div class="content-wrapper">
+      <!-- BREADCRUMB DINÁMICO -->
+      <nav aria-label="breadcrumb" class="custom-breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <% if content_for?(:breadcrumb) %>
+            <%= yield :breadcrumb %>
+          <% else %>
+            <!-- Breadcrumb automático -->
+            <li class="breadcrumb-item">
+              <%= link_to root_path do %>
+                <i class="bi bi-house-door"></i> Inicio
+              <% end %>
+            </li>
+            
+            <%# Determinar breadcrumb según la ruta actual %>
+            <% if current_page?(dashboard_path) %>
+              <li class="breadcrumb-item active">Dashboard</li>
+            <% elsif current_page?(personal_data_path) %>
+              <li class="breadcrumb-item active">Datos Personales</li>
+            <% elsif current_page?(system_info_path) %>
+              <li class="breadcrumb-item active">Información del Sistema</li>
+            <% elsif current_page?(advanced_dashboard_path) %>
+              <li class="breadcrumb-item"><%= link_to "Sistema", system_info_path %></li>
+              <li class="breadcrumb-item active">Dashboard Avanzado</li>
+            <% elsif current_page?(carousel_path) %>
+              <li class="breadcrumb-item active">Carrusel</li>
+            <% elsif current_page?(questionnaire_path) %>
+              <li class="breadcrumb-item active">Formulario</li>
+            <% elsif current_page?(questionnaire_list_path) %>
+              <li class="breadcrumb-item active">Lista de Respuestas</li>
+            <% elsif current_page?(random_error_path) %>
+              <li class="breadcrumb-item active">Error Aleatorio</li>
+            <% end %>
+          <% end %>
+        </ol>
+      </nav>
+
+      <!-- MENSAJES FLASH -->
+      <% if flash.any? %>
+        <div class="flash-messages">
+          <% flash.each do |type, message| %>
+            <% alert_class = case type.to_sym
+              when :notice, :success then "alert-success"
+              when :alert, :error, :danger then "alert-danger"
+              else "alert-info"
+            end %>
+            
+            <div class="alert <%= alert_class %> alert-global fade-in alert-dismissible" role="alert">
+              <i class="bi <%= type.to_sym == :success ? 'bi-check-circle' : 'bi-exclamation-circle' %> me-2"></i>
+              <%= message %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- CONTENIDO ESPECÍFICO DE CADA VISTA -->
+      <%= yield %>
+    </div>
+  </main>
+
+  <!-- FOOTER GLOBAL -->
+  <footer class="global-footer">
+    <div class="main-container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-start">
+          <h6 class="mb-2">
+            <i class="bi bi-flower2 me-2"></i>Aplicación de Prueba
+          </h6>
+          <p class="small mb-0">
+            Proyecto avanzado en producción con Ruby on Rails
+          </p>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="small">
+            <i class="bi bi-cpu me-1"></i> Rails 
+            <span class="mx-2" style="color: var(--rosa-clarito);">•</span>
+            <i class="bi bi-database me-1"></i> PostgreSQL
+            <span class="mx-2" style="color: var(--rosa-clarito);">•</span>
+            <i class="bi bi-cloud me-1"></i> Render
+          </div>
+          <p class="small mt-2 mb-0">
+            <i class="bi bi-heart-fill me-1" style="color: var(--rosa-clarito);"></i>
+            Diseñado con la nueva paleta de colores
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOOTSTRAP JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- JAVASCRIPT ESPECÍFICO -->
+  <%= yield :javascript if content_for?(:javascript) %>
+  
+  <!-- JAVASCRIPT GLOBAL -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('✅ Aplicación Rails cargada - Nueva paleta: Verdes y Rosas');
+      
+      // Auto-ocultar alertas
+      setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+          const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+          bsAlert.close();
+        });
+      }, 5000);
+      
+      // Cerrar offcanvas al hacer clic en un enlace (mobile)
+      const menuItems = document.querySelectorAll('.menu-item');
+      const offcanvas = document.getElementById('menuOffcanvas');
+      
+      menuItems.forEach(item => {
+        item.addEventListener('click', () => {
+          if (window.innerWidth < 992) {
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+            if (bsOffcanvas) bsOffcanvas.hide();
+          }
+        });
+      });
+    });
+    
+    // Función global para mostrar alertas
+    window.showAlert = function(type, message, duration = 5000) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type} alert-global alert-dismissible fade show`;
+      alertDiv.innerHTML = `
+        <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      const container = document.querySelector('.flash-messages');
+      if (container) {
+        container.appendChild(alertDiv);
+      } else {
+        const contentWrapper = document.querySelector('.content-wrapper');
+        if (contentWrapper) {
+          contentWrapper.prepend(alertDiv);
+        }
+      }
+      
+      setTimeout(() => {
+        const bsAlert = bootstrap.Alert.getInstance(alertDiv);
+        if (bsAlert) bsAlert.close();
+      }, duration);
+    };
+  </script>
+</body>
+</html>

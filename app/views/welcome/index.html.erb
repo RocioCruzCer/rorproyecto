@@ -1,0 +1,636 @@
+<div class="landing-page">
+  <!-- HERO SECTION CON ROBOT CUADRADITO - VERDES Y ROSAS -->
+  <div class="hero-container">
+    <div class="hero-content">
+      <div class="text-section">
+        <span class="badge">Hola Usuario</span>
+        <h1 class="main-title">
+          PÁGINA DE<br />
+          INTERACCIONES
+        </h1>
+        <p class="description">
+          Este es un sistema de prueba, por ahora solo tiene ejercicios prácticos para verificar su funcionalidad<br /><br />
+          🟢 Abre el menú lateral izquierdo para interactuar con el sistema<br />
+        </p>
+      </div>
+
+      <!-- ROBOT CUADRADITO (ESTILO BLOQUE) -->
+      <div class="robot-3d-container">
+        <div class="robot-3d" id="robot3D">
+          <!-- CABEZA CUADRADA -->
+          <div class="robot-head">
+            <!-- Antenas cuadraditas -->
+            <div class="antenna left">
+              <div class="antenna-stem"></div>
+              <div class="antenna-cube"></div>
+            </div>
+            <div class="antenna right">
+              <div class="antenna-stem"></div>
+              <div class="antenna-cube"></div>
+            </div>
+            
+            <!-- CARA -->
+            <div class="robot-face">
+              <!-- OJOS CUADRADOS (PERO CON PUPILAS REDONDAS PARA MANTENER TERNURA) -->
+              <div class="robot-eyes">
+                <div class="eye-left">
+                  <div class="pupil-left"></div>
+                  <div class="eye-sparkle"></div>
+                </div>
+                <div class="eye-right">
+                  <div class="pupil-right"></div>
+                  <div class="eye-sparkle"></div>
+                </div>
+              </div>
+              
+              <!-- MEJILLAS SONROSADAS (CUADRADAS) -->
+              <div class="cheek left"></div>
+              <div class="cheek right"></div>
+              
+              <!-- SONRISA (LÍNEA RECTA CON ESQUINAS REDONDEADAS) -->
+              <div class="robot-smile"></div>
+            </div>
+          </div>
+          
+          <!-- CUELLO (RECTANGULAR) -->
+          <div class="robot-neck"></div>
+          
+          <!-- CUERPO CUADRADO -->
+          <div class="robot-body">
+            <!-- CORAZÓN (SE MANTIENE REDONDO PARA EL CONTRASTE) -->
+            <div class="heart"></div>
+            
+            <!-- BOTONES CUADRADOS -->
+            <div class="button button1"></div>
+            <div class="button button2"></div>
+            
+            <!-- LÍNEAS DE CIRCUITO (LÍNEAS RECTAS) -->
+            <div class="circuit-line horizontal"></div>
+            <div class="circuit-line vertical"></div>
+          </div>
+          
+          <!-- BASE (PIES CUADRADOS) -->
+          <div class="robot-base">
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+          </div>
+        </div>
+        
+        <!-- ELEMENTOS FLOTANTES (CUBOS PEQUEÑOS) -->
+        <div class="floating-cube cube1"></div>
+        <div class="floating-cube cube2"></div>
+        <div class="floating-cube cube3"></div>
+        <div class="floating-cube cube4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --green-primary: #00A86B;
+    --green-soft: #6F8F7A;
+    --green-light: #8FBC8F;
+    --pink-light: #FFB6C1;      /* Rosa clarito principal */
+    --pink-soft: #FFC0CB;        /* Rosa más suave */
+    --pink-cheek: #FFB6C1;       /* Para mejillas */
+    --pink-pale: #FFE4E1;        /* Rosa palo */
+    --pink-glow: #FFD9E6;        /* Rosa para glow effects */
+    --dark: #2F2F2A;
+    --white: #FFFFFF;
+  }
+
+  body {
+    background-color: #F0F7F3;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* HERO SECTION */
+  .hero-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 2rem 4rem;
+    min-height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    width: 100%;
+  }
+
+  /* TEXTO */
+  .text-section {
+    flex: 1;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(255, 182, 193, 0.15);
+    color: var(--green-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 182, 193, 0.3);
+  }
+
+  .main-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #2F2F2A;
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
+  }
+
+  .description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #5C5C55;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ========== ROBOT CUADRADITO ========== */
+  .robot-3d-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+  }
+
+  .robot-3d {
+    position: relative;
+    width: 300px;
+    height: 420px;
+    transform-style: preserve-3d;
+    animation: floatBlock 5s ease-in-out infinite;
+    filter: drop-shadow(0 15px 25px rgba(255, 182, 193, 0.4));
+  }
+
+  /* CABEZA CUADRADA */
+  .robot-head {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, var(--green-light), var(--green-primary));
+    border-radius: 20px; /* Esquinas ligeramente redondeadas para no ser tan agresivo */
+    transform: translateZ(20px);
+    box-shadow: 
+      10px 10px 20px rgba(0,0,0,0.15),
+      -5px -5px 15px rgba(255,255,255,0.3) inset,
+      0 0 0 4px rgba(255,182,193,0.6) inset;
+    border: 3px solid var(--pink-light);
+    z-index: 10;
+  }
+
+  /* ANTENAS CUADRADAS */
+  .antenna {
+    position: absolute;
+    top: -25px;
+    width: 20px;
+    height: 45px;
+    transform-origin: bottom center;
+  }
+  .antenna.left {
+    left: 45px;
+    transform: rotate(-3deg);
+  }
+  .antenna.right {
+    right: 45px;
+    transform: rotate(3deg);
+  }
+  .antenna-stem {
+    width: 6px;
+    height: 30px;
+    background: linear-gradient(to top, var(--pink-light), #FFB6C1);
+    margin: 0 auto;
+    border-radius: 2px; /* Ligero redondeo, pero podría ser 0 si quieres totalmente cuadrado */
+    box-shadow: 0 0 8px var(--pink-glow);
+  }
+  .antenna-cube {
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle at 30% 30%, white, var(--pink-light));
+    border-radius: 4px; /* 0 para cubo perfecto, 4px para un cubo con esquinitas suaves */
+    margin-top: -3px;
+    box-shadow: 0 0 15px var(--pink-light);
+    animation: bob 2s ease-in-out infinite;
+  }
+
+  /* CARA */
+  .robot-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* OJOS (CUADRADOS CON PUPILAS REDONDAS) */
+  .robot-eyes {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
+    margin-top: 40px;
+  }
+
+  .eye-left, .eye-right {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 10px; /* Ojos cuadrados con esquinas suaves */
+    position: relative;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2), 0 0 0 4px var(--pink-light);
+    overflow: hidden;
+  }
+
+  .pupil-left, .pupil-right {
+    width: 20px;
+    height: 20px;
+    background: #2F2F2A;
+    border-radius: 50%; /* Pupilas redondas para contraste tierno */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+    z-index: 2;
+  }
+
+  .eye-sparkle {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    width: 12px;
+    height: 12px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    filter: blur(1px);
+    z-index: 3;
+  }
+
+  /* MEJILLAS CUADRADAS */
+  .cheek {
+    position: absolute;
+    bottom: 60px;
+    width: 25px;
+    height: 20px;
+    background: var(--pink-cheek);
+    border-radius: 4px; /* Ligeramente redondeadas */
+    opacity: 0.5;
+    filter: blur(3px);
+    animation: blush 3s ease-in-out infinite;
+  }
+  .cheek.left {
+    left: 25px;
+  }
+  .cheek.right {
+    right: 25px;
+  }
+
+  /* SONRISA (LÍNEA RECTA CON EXTREMOS REDONDEADOS) */
+  .robot-smile {
+    width: 60px;
+    height: 8px;
+    background: white;
+    border-radius: 10px;
+    margin-top: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: relative;
+  }
+  .robot-smile::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 10px;
+    width: 40px;
+    height: 2px;
+    background: var(--pink-light);
+    border-radius: 2px;
+    opacity: 0.6;
+  }
+
+  /* CUELLO RECTANGULAR */
+  .robot-neck {
+    width: 50px;
+    height: 20px;
+    background: linear-gradient(to bottom, var(--green-primary), var(--green-soft));
+    margin: -5px auto 0;
+    border-radius: 5px;
+    border: 3px solid var(--pink-light);
+    transform: translateZ(15px);
+    box-shadow: 0 5px 8px rgba(0,0,0,0.15);
+    z-index: 5;
+  }
+
+  /* CUERPO CUADRADO */
+  .robot-body {
+    position: relative;
+    width: 220px;
+    height: 160px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, var(--green-primary), #2E8B57);
+    border-radius: 15px; /* Esquinas ligeramente redondeadas */
+    transform: translateZ(10px);
+    box-shadow: 
+      10px 10px 20px rgba(0,0,0,0.15),
+      -5px -5px 15px rgba(255,255,255,0.2) inset,
+      0 0 0 4px rgba(255,182,193,0.5) inset;
+    border: 3px solid var(--pink-light);
+    z-index: 4;
+  }
+
+  /* CORAZÓN (REDONDO PARA DESTACAR) */
+  .heart {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    width: 40px;
+    height: 36px;
+    background: var(--pink-light);
+    border-radius: 20px 20px 0 0;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+  .heart::before,
+  .heart::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 36px;
+    background: var(--pink-light);
+    border-radius: 50%;
+  }
+  .heart::before {
+    left: -18px;
+    top: 0;
+  }
+  .heart::after {
+    right: -18px;
+    top: 0;
+  }
+
+  /* BOTONES CUADRADOS */
+  .button {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: var(--pink-light);
+    border-radius: 4px; /* Cuadrados con esquinas suaves */
+    box-shadow: 0 0 10px var(--pink-glow);
+    animation: glow 2s ease-in-out infinite;
+  }
+  .button1 {
+    bottom: 30px;
+    left: 35px;
+  }
+  .button2 {
+    bottom: 30px;
+    right: 35px;
+  }
+
+  /* LÍNEAS DE CIRCUITO */
+  .circuit-line {
+    position: absolute;
+    background: var(--pink-light);
+    opacity: 0.5;
+    box-shadow: 0 0 8px var(--pink-glow);
+  }
+  .horizontal {
+    width: 50px;
+    height: 3px;
+    top: 90px;
+    left: 20px;
+    transform: rotate(0deg);
+    animation: moveHorizontal 3s linear infinite;
+  }
+  .vertical {
+    width: 3px;
+    height: 40px;
+    top: 60px;
+    right: 30px;
+    animation: moveVertical 3s linear infinite;
+  }
+
+  /* BASE (PIES CUADRADOS) */
+  .robot-base {
+    position: relative;
+    width: 240px;
+    height: 25px;
+    margin: -5px auto 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 25px;
+    z-index: 3;
+  }
+  .foot {
+    width: 50px;
+    height: 25px;
+    background: linear-gradient(to top, var(--green-soft), var(--green-primary));
+    border-radius: 8px;
+    border: 3px solid var(--pink-light);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+  }
+
+  /* CUBOS FLOTANTES */
+  .floating-cube {
+    position: absolute;
+    background: rgba(255, 182, 193, 0.3);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 4px;
+    animation: float 8s linear infinite;
+    box-shadow: 0 0 15px var(--pink-glow);
+  }
+  .cube1 {
+    width: 25px;
+    height: 25px;
+    top: 15%;
+    right: 10%;
+    animation-duration: 7s;
+    background: rgba(0, 168, 107, 0.2);
+  }
+  .cube2 {
+    width: 40px;
+    height: 40px;
+    bottom: 10%;
+    left: 5%;
+    animation-duration: 9s;
+    background: rgba(255, 182, 193, 0.25);
+  }
+  .cube3 {
+    width: 18px;
+    height: 18px;
+    top: 60%;
+    right: 20%;
+    animation-duration: 6s;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  .cube4 {
+    width: 30px;
+    height: 30px;
+    bottom: 25%;
+    right: 15%;
+    animation-duration: 10s;
+    background: rgba(0, 200, 83, 0.15);
+  }
+
+  /* ANIMACIONES */
+  @keyframes floatBlock {
+    0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translateY(-10px) rotateX(1deg) rotateY(1deg); }
+    75% { transform: translateY(8px) rotateX(-1deg) rotateY(-1deg); }
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @keyframes blush {
+    0%, 100% { opacity: 0.5; filter: blur(3px); }
+    50% { opacity: 0.8; filter: blur(4px); }
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    25% { transform: translateX(-50%) scale(1.1); }
+    30% { transform: translateX(-50%) scale(1.1); }
+    35% { transform: translateX(-50%) scale(1); }
+  }
+
+  @keyframes glow {
+    0%, 100% { opacity: 1; box-shadow: 0 0 15px var(--pink-light); }
+    50% { opacity: 0.7; box-shadow: 0 0 25px var(--pink-glow); }
+  }
+
+  @keyframes moveHorizontal {
+    0% { transform: translateX(0); opacity: 0.3; }
+    50% { transform: translateX(10px); opacity: 0.8; }
+    100% { transform: translateX(0); opacity: 0.3; }
+  }
+
+  @keyframes moveVertical {
+    0% { transform: translateY(0); opacity: 0.3; }
+    50% { transform: translateY(10px); opacity: 0.8; }
+    100% { transform: translateY(0); opacity: 0.3; }
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+    100% { transform: translateY(0) rotate(360deg); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .hero-container { padding: 2rem; }
+    .main-title { font-size: 2.8rem; }
+  }
+
+  @media (max-width: 768px) {
+    .hero-content { flex-direction: column-reverse; text-align: center; }
+    .main-title { font-size: 2.2rem; }
+    .robot-3d-container { height: 400px; }
+    .robot-3d { transform: scale(0.8); }
+    .description br { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-container { padding: 1rem; }
+    .main-title { font-size: 1.8rem; }
+    .badge { font-size: 0.8rem; }
+    .robot-3d { transform: scale(0.7); }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const pupils = document.querySelectorAll('.pupil-left, .pupil-right');
+    const eyes = document.querySelectorAll('.eye-left, .eye-right');
+    const robot = document.getElementById('robot3D');
+    
+    // Límites de movimiento para las pupilas
+    const maxMove = 10;
+    
+    // Seguimiento del cursor con los ojos
+    document.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      pupils.forEach((pupil, index) => {
+        const eye = eyes[index];
+        const eyeRect = eye.getBoundingClientRect();
+        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+        
+        // Calcular dirección hacia el cursor
+        let deltaX = mouseX - eyeCenterX;
+        let deltaY = mouseY - eyeCenterY;
+        
+        // Limitar la distancia de movimiento
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        const maxDistance = 120;
+        
+        if (distance > maxDistance) {
+          deltaX = (deltaX / distance) * maxDistance;
+          deltaY = (deltaY / distance) * maxDistance;
+        }
+        
+        // Convertir a porcentaje de movimiento (limitado)
+        const moveX = (deltaX / maxDistance) * maxMove;
+        const moveY = (deltaY / maxDistance) * maxMove;
+        
+        // Aplicar movimiento limitado
+        pupil.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+      });
+    });
+    
+    // Efecto 3D que sigue el mouse
+    document.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX / window.innerWidth;
+      const mouseY = e.clientY / window.innerHeight;
+      
+      const rotateY = (mouseX - 0.5) * 15;
+      const rotateX = (mouseY - 0.5) * 8;
+      
+      robot.style.transform = `perspective(800px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateY(-8px)`;
+    });
+    
+    // Resetear posición cuando el mouse sale
+    document.addEventListener('mouseleave', () => {
+      pupils.forEach(pupil => {
+        pupil.style.transform = 'translate(-50%, -50%)';
+      });
+      robot.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateY(-8px)';
+    });
+    
+    // Parpadeo ocasional
+    setInterval(() => {
+      eyes.forEach(eye => {
+        eye.style.transform = 'scaleY(0.1)';
+        setTimeout(() => {
+          eye.style.transform = 'scaleY(1)';
+        }, 150);
+      });
+    }, 4000);
+  });
+</script>

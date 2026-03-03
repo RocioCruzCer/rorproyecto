@@ -1,0 +1,994 @@
+<div class="form-section">
+  <!-- Mensaje de éxito (mostrado con flash) -->
+  <% if flash[:success] %>
+    <div class="success-message active">
+      <h3><i class="fas fa-check-circle"></i> ¡Registro Guardado!</h3>
+      <p><%= flash[:success] %></p>
+      <p><small>Nota: Los datos no se almacenan en base de datos, solo se muestran para demostración.</small></p>
+    </div>
+  <% end %>
+  
+  <!-- Mensajes de error de validación -->
+  <div id="errorMessages" class="error-messages"></div>
+  
+  <h2 class="form-title">
+    <i class="fas fa-user-edit"></i> Formulario de Datos Personales
+  </h2>
+  <p class="form-subtitle">
+    Complete todos los campos del formulario. Los campos marcados con <span class="required">*</span> son obligatorios.
+  </p>
+  
+  <%= form_tag save_personal_data_path, method: :post, id: "personalDataForm", onsubmit: "return validateForm()" do %>
+    <div class="form-grid">
+      <!-- Información Personal -->
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-user"></i> Nombre Completo <span class="required">*</span>
+        </label>
+        <%= text_field_tag :full_name, nil, class: "form-input", required: true, 
+                          placeholder: "Ingrese su nombre completo (mín. 5 caracteres)", 
+                          pattern: "^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{5,100}$",
+                          title: "Solo letras y espacios, mínimo 5 caracteres",
+                          onblur: "validateName(this)" %>
+        <div class="field-error" id="full_name_error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-id-card"></i> CURP <span class="required">*</span>
+        </label>
+        <%= text_field_tag :document_id, nil, class: "form-input", required: true, 
+                          placeholder: "Ej: GARM800101HDFRNN09",
+                          pattern: "^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[A-Z0-9][0-9A]$",
+                          title: "Formato CURP: 4 letras, 6 números, H/M, 5 letras, 1 alfanumérico, 1 número o letra",
+                          onblur: "validateCURP(this)",
+                          oninput: "this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')" %>
+        <div class="field-error" id="document_id_error"></div>
+        <small class="field-help">Formato: 4 letras + 6 números + H/M + 5 letras + 2 caracteres</small>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-birthday-cake"></i> Fecha de Nacimiento <span class="required">*</span>
+        </label>
+        <%= date_field_tag :birth_date, nil, class: "form-input", required: true,
+                          min: "1900-01-01",
+                          onchange: "validateBirthDate(this)" %>
+        <div class="field-error" id="birth_date_error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-venus-mars"></i> Género <span class="required">*</span>
+        </label>
+        <%= select_tag :gender, options_for_select([
+          ["Seleccione una opción", ""],
+          ["Masculino", "masculino"],
+          ["Femenino", "femenino"],
+          ["Otro", "otro"],
+          ["Prefiero no decir", "prefiero-no-decir"]
+        ]), class: "form-select", required: true,
+        onchange: "validateSelect(this)" %>
+        <div class="field-error" id="gender_error"></div>
+      </div>
+      
+      <!-- Información de Contacto -->
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-envelope"></i> Correo Electrónico <span class="required">*</span>
+        </label>
+        <%= email_field_tag :email, nil, class: "form-input", required: true, 
+                          placeholder: "ejemplo@correo.com",
+                          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+                          title: "Formato de email válido: usuario@dominio.com",
+                          onblur: "validateEmail(this)" %>
+        <div class="field-error" id="email_error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-phone"></i> Teléfono <span class="required">*</span>
+        </label>
+        <%= telephone_field_tag :phone, nil, class: "form-input", required: true, 
+                              placeholder: "10 dígitos (ej: 5512345678)",
+                              pattern: "^[0-9]{10}$",
+                              title: "10 dígitos numéricos",
+                              onblur: "validatePhone(this)" %>
+        <div class="field-error" id="phone_error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-map-marker-alt"></i> Dirección <span class="required">*</span>
+        </label>
+        <%= text_field_tag :address, nil, class: "form-input", required: true, 
+                          placeholder: "Calle, número, colonia",
+                          pattern: "^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s.,#-]{10,200}$",
+                          title: "Dirección válida, mínimo 10 caracteres",
+                          onblur: "validateAddress(this)" %>
+        <div class="field-error" id="address_error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-city"></i> Ciudad
+        </label>
+        <%= text_field_tag :city, nil, class: "form-input", 
+                          placeholder: "Ciudad de residencia",
+                          pattern: "^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,50}$",
+                          title: "Solo letras y espacios, mínimo 3 caracteres",
+                          onblur: "validateCity(this)" %>
+        <div class="field-error" id="city_error"></div>
+      </div>
+      
+      <!-- Información Adicional -->
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-graduation-cap"></i> Nivel de Educación
+        </label>
+        <%= select_tag :education, options_for_select([
+          ["Seleccione una opción", ""],
+          ["Primaria", "primaria"],
+          ["Secundaria", "secundaria"],
+          ["Técnico", "tecnico"],
+          ["Universitario", "universitario"],
+          ["Posgrado", "posgrado"]
+        ]), class: "form-select" %>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-briefcase"></i> Ocupación
+        </label>
+        <%= text_field_tag :occupation, nil, class: "form-input", 
+                          placeholder: "Su profesión u oficio",
+                          pattern: "^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,100}$",
+                          title: "Solo letras y espacios, mínimo 3 caracteres",
+                          onblur: "validateOccupation(this)" %>
+        <div class="field-error" id="occupation_error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-heart"></i> Estado Civil
+        </label>
+        <%= select_tag :marital_status, options_for_select([
+          ["Seleccione una opción", ""],
+          ["Soltero(a)", "soltero"],
+          ["Casado(a)", "casado"],
+          ["Divorciado(a)", "divorciado"],
+          ["Viudo(a)", "viudo"],
+          ["Unión Libre", "union-libre"]
+        ]), class: "form-select" %>
+      </div>
+      
+      <!-- Campo de texto grande -->
+      <div class="form-group full-width">
+        <label class="form-label">
+          <i class="fas fa-comment-alt"></i> Información Adicional
+        </label>
+        <%= text_area_tag :additional_info, nil, class: "form-textarea", 
+                          placeholder: "Escriba aquí cualquier información adicional que considere importante...", 
+                          rows: 4,
+                          maxlength: "500",
+                          oninput: "updateCharCount(this)" %>
+        <div class="char-count">Caracteres: <span id="charCount">0</span>/500</div>
+        <div class="field-error" id="additional_info_error"></div>
+      </div>
+      
+      <!-- Checkbox de términos y condiciones -->
+      <div class="form-group full-width">
+        <div class="checkbox-group">
+          <%= check_box_tag :terms, "1", false, required: true, onchange: "validateTerms(this)" %>
+          <label for="terms">Acepto los términos y condiciones del tratamiento de datos personales <span class="required">*</span></label>
+        </div>
+        <div class="field-error" id="terms_error"></div>
+      </div>
+    </div>
+    
+    <!-- Botones de acción -->
+    <div class="form-actions">
+      <%= button_tag type: "submit", class: "btn-submit" do %>
+        <i class="fas fa-save"></i> Guardar Registro
+      <% end %>
+      
+      <button type="button" class="btn-reset" onclick="resetForm()">
+        <i class="fas fa-undo"></i> Limpiar Formulario
+      </button>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  /* ===== PALETA DE COLORES COMPLETA ===== */
+  :root {
+    /* VERDES */
+    --verde-primario: #00A86B;
+    --verde-bosque: #2E8B57;
+    --verde-suave: #6F8F7A;
+    --verde-neon: #00C853;
+    --verde-oscuro: #008F4C;
+    --verde-profundo: #0B5D3B;
+    --verde-intermedio: #1A7D55;
+    
+    /* ROSAS */
+    --rosa-clarito: #FFB6C1;
+    --rosa-suave: #FFC0CB;
+    --rosa-palo: #FFE4E1;
+    --rosa-glow: #FFD9E6;
+    --rosa-muy-palido: #FFF0F5;
+    
+    /* NEUTROS */
+    --casi-negro: #2F2F2A;
+    --gris-medio: #5C5C55;
+    --verde-muy-claro: #F0F7F3;
+    --blanco: #FFFFFF;
+    --verde-palido: #E8F3E9;
+    
+    /* SOMBRAS */
+    --sombra-rosa-claro: rgba(255, 182, 193, 0.3);
+    --sombra-rosa-semtransparente: rgba(255, 182, 193, 0.5);
+    --sombra-verde-transparente: rgba(11, 93, 59, 0.2);
+    
+    /* VARIABLES DE APLICACIÓN */
+    --primary-dark: var(--verde-profundo);
+    --primary-base: var(--verde-primario);
+    --primary-light: var(--verde-suave);
+    --accent-pink: var(--rosa-clarito);
+    --bg-light: var(--verde-muy-claro);
+    --bg-secondary: var(--verde-palido);
+    --bg-pink-soft: var(--rosa-muy-palido);
+    --text-dark: var(--casi-negro);
+    --text-soft: var(--gris-medio);
+    --border-light: rgba(11, 93, 59, 0.08);
+    --border-pink-light: rgba(255, 182, 193, 0.3);
+    --shadow-sm: 0 2px 8px var(--sombra-verde-transparente);
+    --shadow-md: 0 4px 16px rgba(11, 93, 59, 0.08);
+    --shadow-pink-sm: 0 2px 8px var(--sombra-rosa-claro);
+    --shadow-pink-md: 0 4px 16px var(--sombra-rosa-semtransparente);
+  }
+
+  /* ESTILOS PARA EL FORMULARIO DE DATOS PERSONALES */
+  .form-section {
+    background: var(--blanco);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+    margin: 20px 0;
+    border: 1px solid var(--border-pink-light);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .form-section:hover {
+    box-shadow: var(--shadow-pink-md);
+    border-color: var(--rosa-clarito);
+  }
+  
+  .form-title {
+    color: var(--primary-dark);
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .form-title i {
+    color: var(--rosa-clarito);
+  }
+  
+  .form-subtitle {
+    color: var(--text-soft);
+    font-size: 16px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group.full-width {
+    grid-column: 1 / -1;
+  }
+  
+  .form-label {
+    color: var(--text-dark);
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .form-label i {
+    color: var(--rosa-clarito);
+    font-size: 14px;
+  }
+  
+  .required {
+    color: var(--rosa-clarito);
+    font-weight: bold;
+    margin-left: 2px;
+  }
+  
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 12px 16px;
+    border: 2px solid var(--border-pink-light);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: var(--bg-pink-soft);
+    color: var(--text-dark);
+  }
+  
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: var(--rosa-clarito);
+    box-shadow: 0 0 0 3px var(--sombra-rosa-claro);
+    background-color: var(--blanco);
+  }
+  
+  .form-input.error,
+  .form-select.error,
+  .form-textarea.error {
+    border-color: var(--rosa-clarito);
+    background-color: var(--rosa-muy-palido);
+  }
+  
+  .form-input.success,
+  .form-select.success,
+  .form-textarea.success {
+    border-color: var(--verde-primario);
+  }
+  
+  .form-textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .field-error {
+    color: var(--rosa-clarito);
+    font-size: 12px;
+    margin-top: 4px;
+    min-height: 16px;
+    display: none;
+  }
+  
+  .field-error.show {
+    display: block;
+  }
+  
+  .field-help {
+    color: var(--text-soft);
+    font-size: 11px;
+    margin-top: 4px;
+    display: block;
+    font-style: italic;
+  }
+  
+  .char-count {
+    color: var(--text-soft);
+    font-size: 12px;
+    text-align: right;
+    margin-top: 4px;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--rosa-clarito);
+  }
+  
+  .checkbox-group input[type="checkbox"].error {
+    outline: 2px solid var(--rosa-clarito);
+    border-radius: 4px;
+  }
+  
+  .checkbox-group label {
+    color: var(--text-dark);
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-pink-light);
+  }
+  
+  .btn-submit {
+    background: linear-gradient(135deg, var(--rosa-clarito) 0%, var(--rosa-suave) 100%);
+    color: var(--text-dark);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-pink-sm);
+  }
+  
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-pink-md);
+    background: linear-gradient(135deg, var(--rosa-suave) 0%, var(--rosa-clarito) 100%);
+  }
+  
+  .btn-submit:active {
+    transform: translateY(0);
+  }
+  
+  .btn-reset {
+    background: var(--bg-pink-soft);
+    color: var(--text-dark);
+    border: 1px solid var(--border-pink-light);
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-reset:hover {
+    background: var(--rosa-muy-palido);
+    border-color: var(--rosa-clarito);
+    transform: translateY(-2px);
+  }
+  
+  /* Mensajes de error generales */
+  .error-messages {
+    background: var(--rosa-muy-palido);
+    border: 2px solid var(--rosa-clarito);
+    color: var(--text-dark);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 0 0 20px 0;
+    display: none;
+  }
+  
+  .error-messages.show {
+    display: block;
+  }
+  
+  .error-messages h4 {
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dark);
+  }
+  
+  .error-messages h4 i {
+    color: var(--rosa-clarito);
+  }
+  
+  .error-messages ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text-dark);
+  }
+  
+  .error-messages li {
+    margin-bottom: 5px;
+  }
+  
+  /* Mensaje de confirmación */
+  .success-message {
+    background: linear-gradient(135deg, var(--verde-muy-claro) 0%, var(--verde-palido) 100%);
+    border: 2px solid var(--verde-primario);
+    color: var(--primary-dark);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 0 0 30px 0;
+    animation: fadeIn 0.5s ease;
+    text-align: center;
+  }
+  
+  .success-message.active {
+    display: block;
+  }
+  
+  .success-message h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .success-message h3 i {
+    color: var(--verde-primario);
+  }
+  
+  .success-message p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-dark);
+  }
+  
+  .success-message small {
+    color: var(--text-soft);
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive para el formulario */
+  @media (max-width: 768px) {
+    .form-section {
+      padding: 20px;
+    }
+    
+    .form-title {
+      font-size: 20px;
+    }
+    
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+    }
+    
+    .btn-submit,
+    .btn-reset {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  /* Ajustes para pantallas muy pequeñas */
+  @media (max-width: 480px) {
+    .form-section {
+      padding: 16px;
+    }
+    
+    .form-title {
+      font-size: 18px;
+    }
+    
+    .form-subtitle {
+      font-size: 14px;
+    }
+    
+    .form-label {
+      font-size: 13px;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<script>
+  // Función principal de validación del formulario
+  function validateForm() {
+    let isValid = true;
+    let errors = [];
+    
+    // Validar todos los campos
+    isValid = validateName(document.getElementById('full_name')) && isValid;
+    isValid = validateCURP(document.getElementById('document_id')) && isValid;
+    isValid = validateBirthDate(document.getElementById('birth_date')) && isValid;
+    isValid = validateSelect(document.getElementById('gender')) && isValid;
+    isValid = validateEmail(document.getElementById('email')) && isValid;
+    isValid = validatePhone(document.getElementById('phone')) && isValid;
+    isValid = validateAddress(document.getElementById('address')) && isValid;
+    isValid = validateCity(document.getElementById('city')) && isValid;
+    isValid = validateOccupation(document.getElementById('occupation')) && isValid;
+    isValid = validateTerms(document.getElementById('terms')) && isValid;
+    
+    if (!isValid) {
+      showErrorMessages(errors);
+      return false;
+    }
+    
+    return true;
+  }
+  
+  // Función para validar nombre completo
+  function validateName(input) {
+    const value = input.value.trim();
+    const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{5,100}$/;
+    const errorElement = document.getElementById('full_name_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'El nombre completo es obligatorio');
+      return false;
+    }
+    
+    if (!regex.test(value)) {
+      showError(input, errorElement, 'Solo letras y espacios, mínimo 5 caracteres');
+      return false;
+    }
+    
+    if (value.split(' ').length < 2) {
+      showError(input, errorElement, 'Ingrese al menos nombre y apellido');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar CURP (formato oficial mexicano)
+  function validateCURP(input) {
+    const value = input.value.trim().toUpperCase();
+    const errorElement = document.getElementById('document_id_error');
+    
+    // Expresión regular para CURP oficial
+    const regex = /^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[A-Z0-9][0-9A]$/;
+    
+    if (!value) {
+      showError(input, errorElement, 'La CURP es obligatoria');
+      return false;
+    }
+    
+    if (value.length !== 18) {
+      showError(input, errorElement, 'La CURP debe tener exactamente 18 caracteres');
+      return false;
+    }
+    
+    if (!regex.test(value)) {
+      showError(input, errorElement, 'Formato CURP inválido. Ej: GARM800101HDFRNN09');
+      return false;
+    }
+    
+    // Validar estructura específica de la CURP
+    const curpParts = {
+      birthDate: value.substring(4, 10), // Fecha de nacimiento (YYMMDD)
+      gender: value.charAt(10),      // Sexo (H/M)
+      stateCode: value.substring(11, 13), // Código de la entidad federativa
+    };
+    
+    // Validar año (00-99)
+    const year = parseInt(curpParts.birthDate.substring(0, 2));
+    if (year < 0 || year > 99) {
+      showError(input, errorElement, 'Año inválido en la CURP');
+      return false;
+    }
+    
+    // Validar mes (01-12)
+    const month = parseInt(curpParts.birthDate.substring(2, 4));
+    if (month < 1 || month > 12) {
+      showError(input, errorElement, 'Mes inválido en la CURP');
+      return false;
+    }
+    
+    // Validar día (dependiendo del mes)
+    const day = parseInt(curpParts.birthDate.substring(4, 6));
+    const daysInMonth = getDaysInMonth(month, year);
+    
+    if (day < 1 || day > daysInMonth) {
+      showError(input, errorElement, 'Día inválido en la CURP');
+      return false;
+    }
+    
+    // Validar sexo (H o M)
+    if (!['H', 'M'].includes(curpParts.gender)) {
+      showError(input, errorElement, 'Sexo inválido en la CURP (debe ser H o M)');
+      return false;
+    }
+    
+    // Validar código de estado (entidad federativa)
+    const stateCodes = [
+      'AS', 'BC', 'BS', 'CC', 'CL', 'CM', 'CS', 'CH', 'DF', 'DG',
+      'GT', 'GR', 'HG', 'JC', 'MC', 'MN', 'MS', 'NT', 'NL', 'OC',
+      'PL', 'QT', 'QR', 'SP', 'SL', 'SR', 'TC', 'TS', 'TL', 'VZ',
+      'YN', 'ZS', 'NE'
+    ];
+    
+    if (!stateCodes.includes(curpParts.stateCode)) {
+      showError(input, errorElement, 'Código de estado inválido en la CURP');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función auxiliar para obtener días en un mes
+  function getDaysInMonth(month, year) {
+    // Ajustar año completo (1900-1999 para años 00-99)
+    const fullYear = year < 50 ? 2000 + year : 1900 + year;
+    
+    return new Date(fullYear, month, 0).getDate();
+  }
+  
+  // Función para validar fecha de nacimiento
+  function validateBirthDate(input) {
+    const value = input.value;
+    const errorElement = document.getElementById('birth_date_error');
+    const today = new Date();
+    const birthDate = new Date(value);
+    
+    if (!value) {
+      showError(input, errorElement, 'La fecha de nacimiento es obligatoria');
+      return false;
+    }
+    
+    if (birthDate > today) {
+      showError(input, errorElement, 'La fecha de nacimiento no puede ser futura');
+      return false;
+    }
+    
+    // Calcular edad
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() < birthDate.getDate();
+    
+    let calculatedAge = age;
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff)) {
+      calculatedAge--;
+    }
+    
+    if (calculatedAge < 18) {
+      showError(input, errorElement, 'Debe ser mayor de 18 años');
+      return false;
+    }
+    
+    if (calculatedAge > 120) {
+      showError(input, errorElement, 'Edad inválida');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar select
+  function validateSelect(input) {
+    const value = input.value;
+    const errorElement = document.getElementById(input.id + '_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'Este campo es obligatorio');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar email
+  function validateEmail(input) {
+    const value = input.value.trim();
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const errorElement = document.getElementById('email_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'El email es obligatorio');
+      return false;
+    }
+    
+    if (!regex.test(value)) {
+      showError(input, errorElement, 'Formato de email inválido');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar teléfono
+  function validatePhone(input) {
+    const value = input.value.trim().replace(/\s/g, '');
+    const regex = /^[0-9]{10}$/;
+    const errorElement = document.getElementById('phone_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'El teléfono es obligatorio');
+      return false;
+    }
+    
+    if (!regex.test(value)) {
+      showError(input, errorElement, 'Debe tener 10 dígitos numéricos');
+      return false;
+    }
+    
+    // Validar que no empiece con 0 (en México)
+    if (value.startsWith('0')) {
+      showError(input, errorElement, 'El teléfono no puede empezar con 0');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar dirección
+  function validateAddress(input) {
+    const value = input.value.trim();
+    const errorElement = document.getElementById('address_error');
+    
+    if (!value) {
+      showError(input, errorElement, 'La dirección es obligatoria');
+      return false;
+    }
+    
+    if (value.length < 10) {
+      showError(input, errorElement, 'La dirección debe tener al menos 10 caracteres');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar ciudad
+  function validateCity(input) {
+    const value = input.value.trim();
+    const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,50}$/;
+    const errorElement = document.getElementById('city_error');
+    
+    if (value && !regex.test(value)) {
+      showError(input, errorElement, 'Solo letras y espacios, mínimo 3 caracteres');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar ocupación
+  function validateOccupation(input) {
+    const value = input.value.trim();
+    const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{3,100}$/;
+    const errorElement = document.getElementById('occupation_error');
+    
+    if (value && !regex.test(value)) {
+      showError(input, errorElement, 'Solo letras y espacios, mínimo 3 caracteres');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para validar términos y condiciones
+  function validateTerms(input) {
+    const errorElement = document.getElementById('terms_error');
+    
+    if (!input.checked) {
+      showError(input, errorElement, 'Debe aceptar los términos y condiciones');
+      return false;
+    }
+    
+    showSuccess(input, errorElement);
+    return true;
+  }
+  
+  // Función para mostrar errores de campos
+  function showError(input, errorElement, message) {
+    input.classList.add('error');
+    input.classList.remove('success');
+    errorElement.textContent = message;
+    errorElement.classList.add('show');
+  }
+  
+  // Función para mostrar éxito de campos
+  function showSuccess(input, errorElement) {
+    input.classList.remove('error');
+    input.classList.add('success');
+    errorElement.classList.remove('show');
+  }
+  
+  // Función para mostrar mensajes de error generales
+  function showErrorMessages(errors) {
+    const errorContainer = document.getElementById('errorMessages');
+    
+    if (errors.length > 0) {
+      let html = '<h4><i class="fas fa-exclamation-triangle"></i> Errores en el formulario:</h4>';
+      html += '<ul>';
+      errors.forEach(error => {
+        html += `<li>${error}</li>`;
+      });
+      html += '</ul>';
+      errorContainer.innerHTML = html;
+      errorContainer.classList.add('show');
+      
+      // Scroll to top
+      errorContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+  
+  // Función para contar caracteres en textarea
+  function updateCharCount(textarea) {
+    const charCount = textarea.value.length;
+    document.getElementById('charCount').textContent = charCount;
+    
+    if (charCount > 500) {
+      textarea.value = textarea.value.substring(0, 500);
+      document.getElementById('charCount').textContent = 500;
+    }
+  }
+  
+  // Función para resetear el formulario
+  function resetForm() {
+    document.getElementById('personalDataForm').reset();
+    
+    // Limpiar errores
+    document.querySelectorAll('.field-error').forEach(el => {
+      el.classList.remove('show');
+    });
+    
+    document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(el => {
+      el.classList.remove('error', 'success');
+    });
+    
+    document.getElementById('errorMessages').classList.remove('show');
+    document.getElementById('charCount').textContent = '0';
+  }
+  
+  // Establecer fecha máxima para fecha de nacimiento (hoy)
+  document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    const birthDateField = document.getElementById('birth_date');
+    if (birthDateField) {
+      birthDateField.max = today;
+      
+      // Establecer fecha por defecto (hace 25 años)
+      const defaultDate = new Date();
+      defaultDate.setFullYear(defaultDate.getFullYear() - 25);
+      birthDateField.value = defaultDate.toISOString().split('T')[0];
+    }
+    
+    // Actualizar breadcrumb para esta página
+    if (typeof updateBreadcrumb === 'function') {
+      updateBreadcrumb('Datos Personales', 'fa-user-circle');
+    }
+  });
+</script>

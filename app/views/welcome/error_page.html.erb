@@ -1,0 +1,818 @@
+<div class="error-container">
+  <div class="error-wrapper">
+    <div class="error-illustration">
+      <div class="error-shape">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="error-rays">
+        <div class="ray ray-1"></div>
+        <div class="ray ray-2"></div>
+        <div class="ray ray-3"></div>
+        <div class="ray ray-4"></div>
+      </div>
+    </div>
+    
+    <div class="error-content">
+      <h1 class="error-code">Error <span class="code-number">500</span></h1>
+      <h2 class="error-title">¡Ups! Algo salió mal</h2>
+      <p class="error-description">
+        Has accedido a la pantalla de error intencional. Esta página simula 
+        un error de servidor para fines de demostración y pruebas.
+      </p>
+      
+      <!-- Contador de regreso -->
+      <div class="countdown-container">
+        <div class="countdown-card">
+          <i class="fas fa-clock"></i>
+          <div class="countdown-content">
+            <h3>Redirección automática</h3>
+            <p>Serás redirigido a la página principal en:</p>
+            <div class="countdown-timer">
+              <span id="countdown-display">10</span>
+              <span class="seconds-text">segundos</span>
+            </div>
+            <div class="countdown-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" id="countdown-progress"></div>
+              </div>
+            </div>
+          </div>
+          <button onclick="cancelCountdown()" class="cancel-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="error-details-card">
+        <h3><i class="fas fa-info-circle"></i> Detalles del Error</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Código de Error:</span>
+            <span class="detail-value">ERR-SIM-001</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Tipo:</span>
+            <span class="detail-value">Error de Simulación</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Severidad:</span>
+            <span class="detail-value">
+              <span class="severity-tag">Baja</span>
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Timestamp:</span>
+            <span class="detail-value" id="errorTimestamp">
+              <%= Time.current.strftime("%d/%m/%Y %H:%M:%S") %>
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Sesión ID:</span>
+            <span class="detail-value" id="errorSessionId">
+              <%= SecureRandom.hex(8).upcase %>
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Componente:</span>
+            <span class="detail-value">Sistema de Interacciones</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="error-actions">
+        <button onclick="navigateWithBreadcrumbs('/', 'Inicio', 'fa-home')" class="action-btn primary-btn">
+          <i class="fas fa-home"></i>
+          <span>Volver al Inicio</span>
+        </button>
+        <button onclick="restartCountdown()" class="action-btn secondary-btn">
+          <i class="fas fa-redo"></i>
+          <span>Reiniciar Contador</span>
+        </button>
+        <button onclick="navigateWithBreadcrumbs('/dashboard', 'Interacción con DB', 'fa-database')" 
+                class="action-btn tertiary-btn">
+          <i class="fas fa-database"></i>
+          <span>Ir al Dashboard</span>
+        </button>
+      </div>
+      
+      <div class="error-tips">
+        <h4><i class="fas fa-lightbulb"></i> ¿Qué puedes hacer?</h4>
+        <ul>
+          <li>Verificar que estés conectado a internet</li>
+          <li>Recargar la página actual</li>
+          <li>Contactar al administrador si el error persiste</li>
+          <li>Regresar a una página funcional del sistema</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --verde-primario: #00A86B;
+    --verde-bosque: #2E8B57;
+    --verde-suave: #6F8F7A;
+    --verde-neon: #00C853;
+    --verde-oscuro: #008F4C;
+    --verde-profundo: #0B5D3B;
+    --verde-intermedio: #1A7D55;
+    --verde-muy-claro: #F0F7F3;
+    --verde-palido: #E8F3E9;
+    
+    --rosa-clarito: #FFB6C1;
+    --rosa-suave: #FFC0CB;
+    --rosa-palo: #FFE4E1;
+    --rosa-glow: #FFD9E6;
+    --rosa-muy-palido: #FFF0F5;
+    
+    --casi-negro: #2F2F2A;
+    --gris-medio: #5C5C55;
+    --blanco: #FFFFFF;
+    
+    --sombra-rosa-claro: rgba(255, 182, 193, 0.3);
+    --sombra-rosa-sem-transparente: rgba(255, 182, 193, 0.5);
+    --sombra-verde-transparente: rgba(11, 93, 59, 0.2);
+    
+    --primary-dark: var(--verde-profundo);
+    --primary-base: var(--verde-primario);
+    --primary-light: var(--verde-suave);
+    --accent-pink: var(--rosa-clarito);
+    --accent-pink-soft: var(--rosa-suave);
+    --bg-light: var(--verde-muy-claro);
+    --bg-secondary: var(--verde-palido);
+    --bg-pink-soft: var(--rosa-muy-palido);
+    --text-dark: var(--casi-negro);
+    --text-soft: var(--gris-medio);
+    --border-light: rgba(11, 93, 59, 0.08);
+    --border-pink-light: rgba(255, 182, 193, 0.3);
+    --shadow-sm: 0 2px 8px var(--sombra-verde-transparente);
+    --shadow-md: 0 4px 16px rgba(11, 93, 59, 0.08);
+    --shadow-pink-sm: 0 2px 8px var(--sombra-rosa-claro);
+    --shadow-pink-md: 0 4px 16px var(--sombra-rosa-sem-transparente);
+  }
+
+  /* Estilos del error container */
+  .error-container {
+    min-height: calc(100vh - 150px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .error-wrapper {
+    background-color: var(--blanco);
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-pink-light);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin: 20px auto;
+  }
+  
+  .error-illustration {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 30px;
+  }
+  
+  .error-shape {
+    width: 140px;
+    height: 140px;
+    background: linear-gradient(135deg, var(--rosa-clarito) 0%, var(--rosa-suave) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 2;
+    box-shadow: var(--shadow-pink-md);
+  }
+  
+  .error-shape i {
+    font-size: 60px;
+    color: var(--text-dark);
+  }
+  
+  .error-rays {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    top: 0;
+    left: 0;
+  }
+  
+  .ray {
+    position: absolute;
+    background: linear-gradient(135deg, var(--sombra-rosa-sem-transparente) 0%, transparent 100%);
+    border-radius: 4px;
+  }
+  
+  .ray-1 {
+    width: 180px;
+    height: 4px;
+    top: 88px;
+    left: 0;
+    transform: rotate(0deg);
+    animation: pulseRay 2s infinite;
+  }
+  
+  .ray-2 {
+    width: 180px;
+    height: 4px;
+    top: 88px;
+    left: 0;
+    transform: rotate(90deg);
+    animation: pulseRay 2s infinite 0.5s;
+  }
+  
+  .ray-3 {
+    width: 180px;
+    height: 4px;
+    top: 88px;
+    left: 0;
+    transform: rotate(45deg);
+    animation: pulseRay 2s infinite 1s;
+  }
+  
+  .ray-4 {
+    width: 180px;
+    height: 4px;
+    top: 88px;
+    left: 0;
+    transform: rotate(135deg);
+    animation: pulseRay 2s infinite 1.5s;
+  }
+  
+  @keyframes pulseRay {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+  
+  .error-content {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .error-code {
+    color: var(--text-dark);
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+  
+  .error-code .code-number {
+    color: var(--rosa-clarito);
+  }
+  
+  .error-title {
+    color: var(--verde-profundo);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .error-description {
+    color: var(--verde-suave);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Contador */
+  .countdown-container {
+    margin-bottom: 30px;
+  }
+  
+  .countdown-card {
+    background: linear-gradient(135deg, var(--verde-profundo) 0%, var(--verde-intermedio) 100%);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    box-shadow: var(--shadow-pink-md);
+    animation: pulseCountdown 2s infinite;
+  }
+  
+  @keyframes pulseCountdown {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+  
+  .countdown-card i {
+    font-size: 32px;
+    color: var(--blanco);
+  }
+  
+  .countdown-content {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .countdown-content h3 {
+    color: var(--blanco);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .countdown-content p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .countdown-timer {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  #countdown-display {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--blanco);
+    font-family: 'Courier New', monospace;
+    min-width: 50px;
+    text-align: center;
+  }
+  
+  .seconds-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .countdown-progress {
+    width: 100%;
+  }
+  
+  .progress-bar {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blanco) 0%, var(--rosa-clarito) 100%);
+    width: 100%;
+    border-radius: 4px;
+    transition: width 1s linear;
+  }
+  
+  .cancel-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--blanco);
+    transition: all 0.3s ease;
+  }
+  
+  .cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: rotate(90deg);
+  }
+  
+  .error-details-card {
+    background-color: var(--bg-pink-soft);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border-pink-light);
+    text-align: left;
+  }
+  
+  .error-details-card h3 {
+    color: var(--text-dark);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .error-details-card h3 i {
+    color: var(--verde-suave);
+  }
+  
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+  }
+  
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-pink-light);
+  }
+  
+  .detail-item:last-child {
+    border-bottom: none;
+  }
+  
+  .detail-label {
+    color: var(--verde-suave);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  
+  .detail-value {
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .severity-tag {
+    background-color: var(--border-pink-light);
+    color: var(--text-dark);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .error-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .action-btn {
+    padding: 14px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+    justify-content: center;
+  }
+  
+  .action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-pink-md);
+  }
+  
+  .primary-btn {
+    background: linear-gradient(135deg, var(--verde-profundo) 0%, var(--verde-intermedio) 100%);
+    color: var(--blanco);
+  }
+  
+  .secondary-btn {
+    background-color: var(--verde-suave);
+    color: var(--blanco);
+  }
+  
+  .tertiary-btn {
+    background-color: var(--border-pink-light);
+    color: var(--text-dark);
+  }
+  
+  .error-tips {
+    background-color: var(--border-pink-light);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .error-tips h4 {
+    color: var(--text-dark);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .error-tips h4 i {
+    color: var(--rosa-clarito);
+  }
+  
+  .error-tips ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .error-tips li {
+    color: var(--verde-suave);
+    padding: 6px 0;
+    padding-left: 25px;
+    position: relative;
+    font-size: 14px;
+  }
+  
+  .error-tips li:before {
+    content: '•';
+    color: var(--verde-profundo);
+    font-size: 18px;
+    position: absolute;
+    left: 0;
+    top: 3px;
+  }
+  
+  @media (max-width: 768px) {
+    .error-wrapper {
+      padding: 25px 20px;
+    }
+    
+    .error-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    
+    .action-btn {
+      min-width: auto;
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+    
+    .error-code {
+      font-size: 36px;
+    }
+    
+    .error-title {
+      font-size: 24px;
+    }
+    
+    .error-description {
+      font-size: 15px;
+      margin-bottom: 25px;
+    }
+    
+    .countdown-card {
+      flex-direction: column;
+      text-align: center;
+      gap: 12px;
+      padding: 15px;
+    }
+    
+    .countdown-content {
+      text-align: center;
+    }
+    
+    #countdown-display {
+      font-size: 32px;
+    }
+    
+    .error-details-card {
+      padding: 20px;
+    }
+    
+    .details-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    
+    .detail-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      padding: 10px 0;
+    }
+    
+    .detail-label, .detail-value {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .error-container {
+      padding: 15px;
+    }
+    
+    .error-wrapper {
+      padding: 20px 15px;
+      margin: 10px auto;
+    }
+    
+    .error-illustration {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 20px;
+    }
+    
+    .error-shape {
+      width: 110px;
+      height: 110px;
+      top: 15px;
+      left: 15px;
+    }
+    
+    .error-shape i {
+      font-size: 45px;
+    }
+    
+    .ray-1, .ray-2, .ray-3, .ray-4 {
+      width: 140px;
+      top: 68px;
+    }
+    
+    .error-code {
+      font-size: 32px;
+    }
+    
+    .error-title {
+      font-size: 22px;
+    }
+    
+    #countdown-display {
+      font-size: 28px;
+    }
+    
+    .seconds-text {
+      font-size: 14px;
+    }
+  }
+</style>
+
+<script>
+  // Variables para el contador
+  let countdownValue = 10;
+  let countdownInterval;
+  let countdownActive = true;
+  const totalTime = 10; // 10 segundos totales
+
+  // Iniciar el contador
+  function startCountdown() {
+    countdownValue = totalTime;
+    const countdownDisplay = document.getElementById('countdown-display');
+    const progressFill = document.getElementById('countdown-progress');
+    
+    // Reiniciar la barra de progreso
+    progressFill.style.width = '100%';
+    
+    // Actualizar inmediatamente
+    countdownDisplay.textContent = countdownValue;
+    
+    // Limpiar intervalo anterior si existe
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+    }
+    
+    // Iniciar nuevo intervalo
+    countdownInterval = setInterval(() => {
+      if (countdownActive && countdownValue > 0) {
+        countdownValue--;
+        countdownDisplay.textContent = countdownValue;
+        
+        // Actualizar barra de progreso
+        const progressPercentage = (countdownValue / totalTime) * 100;
+        progressFill.style.width = `${progressPercentage}%`;
+        
+        // Efecto visual cuando llega a los últimos 3 segundos
+        if (countdownValue <= 3) {
+          countdownDisplay.style.color = '#FF6B6B';
+          countdownDisplay.style.animation = 'pulse 0.5s infinite alternate';
+        }
+        
+        // Redirigir cuando llegue a 0
+        if (countdownValue === 0) {
+          clearInterval(countdownInterval);
+          redirectToHome();
+        }
+      }
+    }, 1000);
+  }
+
+  // Cancelar el contador
+  function cancelCountdown() {
+    countdownActive = false;
+    clearInterval(countdownInterval);
+    
+    const countdownCard = document.querySelector('.countdown-card');
+    const countdownDisplay = document.getElementById('countdown-display');
+    
+    // Efecto visual al cancelar
+    countdownCard.style.animation = 'none';
+    countdownCard.style.transform = 'scale(0.95)';
+    countdownDisplay.textContent = 'Cancelado';
+    countdownDisplay.style.color = '#FF6B6B';
+    
+    // Restaurar después de 2 segundos
+    setTimeout(() => {
+      countdownActive = true;
+      startCountdown();
+    }, 2000);
+  }
+
+  // Reiniciar el contador
+  function restartCountdown() {
+    clearInterval(countdownInterval);
+    startCountdown();
+    
+    // Efecto visual
+    const countdownDisplay = document.getElementById('countdown-display');
+    countdownDisplay.style.color = 'var(--blanco)';
+    countdownDisplay.style.animation = 'none';
+    
+    setTimeout(() => {
+      if (countdownDisplay.style.animation === 'none') {
+        countdownDisplay.style.animation = '';
+      }
+    }, 10);
+  }
+
+  // Redirigir a la página principal
+  function redirectToHome() {
+    // Efecto de desvanecimiento antes de redirigir
+    const errorWrapper = document.querySelector('.error-wrapper');
+    errorWrapper.style.opacity = '0.8';
+    errorWrapper.style.transform = 'scale(0.98)';
+    errorWrapper.style.transition = 'all 0.5s ease';
+    
+    // Redirigir después del efecto
+    setTimeout(() => {
+      navigateWithBreadcrumbs('/', 'Inicio', 'fa-home');
+    }, 500);
+  }
+
+  // Actualizar timestamp en tiempo real
+  function updateTimestamp() {
+    const now = new Date();
+    const timestampElement = document.getElementById('errorTimestamp');
+    if (timestampElement) {
+      timestampElement.textContent = now.toLocaleDateString('es-ES') + ' ' + 
+                                    now.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+  }
+
+  // Efecto de escritura para el código de error
+  const errorCode = document.querySelector('.code-number');
+  const originalText = errorCode.textContent;
+  let charIndex = 0;
+
+  function typeEffect() {
+    if (charIndex < originalText.length) {
+      errorCode.textContent = originalText.substring(0, charIndex + 1);
+      charIndex++;
+      setTimeout(typeEffect, 100);
+    }
+  }
+
+  // Inicializar todo cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', () => {
+    // Generar ID de sesión si no existe
+    const sessionIdElement = document.getElementById('errorSessionId');
+    if (sessionIdElement && !sessionIdElement.textContent.trim()) {
+      sessionIdElement.textContent = 'ERR-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    }
+    
+    updateTimestamp();
+    setInterval(updateTimestamp, 1000);
+    setTimeout(typeEffect, 1000);
+    startCountdown();
+    
+    // Agregar animación de pulso para los últimos segundos
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.2); }
+      }
+    `;
+    document.head.appendChild(style);
+  });
+</script>
