@@ -82,7 +82,7 @@ COPY --chown=rails:rails --from=build /rails /rails
 ENTRYPOINT []
 
 # Start server on port 3000 (Non-root users cannot bind to port 80)
-EXPOSE 3000
+
 
 # Fix deploy: Borrar PIDs viejos, preparar la BD y arrancar Puma
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
