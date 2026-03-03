@@ -14,8 +14,9 @@ end
 
 # PostgreSQL para producción (Railway)
 group :production do
-  gem "pg"
-  gem "fog-aws" # Para almacenar archivos en AWS S3 en producción
+gem "pg"
+  gem "aws-sdk-s3", require: false # Para almacenar archivos en AWS S3 en producción
+  gem "fog-aws"
 end
 
 # ===== GEMAS PARA EL CARRUSEL DE IMÁGENES =====
