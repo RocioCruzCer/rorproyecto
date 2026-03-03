@@ -85,4 +85,4 @@ ENTRYPOINT []
 EXPOSE 3000
 
 # Fix deploy: Borrar PIDs viejos, preparar la BD y arrancar Puma
-CMD ["bash", "-c", "until pg_isready -d $DATABASE_URL; do echo 'Waiting for DB...'; sleep 2; done && bundle exec rails db:prepare && bundle exec puma -C config/puma.rb"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

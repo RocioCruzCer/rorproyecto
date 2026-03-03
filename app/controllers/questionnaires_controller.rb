@@ -46,10 +46,11 @@ class QuestionnairesController < ApplicationController
     end
 
     send_data csv_data, filename: "questionnaires.csv"
+     end
 
 
   def questionnaire_params
-  end
+ 
     params.require(:questionnaire).permit(:name, :email)
   end
 end
