@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # ===== HEALTHCHECK PARA RAILWAY =====
   # Estas rutas son las que usa Railway para verificar que la app está viva
-  get "up" => "rails/health#show", as: :rails_health_check
+ get "/up", to: proc { [200, { "Content-Type" => "text/plain" }, ["OK"]] }
   get "healthcheck" => "rails/health#show"
 
   # ===== TU RUTA RAÍZ ORIGINAL =====

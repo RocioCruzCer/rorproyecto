@@ -76,4 +76,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 3000
 
 # Fix deploy: Borrar PIDs viejos, preparar la BD y arrancar Puma
-CMD ["bash", "-c", "bin/rails server -b 0.0.0.0 -p $PORT"]
+CMD ["bash", "-c", "bundle exec puma -C config/puma.rb"]
