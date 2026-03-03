@@ -76,4 +76,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 3000
 
 # Fix deploy: Borrar PIDs viejos, preparar la BD y arrancar Puma
-CMD bash -c "rm -f tmp/pids/server.pid && sleep 10 && bin/rails db:prepare && bin/rails server CMD bash -c "rm -f tmp/pids/server.pid && sleep 10 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p $PORT"-b 0.0.0.0 -p ${PORT:-3000}"CMD bash -c "rm -f tmp/pids/server.pid && sleep 20 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p $PORT"
+CMD bash -c "rm -f tmp/pids/server.pid && sleep 10 && bin/rails db:prepare && bin/rails server CMD bash -c "rm -f tmp/pids/server.pid && sleep 10 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p $PORT"-b 0.0.0.0 -p ${PORT:-3000}"CMD bash -c "rm -f tmp/pids/server.pid && sleep 20 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p $PORT"CMD bash -c "rm -f tmp/pids/server.pid &&sleep 15 &&bin/rails server -b 0.0.0.0 -p $PORT"
