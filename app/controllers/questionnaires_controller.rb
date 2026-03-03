@@ -1,101 +1,55 @@
-# app/controllers/products_controller.rb
-class ProductsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [ :create, :update, :destroy, :index_json ]
-  before_action :set_product, only: [ :show, :edit, :update, :destroy ]
+# app/controllers/questionnaires_controller.rb
+class QuestionnairesController < ApplicationController
+  protect_from_forgery with: :exception
 
-  def index
-    @products = Product.order(created_at: :desc).page(params[:page]).per(15)
-    @product = Product.new
+  # Mostrar formulario
+  def new
+    @questionnaire = Questionnaire.new
   end
 
+  # Guardar formulario (AJAX)
   def create
-    @product = Product.new(product_params)
+    @questionnaire = Questionnaire.new(questionnaire_params)
 
-    respond_to do |format|
-      if @product.save
-        format.html { redirect_to products_path, notice: "Producto guardado exitosamente." }
-        format.json {
-          @products = Product.order(created_at: :desc).page(params[:page]).per(15)
-          render json: {
-            success: true,
-            message: "Producto guardado exitosamente.",
-            product: @product,
-            html: render_to_string(partial: "product_list", locals: { products: @products }, formats: [ :html ])
-          }
-        }
-      else
-        format.html {
-          @products = Product.order(created_at: :desc).page(params[:page]).per(15)
-          render :index, status: :unprocessable_entity
-        }
-        format.json { render json: {
-          success: false,
-          errors: @product.errors.full_messages
-        }, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def update
-    respond_to do |format|
-      if @product.update(product_params)
-        format.html { redirect_to products_path, notice: "Producto actualizado exitosamente." }
-        format.json {
-          @products = Product.order(created_at: :desc).page(params[:page]).per(15)
-          render json: {
-            success: true,
-            message: "Producto actualizado exitosamente.",
-            product: @product,
-            html: render_to_string(partial: "product_list", locals: { products: @products }, formats: [ :html ])
-          }
-        }
-      else
-        format.json { render json: {
-          success: false,
-          errors: @product.errors.full_messages
-        }, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def destroy
-    @product.destroy
-    respond_to do |format|
-      format.html { redirect_to products_path, notice: "Producto eliminado exitosamente." }
-      format.json {
-        @products = Product.order(created_at: :desc).page(params[:page]).per(15)
-        render json: {
-          success: true,
-          message: "Producto eliminado exitosamente.",
-          html: render_to_string(partial: "product_list", locals: { products: @products }, formats: [ :html ])
-        }
+    if @questionnaire.save
+      render json: {
+        success: true,
+        message: "Cuestionario guardado correctamente"
       }
+    else
+      render json: {
+        success: false,
+        errors: @questionnaire.errors.full_messages
+      }, status: :unprocessable_entity
     end
   end
 
-  def index_json
-    @products = Product.all.order(created_at: :desc)
-    render json: @products
+  # Listado
+  def index
+    @questionnaires = Questionnaire.order(created_at: :desc)
   end
 
-  def search
-    @products = Product.where("name ILIKE :search OR category ILIKE :search OR brand ILIKE :search",
-                              search: "%#{params[:q]}%")
-                      .order(created_at: :desc)
-                      .page(params[:page]).per(15)
+  # Exportar JSON
+  def export_json
+    render json: Questionnaire.all
+  end
 
-    render json: {
-      html: render_to_string(partial: "product_list", locals: { products: @products }, formats: [ :html ])
-    }
+  # Exportar CSV
+  def export_csv
+    require 'csv'
+    csv_data = CSV.generate(headers: true) do |csv|
+      csv << ["ID", "Nombre", "Email", "Fecha"]
+      Questionnaire.find_each do |q|
+        csv << [q.id, q.name, q.email, q.created_at]
+      end
+    end
+
+    send_data csv_data, filename: "questionnaires.csv"
   end
 
   private
 
-  def set_product
-    @product = Product.find(params[:id])
-  end
-
-  def product_params
-    params.require(:product).permit(:name, :category, :price, :brand)
+  def questionnaire_params
+    params.require(:questionnaire).permit(:name, :email)
   end
 end
