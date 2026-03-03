@@ -69,11 +69,8 @@ USER 1000:1000
 COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
 
-# Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Start server on port 3000 (Non-root users cannot bind to port 80)
 EXPOSE 3000
 
-# Fix deploy: Borrar PIDs viejos, preparar la BD y arrancar Puma
-CMD bash -c "rm -f tmp/pids/server.pid && sleep 10 && bin/rails db:prepare && bin/rails server CMD bash -c "rm -f tmp/pids/server.pid && sleep 10 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p $PORT"-b 0.0.0.0 -p ${PORT:-3000}"CMD bash -c "rm -f tmp/pids/server.pid && sleep 20 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p $PORT"CMD bash -c "rm -f tmp/pids/server.pid &&sleep 15 &&bin/rails server -b 0.0.0.0 -p $PORT"
+CMD ["bash", "-c", "bundle exec puma -C config/puma.rb"]
