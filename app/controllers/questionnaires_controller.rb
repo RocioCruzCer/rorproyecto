@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # app/controllers/questionnaires_controller.rb
 class QuestionnairesController < ApplicationController
   protect_from_forgery with: :exception
