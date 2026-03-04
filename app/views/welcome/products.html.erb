@@ -1,4 +1,4 @@
-<%# app/views/welcome/products.html.erb - VERSIÓN COMPLETA, CORREGIDA Y SEGURA %>
+<%# app/views/welcome/products.html.erb %>
 
 <% content_for :head do %>
   <style>
@@ -658,15 +658,13 @@
                               data-name="<%= product.name %>"
                               data-category="<%= product.category %>"
                               data-price="<%= product.price %>"
-                              data-brand="<%= product.brand %>"
-                              onclick="editProduct(this)">
+                              data-brand="<%= product.brand %>">
                         <i class="bi bi-pencil"></i>
                       </button>
                       <button type="button" 
                               class="btn-action btn-delete"
                               data-id="<%= product.id %>"
-                              data-name="<%= product.name %>"
-                              onclick="confirmDelete(this)">
+                              data-name="<%= product.name %>">
                         <i class="bi bi-trash3"></i>
                       </button>
                     </div>
@@ -1036,20 +1034,10 @@
     }
   });
 
-  // ========== FUNCIONES PARA PRODUCTOS ==========
-  window.editProduct = function(button) {
-    currentEditId = button.dataset.id;
-    document.getElementById('edit_name').value = button.dataset.name;
-    document.getElementById('edit_category').value = button.dataset.category;
-    document.getElementById('edit_price').value = button.dataset.price;
-    document.getElementById('edit_brand').value = button.dataset.brand;
-    openModal('editModal');
-  }
-
-  window.confirmDelete = function(button) {
-    currentDeleteId = button.dataset.id;
-    document.getElementById('deleteProductName').textContent = `"${button.dataset.name}"`;
-    openModal('deleteModal');
+  // ========== FUNCIONES PARA PRODUCTOS (CON DELEGACIÓN DE EVENTOS) ==========
+  function setupProductActions() {
+    // Estas funciones ahora serán llamadas mediante delegación de eventos
+    // No necesitan adjuntarse directamente a los botones
   }
 
   // ========== INICIALIZACIÓN ==========
@@ -1057,6 +1045,30 @@
     const form = document.getElementById('productForm');
     const searchInput = document.getElementById('searchInput');
     const clearSearch = document.getElementById('clearSearch');
+
+    // ========== DELEGACIÓN DE EVENTOS PARA BOTONES DE ACCIÓN ==========
+    // Escuchamos clicks en todo el documento, pero solo procesamos si el click
+    // viene de un botón de edición o eliminación
+    document.addEventListener('click', function(event) {
+      // Botón de edición
+      if (event.target.closest('.btn-edit')) {
+        const button = event.target.closest('.btn-edit');
+        currentEditId = button.dataset.id;
+        document.getElementById('edit_name').value = button.dataset.name;
+        document.getElementById('edit_category').value = button.dataset.category;
+        document.getElementById('edit_price').value = button.dataset.price;
+        document.getElementById('edit_brand').value = button.dataset.brand;
+        openModal('editModal');
+      }
+      
+      // Botón de eliminación
+      if (event.target.closest('.btn-delete')) {
+        const button = event.target.closest('.btn-delete');
+        currentDeleteId = button.dataset.id;
+        document.getElementById('deleteProductName').textContent = `"${button.dataset.name}"`;
+        openModal('deleteModal');
+      }
+    });
 
     // ========== ENVÍO DEL FORMULARIO DE AGREGAR ==========
     if (form) {
