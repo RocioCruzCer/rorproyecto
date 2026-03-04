@@ -1011,36 +1011,148 @@
 <div id="formMessage"></div>
 
 <script>
-  let currentEditId = null;
-  let currentDeleteId = null;
+if (!window.productsScriptLoaded) {
+
+  window.productsScriptLoaded = true;
+
+  window.currentEditId = null;
+  window.currentDeleteId = null;
 
 
 
-  function openModal(modalId) {
-    document.getElementById(modalId)?.classList.add('show');
-    document.body.style.overflow = 'hidden';
-  }
+  document.addEventListener('turbo:load', function () {
 
-  function closeModal(modalId) {
-    document.getElementById(modalId)?.classList.remove('show');
-    document.body.style.overflow = '';
-  }
+    const form = document.getElementById('productForm');
+    const editForm = document.getElementById('editForm');
+    const deleteForm = document.getElementById('deleteForm');
 
-  window.addEventListener('click', function (event) {
-    if (event.target.classList.contains('modal')) {
-      event.target.classList.remove('show');
-      document.body.style.overflow = '';
+
+    if (form && !form.dataset.listenerAdded) {
+      form.dataset.listenerAdded = "true";
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        try {
+          const response = await fetch('/products', {
+            method: 'POST',
+            headers: {
+              'X-CSRF-Token': csrfToken,
+              'Accept': 'application/json'
+            },
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            closeModal('addModal');
+            if (result.html) {
+              document.getElementById('productsTableContainer').innerHTML = result.html;
+            }
+            form.reset();
+            showMessage('success', '✅ Producto guardado');
+            updateStats();
+          } else {
+            showMessage('danger', '❌ Error al guardar');
+          }
+
+        } catch (err) {
+          console.error(err);
+          showMessage('danger', '❌ Error de conexión');
+        }
+      });
     }
+
+
+    if (editForm && !editForm.dataset.listenerAdded) {
+      editForm.dataset.listenerAdded = "true";
+
+      editForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        formData.append('_method', 'patch');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        try {
+          const response = await fetch(`/products/${window.currentEditId}`, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-Token': csrfToken,
+              'Accept': 'application/json'
+            },
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            closeModal('editModal');
+            if (result.html) {
+              document.getElementById('productsTableContainer').innerHTML = result.html;
+            }
+            showMessage('success', '✅ Producto actualizado');
+            updateStats();
+          }
+
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    }
+
+    
+    if (deleteForm && !deleteForm.dataset.listenerAdded) {
+      deleteForm.dataset.listenerAdded = "true";
+
+      deleteForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        formData.append('_method', 'delete');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        try {
+          const response = await fetch(`/products/${window.currentDeleteId}`, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-Token': csrfToken,
+              'Accept': 'application/json'
+            },
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            closeModal('deleteModal');
+            if (result.html) {
+              document.getElementById('productsTableContainer').innerHTML = result.html;
+            }
+            showMessage('success', '✅ Producto eliminado');
+            updateStats();
+          }
+
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    }
+
   });
 
 
 
   document.addEventListener('click', function (event) {
 
-    
+   
     const editBtn = event.target.closest('.btn-edit');
     if (editBtn) {
-      currentEditId = editBtn.dataset.id;
+      window.currentEditId = editBtn.dataset.id;
 
       document.getElementById('edit_name').value = editBtn.dataset.name;
       document.getElementById('edit_category').value = editBtn.dataset.category;
@@ -1051,10 +1163,10 @@
       return;
     }
 
- 
+   
     const deleteBtn = event.target.closest('.btn-delete');
     if (deleteBtn) {
-      currentDeleteId = deleteBtn.dataset.id;
+      window.currentDeleteId = deleteBtn.dataset.id;
       document.getElementById('deleteProductName').textContent =
         `"${deleteBtn.dataset.name}"`;
       openModal('deleteModal');
@@ -1087,124 +1199,20 @@
 
 
 
-  document.addEventListener('DOMContentLoaded', function () {
+  function openModal(modalId) {
+    document.getElementById(modalId)?.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
 
-    const form = document.getElementById('productForm');
-    const editForm = document.getElementById('editForm');
-    const deleteForm = document.getElementById('deleteForm');
+  function closeModal(modalId) {
+    document.getElementById(modalId)?.classList.remove('show');
+    document.body.style.overflow = '';
+  }
 
-    
-    if (form) {
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const formData = new FormData(this);
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-
-        try {
-          const response = await fetch('/products', {
-            method: 'POST',
-            headers: {
-              'X-CSRF-Token': csrfToken,
-              'Accept': 'application/json'
-            },
-            body: formData
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            closeModal('addModal');
-            if (result.html) {
-              document.getElementById('productsTableContainer').innerHTML =
-                result.html;
-            }
-            form.reset();
-            showMessage('success', '✅ Producto guardado');
-            updateStats();
-          } else {
-            showMessage('danger', '❌ Error al guardar');
-          }
-
-        } catch (err) {
-          console.error(err);
-          showMessage('danger', '❌ Error de conexión');
-        }
-      });
-    }
-
-    
-    if (editForm) {
-      editForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const formData = new FormData(this);
-        formData.append('_method', 'patch');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-
-        try {
-          const response = await fetch(`/products/${currentEditId}`, {
-            method: 'POST',
-            headers: {
-              'X-CSRF-Token': csrfToken,
-              'Accept': 'application/json'
-            },
-            body: formData
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            closeModal('editModal');
-            if (result.html) {
-              document.getElementById('productsTableContainer').innerHTML =
-                result.html;
-            }
-            showMessage('success', '✅ Producto actualizado');
-            updateStats();
-          }
-
-        } catch (err) {
-          console.error(err);
-        }
-      });
-    }
-
-    
-    if (deleteForm) {
-      deleteForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const formData = new FormData(this);
-        formData.append('_method', 'delete');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-
-        try {
-          const response = await fetch(`/products/${currentDeleteId}`, {
-            method: 'POST',
-            headers: {
-              'X-CSRF-Token': csrfToken,
-              'Accept': 'application/json'
-            },
-            body: formData
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            closeModal('deleteModal');
-            if (result.html) {
-              document.getElementById('productsTableContainer').innerHTML =
-                result.html;
-            }
-            showMessage('success', '✅ Producto eliminado');
-            updateStats();
-          }
-
-        } catch (err) {
-          console.error(err);
-        }
-      });
+  window.addEventListener('click', function (event) {
+    if (event.target.classList.contains('modal')) {
+      event.target.classList.remove('show');
+      document.body.style.overflow = '';
     }
   });
 
@@ -1221,7 +1229,7 @@
       <button class="btn-close-alert" onclick="this.parentElement.remove()">×</button>
     `;
 
-    document.getElementById('formMessage').appendChild(div);
+    document.getElementById('formMessage')?.appendChild(div);
 
     setTimeout(() => div.remove(), 4000);
   }
@@ -1240,4 +1248,6 @@
       })
       .catch(err => console.error(err));
   }
+
+}
 </script>
