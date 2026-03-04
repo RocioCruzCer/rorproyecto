@@ -132,7 +132,7 @@ class WelcomeController < ApplicationController
             success: true,
             message: "Producto guardado exitosamente.",
             product: @product,
-            html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
+          render_to_string(partial: "welcome/product_list.html.erb", locals: { products: @products })
           }
         }
       else
