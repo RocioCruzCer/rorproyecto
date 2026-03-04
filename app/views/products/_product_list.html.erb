@@ -1,4 +1,4 @@
-<%# app/views/welcome/_product_list.html.erb %>
+<%# app/views/products/_product_list.html.erb %>
 
 <% if products && products.any? %>
   <div class="table-responsive">
@@ -17,7 +17,7 @@
       <tbody>
         <% products.each_with_index do |product, index| %>
           <tr>
-            <td data-label="#">#<%= ((products.current_page - 1) * 15) + index + 1 %></td>
+            <td data-label="#">#<%= ((products.current_page - 1) * 5) + index + 1 %></td>
             <td data-label="Nombre"><strong><%= product.name %></strong></td>
             <td data-label="Categoría">
               <span class="category-badge"><i class="bi bi-tag"></i> <%= product.category %></span>
@@ -33,10 +33,21 @@
             </td>
             <td data-label="Acciones">
               <div class="action-buttons">
-                <button type="button" class="btn-action btn-edit" onclick='editProduct(<%= product.id %>, <%= product.name.to_json.html_safe %>, <%= product.category.to_json.html_safe %>, <%= product.price %>, <%= product.brand.to_json.html_safe %>)'>
+                <button type="button" 
+                        class="btn-action btn-edit" 
+                        data-action="click->products#openEditModal"
+                        data-id="<%= product.id %>"
+                        data-name="<%= product.name %>"
+                        data-category="<%= product.category %>"
+                        data-price="<%= product.price %>"
+                        data-brand="<%= product.brand %>">
                   <i class="bi bi-pencil"></i>
                 </button>
-                <button type="button" class="btn-action btn-delete" onclick='confirmDelete(<%= product.id %>, <%= product.name.to_json.html_safe %>)'>
+                <button type="button" 
+                        class="btn-action btn-delete"
+                        data-action="click->products#openDeleteModal"
+                        data-id="<%= product.id %>"
+                        data-name="<%= product.name %>">
                   <i class="bi bi-trash3"></i>
                 </button>
               </div>
@@ -47,7 +58,7 @@
     </table>
   </div>
 
-  <!-- Paginación con PRIMERO y ÚLTIMO -->
+  <!-- Paginación (igual que antes) -->
   <% if products.total_pages > 1 %>
     <div class="pagination-container">
       <nav>
@@ -82,7 +93,7 @@
             </li>
           <% end %>
 
-          <!-- Números de página (mostramos solo algunos para no saturar) -->
+          <!-- Números de página -->
           <% 
             start_page = [products.current_page - 2, 1].max
             end_page = [start_page + 4, products.total_pages].min

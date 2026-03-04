@@ -1,9 +1,8 @@
 class WelcomeController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [
     :submit_questionnaire,
-    :create_product,
-    :update_product,
-    :destroy_product
+    :create_slide,
+    :destroy_slide
   ]
 
   def index
@@ -110,106 +109,6 @@ class WelcomeController < ApplicationController
     @questionnaires = Questionnaire.all.order(created_at: :desc)
   end
 
-  # ========== ACCIONES PARA PRODUCTOS ==========
-  def products
-    @products = Product.order(created_at: :desc).page(params[:page]).per(5)
-    @product = Product.new
-  rescue => e
-    @products = []
-    @product = Product.new
-    flash.now[:alert] = "Error al cargar productos: #{e.message}"
-  end
-
-  def create_product
-    @product = Product.new(product_params)
-
-    respond_to do |format|
-      if @product.save
-        @products = Product.order(created_at: :desc).page(params[:page]).per(5)
-        format.html { redirect_to products_path, notice: "Producto guardado exitosamente." }
-        format.json {
-          render json: {
-            success: true,
-            message: "Producto guardado exitosamente.",
-            product: @product,
-            html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
-          }
-        }
-      else
-        format.json {
-          render json: {
-            success: false,
-            errors: @product.errors.full_messages
-          }, status: :unprocessable_entity
-        }
-      end
-    end
-  end
-
-  def update_product
-    @product = Product.find(params[:id])
-
-    respond_to do |format|
-      if @product.update(product_params)
-        @products = Product.order(created_at: :desc).page(params[:page]).per(5)
-        format.json {
-          render json: {
-            success: true,
-            message: "Producto actualizado exitosamente.",
-            product: @product,
-            html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
-          }
-        }
-      else
-        format.json {
-          render json: {
-            success: false,
-            errors: @product.errors.full_messages
-          }, status: :unprocessable_entity
-        }
-      end
-    end
-  end
-
-  def destroy_product
-    @product = Product.find(params[:id])
-    @product.destroy
-
-    respond_to do |format|
-      @products = Product.order(created_at: :desc).page(params[:page]).per(5)
-      format.json {
-        render json: {
-          success: true,
-          message: "Producto eliminado exitosamente.",
-          html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
-        }
-      }
-      format.html { redirect_to products_path, notice: "Producto eliminado exitosamente." }
-    end
-  end
-
-  def search_products
-    @products = if params[:q].present?
-      Product.where("name ILIKE :search OR category ILIKE :search OR brand ILIKE :search",
-                    search: "%#{params[:q]}%")
-    else
-      Product.all
-    end.order(created_at: :desc).page(params[:page]).per(5)
-
-    render json: {
-      html: render_to_string(partial: "welcome/product_list", locals: { products: @products }, formats: [ :html ])
-    }
-  rescue => e
-    render json: { html: "<p>Error: #{e.message}</p>" }
-  end
-
-  def product_data
-    @products = Product.all.order(created_at: :desc)
-    render json: @products
-  rescue => e
-    render json: { error: e.message }, status: :internal_server_error
-  end
-
   private
 
   def slide_params
@@ -218,9 +117,5 @@ class WelcomeController < ApplicationController
 
   def questionnaire_params
     params.require(:questionnaire).permit(:name, :email)
-  end
-
-  def product_params
-    params.require(:product).permit(:name, :category, :price, :brand)
   end
 end
