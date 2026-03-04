@@ -1011,81 +1011,96 @@
 <div id="formMessage"></div>
 
 <script>
-  // ========== VARIABLES GLOBALES ==========
   let currentEditId = null;
   let currentDeleteId = null;
 
-  // ========== FUNCIONES PARA MODALES ==========
+
+
   function openModal(modalId) {
-    document.getElementById(modalId).classList.add('show');
+    document.getElementById(modalId)?.classList.add('show');
     document.body.style.overflow = 'hidden';
   }
 
   function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('show');
+    document.getElementById(modalId)?.classList.remove('show');
     document.body.style.overflow = '';
   }
 
-  // Cerrar modal al hacer clic fuera
-  window.addEventListener('click', function(event) {
+  window.addEventListener('click', function (event) {
     if (event.target.classList.contains('modal')) {
       event.target.classList.remove('show');
       document.body.style.overflow = '';
     }
   });
 
-  // ========== FUNCIONES PARA PRODUCTOS (CON DELEGACIÓN DE EVENTOS) ==========
-  function setupProductActions() {
-    // Estas funciones ahora serán llamadas mediante delegación de eventos
-    // No necesitan adjuntarse directamente a los botones
-  }
 
-  // ========== INICIALIZACIÓN ==========
-  document.addEventListener('DOMContentLoaded', function() {
+
+  document.addEventListener('click', function (event) {
+
+    
+    const editBtn = event.target.closest('.btn-edit');
+    if (editBtn) {
+      currentEditId = editBtn.dataset.id;
+
+      document.getElementById('edit_name').value = editBtn.dataset.name;
+      document.getElementById('edit_category').value = editBtn.dataset.category;
+      document.getElementById('edit_price').value = editBtn.dataset.price;
+      document.getElementById('edit_brand').value = editBtn.dataset.brand;
+
+      openModal('editModal');
+      return;
+    }
+
+ 
+    const deleteBtn = event.target.closest('.btn-delete');
+    if (deleteBtn) {
+      currentDeleteId = deleteBtn.dataset.id;
+      document.getElementById('deleteProductName').textContent =
+        `"${deleteBtn.dataset.name}"`;
+      openModal('deleteModal');
+      return;
+    }
+
+
+    const pageLink = event.target.closest('.page-link[data-remote="true"]');
+    if (pageLink && !pageLink.closest('.disabled')) {
+      event.preventDefault();
+      const url = pageLink.getAttribute('href');
+
+      fetch(url, { headers: { 'Accept': 'text/html' } })
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newContainer = doc.getElementById('productsTableContainer');
+
+          if (newContainer) {
+            document.getElementById('productsTableContainer').innerHTML =
+              newContainer.innerHTML;
+          }
+
+          window.history.pushState({}, '', url);
+        })
+        .catch(err => console.error('Error paginación:', err));
+    }
+  });
+
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+
     const form = document.getElementById('productForm');
-    const searchInput = document.getElementById('searchInput');
-    const clearSearch = document.getElementById('clearSearch');
+    const editForm = document.getElementById('editForm');
+    const deleteForm = document.getElementById('deleteForm');
 
-    // ========== DELEGACIÓN DE EVENTOS PARA BOTONES DE ACCIÓN ==========
-    // Escuchamos clicks en todo el documento, pero solo procesamos si el click
-    // viene de un botón de edición o eliminación
-    document.addEventListener('click', function(event) {
-      // Botón de edición
-      if (event.target.closest('.btn-edit')) {
-        const button = event.target.closest('.btn-edit');
-        currentEditId = button.dataset.id;
-        document.getElementById('edit_name').value = button.dataset.name;
-        document.getElementById('edit_category').value = button.dataset.category;
-        document.getElementById('edit_price').value = button.dataset.price;
-        document.getElementById('edit_brand').value = button.dataset.brand;
-        openModal('editModal');
-      }
-      
-      // Botón de eliminación
-      if (event.target.closest('.btn-delete')) {
-        const button = event.target.closest('.btn-delete');
-        currentDeleteId = button.dataset.id;
-        document.getElementById('deleteProductName').textContent = `"${button.dataset.name}"`;
-        openModal('deleteModal');
-      }
-    });
-
-    // ========== ENVÍO DEL FORMULARIO DE AGREGAR ==========
+    
     if (form) {
-      form.addEventListener('submit', async function(e) {
+      form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
-        clearErrors();
-        
-        if (!validateForm()) {
-          return;
-        }
-        
+
         const formData = new FormData(this);
-        const csrfToken = document.querySelector('input[name="authenticity_token"]').value;
-        
-        setLoadingState(true);
-        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
         try {
           const response = await fetch('/products', {
             method: 'POST',
@@ -1095,44 +1110,38 @@
             },
             body: formData
           });
-          
+
           const result = await response.json();
-          
+
           if (result.success) {
             closeModal('addModal');
             if (result.html) {
-              document.getElementById('productsTableContainer').innerHTML = result.html;
+              document.getElementById('productsTableContainer').innerHTML =
+                result.html;
             }
             form.reset();
-            showMessage('success', '✅ Producto guardado exitosamente');
+            showMessage('success', '✅ Producto guardado');
             updateStats();
           } else {
-            if (result.errors && result.errors.length > 0) {
-              displayServerErrors(result.errors);
-            } else {
-              showMessage('danger', '❌ Error al guardar el producto');
-            }
+            showMessage('danger', '❌ Error al guardar');
           }
-        } catch (error) {
-          console.error('Error:', error);
-          showMessage('danger', '❌ Error de conexión con el servidor');
-        } finally {
-          setLoadingState(false);
+
+        } catch (err) {
+          console.error(err);
+          showMessage('danger', '❌ Error de conexión');
         }
       });
     }
 
-    // ========== ENVÍO DEL FORMULARIO DE EDICIÓN ==========
-    const editForm = document.getElementById('editForm');
+    
     if (editForm) {
-      editForm.addEventListener('submit', async function(e) {
+      editForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
+
         const formData = new FormData(this);
         formData.append('_method', 'patch');
-        
-        const csrfToken = document.querySelector('input[name="authenticity_token"]').value;
-        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
         try {
           const response = await fetch(`/products/${currentEditId}`, {
             method: 'POST',
@@ -1142,37 +1151,34 @@
             },
             body: formData
           });
-          
+
           const result = await response.json();
-          
+
           if (result.success) {
             closeModal('editModal');
             if (result.html) {
-              document.getElementById('productsTableContainer').innerHTML = result.html;
+              document.getElementById('productsTableContainer').innerHTML =
+                result.html;
             }
-            showMessage('success', '✅ Producto actualizado exitosamente');
+            showMessage('success', '✅ Producto actualizado');
             updateStats();
-          } else {
-            alert('Error al actualizar: ' + (result.errors || 'Error desconocido').join(', '));
           }
-        } catch (error) {
-          console.error('Error:', error);
-          alert('Error de conexión');
+
+        } catch (err) {
+          console.error(err);
         }
       });
     }
 
-    // ========== ENVÍO DEL FORMULARIO DE ELIMINACIÓN ==========
-    const deleteForm = document.getElementById('deleteForm');
+    
     if (deleteForm) {
-      deleteForm.addEventListener('submit', async function(e) {
+      deleteForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
+
         const formData = new FormData(this);
         formData.append('_method', 'delete');
-        
-        const csrfToken = document.querySelector('input[name="authenticity_token"]').value;
-        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
         try {
           const response = await fetch(`/products/${currentDeleteId}`, {
             method: 'POST',
@@ -1182,285 +1188,56 @@
             },
             body: formData
           });
-          
+
           const result = await response.json();
-          
+
           if (result.success) {
             closeModal('deleteModal');
             if (result.html) {
-              document.getElementById('productsTableContainer').innerHTML = result.html;
+              document.getElementById('productsTableContainer').innerHTML =
+                result.html;
             }
-            showMessage('success', '✅ Producto eliminado exitosamente');
+            showMessage('success', '✅ Producto eliminado');
             updateStats();
-          } else {
-            alert('Error al eliminar');
           }
-        } catch (error) {
-          console.error('Error:', error);
-          alert('Error de conexión');
+
+        } catch (err) {
+          console.error(err);
         }
       });
     }
-
-    // ========== BÚSQUEDA EN EL CLIENTE ==========
-    if (searchInput) {
-      searchInput.addEventListener('input', function() {
-        const query = this.value.trim().toLowerCase();
-        
-        clearSearch.style.display = query.length > 0 ? 'block' : 'none';
-        
-        const tableBody = document.querySelector('#productsTableContainer table tbody');
-        if (!tableBody) return;
-        
-        const tableRows = tableBody.querySelectorAll('tr');
-        let visibleCount = 0;
-        
-        tableRows.forEach(row => {
-          const nombreCell = row.querySelector('td[data-label="Nombre"]');
-          const categoriaCell = row.querySelector('td[data-label="Categoría"]');
-          const marcaCell = row.querySelector('td[data-label="Marca"]');
-          
-          const nombre = nombreCell ? nombreCell.textContent.toLowerCase() : '';
-          const categoria = categoriaCell ? categoriaCell.textContent.toLowerCase() : '';
-          const marca = marcaCell ? marcaCell.textContent.toLowerCase() : '';
-          
-          if (query.length === 0) {
-            row.style.display = '';
-            visibleCount++;
-          } else {
-            if (nombre.includes(query) || categoria.includes(query) || marca.includes(query)) {
-              row.style.display = '';
-              visibleCount++;
-            } else {
-              row.style.display = 'none';
-            }
-          }
-        });
-        
-        const tableContainer = document.getElementById('productsTableContainer');
-        let noResultsMsg = document.getElementById('noResultsMessage');
-        
-        if (visibleCount === 0 && query.length > 0) {
-          const table = document.querySelector('#productsTableContainer table');
-          if (table) table.style.display = 'none';
-          
-          if (!noResultsMsg) {
-            noResultsMsg = document.createElement('div');
-            noResultsMsg.id = 'noResultsMessage';
-            noResultsMsg.className = 'text-center py-5';
-            noResultsMsg.innerHTML = `
-              <i class="bi bi-search" style="font-size: 60px; color: var(--rosa-clarito);"></i>
-              <h4 class="mt-3 text-muted">No se encontraron productos</h4>
-              <p class="text-muted">No hay resultados para "<strong>${this.value}</strong>"</p>
-            `;
-            tableContainer.appendChild(noResultsMsg);
-          } else {
-            noResultsMsg.querySelector('p').innerHTML = `No hay resultados para "<strong>${this.value}</strong>"`;
-          }
-        } else {
-          const table = document.querySelector('#productsTableContainer table');
-          if (table) table.style.display = '';
-          
-          if (noResultsMsg) {
-            noResultsMsg.remove();
-          }
-        }
-      });
-    }
-
-    // Limpiar búsqueda
-    if (clearSearch) {
-      clearSearch.addEventListener('click', function() {
-        searchInput.value = '';
-        clearSearch.style.display = 'none';
-        
-        const tableRows = document.querySelectorAll('#productsTableContainer table tbody tr');
-        tableRows.forEach(row => {
-          row.style.display = '';
-        });
-        
-        const table = document.querySelector('#productsTableContainer table');
-        if (table) table.style.display = '';
-        
-        const noResultsMsg = document.getElementById('noResultsMessage');
-        if (noResultsMsg) {
-          noResultsMsg.remove();
-        }
-      });
-    }
-
-    // ========== PAGINACIÓN CON AJAX ==========
-    document.addEventListener('click', function(e) {
-      const pageLink = e.target.closest('.page-link[data-remote="true"]');
-      if (pageLink && !pageLink.closest('.disabled')) {
-        e.preventDefault();
-        const url = pageLink.getAttribute('href');
-        
-        if (url) {
-          fetch(url, {
-            headers: { 'Accept': 'text/html' }
-          })
-          .then(response => response.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const newContainer = doc.getElementById('productsTableContainer');
-            
-            if (newContainer) {
-              document.getElementById('productsTableContainer').innerHTML = newContainer.innerHTML;
-            }
-            
-            window.history.pushState({}, '', url);
-          })
-          .catch(error => console.error('Error en paginación:', error));
-        }
-      }
-    });
   });
 
-  // ========== FUNCIONES DE VALIDACIÓN ==========
-  function validateForm() {
-    let isValid = true;
-    const name = document.getElementById('product_name');
-    const category = document.getElementById('product_category');
-    const price = document.getElementById('product_price');
-    const brand = document.getElementById('product_brand');
-    
-    if (!name.value.trim()) {
-      showFieldError('name', 'El nombre es obligatorio');
-      isValid = false;
-    } else if (name.value.trim().length < 3) {
-      showFieldError('name', 'El nombre debe tener al menos 3 caracteres');
-      isValid = false;
-    } else {
-      clearFieldError('name');
-    }
-    
-    if (!category.value) {
-      showFieldError('category', 'La categoría es obligatoria');
-      isValid = false;
-    } else {
-      clearFieldError('category');
-    }
-    
-    if (!price.value) {
-      showFieldError('price', 'El precio es obligatorio');
-      isValid = false;
-    } else if (parseFloat(price.value) <= 0) {
-      showFieldError('price', 'El precio debe ser mayor a 0');
-      isValid = false;
-    } else {
-      clearFieldError('price');
-    }
-    
-    if (!brand.value) {
-      showFieldError('brand', 'La marca es obligatoria');
-      isValid = false;
-    } else {
-      clearFieldError('brand');
-    }
-    
-    return isValid;
-  }
 
-  function showFieldError(field, message) {
-    const input = document.getElementById(`product_${field}`);
-    const errorDiv = document.getElementById(`${field}-error`);
-    
-    if (input && errorDiv) {
-      input.classList.add('is-invalid');
-      errorDiv.textContent = message;
-      errorDiv.style.display = 'block';
-    }
-  }
 
-  function clearFieldError(field) {
-    const input = document.getElementById(`product_${field}`);
-    const errorDiv = document.getElementById(`${field}-error`);
-    
-    if (input && errorDiv) {
-      input.classList.remove('is-invalid');
-      errorDiv.style.display = 'none';
-    }
-  }
-
-  function clearErrors() {
-    document.querySelectorAll('.is-invalid').forEach(el => {
-      el.classList.remove('is-invalid');
-    });
-    
-    document.querySelectorAll('.invalid-feedback').forEach(el => {
-      el.style.display = 'none';
-    });
-  }
-
-  function displayServerErrors(errors) {
-    errors.forEach(error => {
-      const errorLower = error.toLowerCase();
-      if (errorLower.includes('nombre')) {
-        showFieldError('name', error);
-      } else if (errorLower.includes('categor')) {
-        showFieldError('category', error);
-      } else if (errorLower.includes('precio')) {
-        showFieldError('price', error);
-      } else if (errorLower.includes('marca')) {
-        showFieldError('brand', error);
-      } else {
-        showMessage('danger', `❌ ${error}`);
-      }
-    });
-  }
-
-  // ========== ESTADO DE CARGA ==========
-  function setLoadingState(isLoading) {
-    const submitBtn = document.getElementById('submitBtn');
-    if (isLoading) {
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Guardando...';
-      submitBtn.disabled = true;
-    } else {
-      submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Guardar Producto';
-      submitBtn.disabled = false;
-    }
-  }
-
-  // ========== MOSTRAR MENSAJES ==========
   function showMessage(type, text) {
-    const oldMessage = document.querySelector('.alert');
-    if (oldMessage) {
-      oldMessage.remove();
-    }
-    
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `alert alert-${type}`;
-    messageDiv.innerHTML = `
+    const old = document.querySelector('.alert');
+    if (old) old.remove();
+
+    const div = document.createElement('div');
+    div.className = `alert alert-${type}`;
+    div.innerHTML = `
       ${text}
-      <button type="button" class="btn-close-alert" onclick="this.parentElement.remove()">×</button>
+      <button class="btn-close-alert" onclick="this.parentElement.remove()">×</button>
     `;
-    
-    document.getElementById('formMessage').appendChild(messageDiv);
-    
-    setTimeout(() => {
-      if (messageDiv.parentElement) {
-        messageDiv.remove();
-      }
-    }, 5000);
+
+    document.getElementById('formMessage').appendChild(div);
+
+    setTimeout(() => div.remove(), 4000);
   }
 
-  // ========== ACTUALIZAR ESTADÍSTICAS ==========
+
+
   function updateStats() {
-    setTimeout(() => {
-      fetch('/product_data')
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('totalProducts').textContent = data.length;
-          
-          const categories = new Set(data.map(p => p.category));
-          document.getElementById('totalCategories').textContent = categories.size;
-          
-          const brands = new Set(data.map(p => p.brand));
-          document.getElementById('totalBrands').textContent = brands.size;
-        })
-        .catch(error => console.error('Error al actualizar stats:', error));
-    }, 500);
+    fetch('/product_data')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('totalProducts').textContent = data.length;
+        document.getElementById('totalCategories').textContent =
+          new Set(data.map(p => p.category)).size;
+        document.getElementById('totalBrands').textContent =
+          new Set(data.map(p => p.brand)).size;
+      })
+      .catch(err => console.error(err));
   }
 </script>
