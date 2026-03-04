@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # ===== HEALTHCHECK PARA RAILWAY =====
-  get "/up", to: proc { [200, { "Content-Type" => "text/plain" }, ["OK"]] }
+  # Estas rutas son las que usa Railway para verificar que la app está viva
+ get "/up", to: proc { [200, { "Content-Type" => "text/plain" }, ["OK"]] }
   get "healthcheck" => "rails/health#show"
 
   # ===== TU RUTA RAÍZ ORIGINAL =====
@@ -26,14 +27,11 @@ Rails.application.routes.draw do
   get "questionnaire_data", to: "welcome#questionnaire_data"
   get "questionnaire_list", to: "welcome#questionnaire_list"
 
-  # ===== RUTAS PARA PRODUCTOS - AHORA USAN PRODUCTS CONTROLLER =====
-  resources :products, only: [:index, :create, :update, :destroy] do
-    collection do
-      get :search
-      get :data, to: 'products#index_json'
-    end
-  end
-  
-  # Ruta de compatibilidad para product_data (opcional)
-  get "product_data", to: "products#index_json"
+  # ===== RUTAS PARA PRODUCTOS =====
+  get "products", to: "welcome#products"
+  post "products", to: "welcome#create_product"
+  patch "products/:id", to: "welcome#update_product"
+  delete "products/:id", to: "welcome#destroy_product"
+  get "products/search", to: "welcome#search_products"
+  get "product_data", to: "welcome#product_data"
 end
