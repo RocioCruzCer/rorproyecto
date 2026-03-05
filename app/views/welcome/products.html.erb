@@ -1,4 +1,4 @@
-<%# app/views/welcome/products.html.erb %>
+<%# app/views/welcome/products.html.erb - VERSIÓN CORREGIDA CON DELEGACIÓN DE EVENTOS E IDs OCULTOS %>
 
 <% content_for :head do %>
   <style>
@@ -27,6 +27,11 @@
       max-width: 1400px;
       margin: 0 auto;
       padding: 30px;
+    }
+
+    /* Ocultar IDs completamente */
+    .product-id {
+      display: none;
     }
 
     /* Header */
@@ -637,6 +642,8 @@
             <tbody>
               <% @products.each_with_index do |product, index| %>
                 <tr>
+                  <!-- ID oculto para los scripts, pero invisible para el usuario -->
+                  <td class="product-id" style="display: none;"><%= product.id %></td>
                   <td data-label="Nombre"><strong><%= product.name %></strong></td>
                   <td data-label="Categoría">
                     <span class="category-badge"><i class="bi bi-tag"></i> <%= product.category %></span>
@@ -1034,12 +1041,6 @@
     }
   });
 
-  // ========== FUNCIONES PARA PRODUCTOS (CON DELEGACIÓN DE EVENTOS) ==========
-  function setupProductActions() {
-    // Estas funciones ahora serán llamadas mediante delegación de eventos
-    // No necesitan adjuntarse directamente a los botones
-  }
-
   // ========== INICIALIZACIÓN ==========
   document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('productForm');
@@ -1153,7 +1154,12 @@
             showMessage('success', '✅ Producto actualizado exitosamente');
             updateStats();
           } else {
-            alert('Error al actualizar: ' + (result.errors || 'Error desconocido').join(', '));
+            // Mostrar errores específicos si vienen del servidor
+            if (result.errors) {
+              alert('Error al actualizar: ' + result.errors.join(', '));
+            } else {
+              alert('Error al actualizar el producto');
+            }
           }
         } catch (error) {
           console.error('Error:', error);
